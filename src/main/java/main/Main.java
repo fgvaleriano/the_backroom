@@ -34,7 +34,11 @@ public class Main extends Application {
             Scene scene = new Scene(root);
 
             stage.setScene(scene);
+
+            //this would maximized everything including the windows tab (weird enough if resizable was put before show, it become full screen)
+            stage.setMaximized(true);
             stage.show();
+            stage.setResizable(false);
         }catch (Exception e)  {
             throw new RuntimeException(e);
         }
