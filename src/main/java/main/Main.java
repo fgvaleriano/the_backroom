@@ -18,7 +18,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        showSignUp(primaryStage);
+
+        //showSignUp(primaryStage);
+        showAddArchive(primaryStage);
     }
 
     public void showSignUp(Stage stage){
@@ -29,6 +31,24 @@ public class Main extends Application {
             //no need to set up the controller here since we already did that na sa scene builder...
 
             Parent root = signUp.load();
+            Scene scene = new Scene(root);
+
+            stage.setScene(scene);
+            stage.show();
+        }catch (Exception e)  {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public void showAddArchive(Stage stage){
+        try{
+            //Note the fxml file is already the ui class file...so no need to create another ui class file
+
+            FXMLLoader addArchive = new FXMLLoader(getClass().getResource("/ui/AddArchive.fxml"));
+            //no need to set up the controller here since we already did that na sa scene builder...
+
+            Parent root = addArchive.load();
             Scene scene = new Scene(root);
 
             stage.setScene(scene);
