@@ -13,5 +13,6 @@ module ui{
     requires java.desktop;
 
     opens controller to javafx.fxml;
+    opens ui.assets to javafx.graphics;
     exports main;
 }
