@@ -74,7 +74,9 @@ public class Main extends Application {
 
             stage.setScene(scene);
             stage.setTitle("The Backroom - Login");
-            stage.setResizable(false);
+            stage.setResizable(true);
+            stage.setMinWidth(1000);
+            stage.setMinHeight(600);
             stage.setMaximized(true);
             stage.show();
 

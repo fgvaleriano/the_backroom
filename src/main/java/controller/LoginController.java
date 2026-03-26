@@ -23,10 +23,14 @@ public class LoginController {
         root = new StackPane();
         root.getStyleClass().add("main-background");
 
+        BorderPane content = new BorderPane();
+        content.setPadding(new Insets(40, 60, 40, 60));
+
         //container for other stuff
         form = new VBox(20);
-        form.setAlignment(Pos.CENTER_RIGHT);
-        form.setPadding(new Insets(0, 150, 0, 0));
+        form.setAlignment(Pos.CENTER_LEFT);
+        form.setMaxWidth(380);
+        //form.setPadding(new Insets(0, 150, 0, 0));
 
         userLabel = new Label("USERNAME");
         userLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;" +
@@ -42,7 +46,14 @@ public class LoginController {
         guest = guestBtn();
 
         form.getChildren().addAll(userLabel, userTxt, pwLabel, pwTxt, login, guest);
-        root.getChildren().add(form);
+
+        StackPane rightWraper = new StackPane(form);
+        rightWraper.setAlignment(Pos.CENTER_RIGHT);
+        rightWraper.setPadding(new Insets(0, 80,0,0));
+
+        content.setRight(rightWraper);
+
+        root.getChildren().add(content);
 
         return root;
     }
@@ -50,7 +61,6 @@ public class LoginController {
     //buttons
     private Button loginBtn(){
         btn = new Button();
-
         btn.getStyleClass().add("image-button");
 
         img = new Image(getClass().getResourceAsStream("/ui/assets/login.png"));
@@ -59,13 +69,11 @@ public class LoginController {
         view.setFitWidth(350);
 
         btn.setGraphic(view);
-
         return btn;
     }
 
     private Button guestBtn(){
         btn = new Button();
-
         btn.getStyleClass().add("image-button");
 
         img = new Image(getClass().getResourceAsStream("/ui/assets/guest btn.png"));
@@ -74,7 +82,6 @@ public class LoginController {
         view.setFitWidth(350);
 
         btn.setGraphic(view);
-
         return btn;
     }
 
@@ -84,8 +91,7 @@ public class LoginController {
         username.setPromptText("Enter Username");
 
         username.getStyleClass().add("login-input");
-
-        username.setMaxWidth(350);
+        username.setPrefWidth(350);
         username.setMaxHeight(50);
         return username;
     }
@@ -96,8 +102,7 @@ public class LoginController {
         pass.setPromptText("Enter Password");
 
         pass.getStyleClass().add("login-input");
-        pass.setMaxWidth(350);
-
+        pass.setPrefWidth(350);
         return pass;
     }
 }
