@@ -74,10 +74,15 @@ public class Main extends Application {
 
             stage.setScene(scene);
             stage.setTitle("The Backroom - Login");
+
+            //.setResizable(true);
+            //i think teh better if we do it like this:
+            //stage.setMinWidth(1000);
+            //stage.setMinHeight(600);
+
             stage.setMaximized(true);
             stage.show();
-            stage.setResizable(false); //i put the resizable here kay javafx is weird, if false it resizable, tas maximized, if fufull screen nya
-            //so we maximied and show, tas false resizable..huhuhuuhuuh
+            stage.setResizable(false);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
