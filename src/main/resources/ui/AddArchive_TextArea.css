@@ -1,0 +1,31 @@
+.text-area {
+    -fx-background-color: white;
+    -fx-font-family: "Reddit Sans";
+    -fx-font-size: 17px;
+}
+
+.text-area .content{
+    -fx-background-color: white;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+}
+
+.text-area .scroll-bar:vertical{
+    -fx-background-color: #c2bdb6;
+}
+
+.text-area .scroll-bar:vertical .thumb{
+    -fx-background-color:  #4a857c;
+}
+
+.text-area .scroll-bar:vertical .increment-button, .text-area .scroll-bar:vertical .decrement-button{
+    -fx-background-color:  #8a8784;
+}
+
+.text-area.error {
+    -fx-border-color: #bb443c;
+    -fx-border-width: 2;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+}
+

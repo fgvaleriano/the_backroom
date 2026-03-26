@@ -1,0 +1,31 @@
+.combo-box{
+    -fx-font-family: 'Reddit Sans';
+    -fx-font-size: 17;
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-background-radius: 10;
+}
+
+.combo-box .list-view{
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+
+.combo-box .list-cell {
+    -fx-font-family: 'Reddit Sans';
+    -fx-font-size: 17;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+
+
+.combo-box .list-cell:selected{
+    -fx-background-color: white;
+    -fx-text-fill: black;
+}
+
+
+
+
+
