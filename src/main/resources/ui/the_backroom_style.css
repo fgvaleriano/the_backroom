@@ -1,3 +1,7 @@
+.home-background {
+    -fx-background-color: #E6E2D7
+}
+
 .main-background {
     -fx-background-color: #305852;
     -fx-background-image: url("assets/bkg.png");
@@ -30,5 +34,26 @@
     -fx-padding: 10;
     -fx-font-family: "Arial";
     -fx-font-size: 15px;
+}
 
+.search-button {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-text-fill: #8a8a8a;
+    -fx-font-size: 12px;
+    -fx-padding: 8 18 8 18;
+    -fx-cursor: hand;
+}
+
+.textfield-title {
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-font-family: "Reddit Sans Condensed";
+    -fx-text-till: #305852;
+}
+
+@font-face {
+    font-family: "Reddit Sans Condensed";
+    src: url("assets/RedditSansCondensed-Bold.tff");
 }

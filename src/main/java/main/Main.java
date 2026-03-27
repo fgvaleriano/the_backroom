@@ -1,5 +1,6 @@
 package main;
 
+import controller.HomePageController;
 import controller.LoginController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,7 +13,7 @@ import javafx.stage.*;
 
 public class Main extends Application {
     Scene scene;
-    StackPane root;
+    StackPane root, homePage;
 
     public static void main(String[] args) {
 
@@ -24,7 +25,8 @@ public class Main extends Application {
 
         //showSignUp(primaryStage);
         //showAddArchive(primaryStage);
-        showLogin(primaryStage);
+        //showLogin(primaryStage);
+        showHome(primaryStage);
     }
 
     public void showSignUp(Stage stage){
@@ -84,6 +86,24 @@ public class Main extends Application {
             stage.show();
             stage.setResizable(false);
 
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void showHome(Stage stage) {
+        try {
+            HomePageController home = new HomePageController();
+            homePage = home.getLayout(stage);
+            scene = new Scene(homePage);
+            scene.getStylesheets().add(getClass().getResource("/ui/the_backroom_style.css").toExternalForm());
+
+            stage.setScene(scene);
+            stage.setTitle("The Backroom");
+
+            stage.setMaximized(true);
+            stage.show();
+            stage.setResizable(false);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
