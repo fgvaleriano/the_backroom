@@ -41,19 +41,62 @@
     -fx-background-radius: 12;
     -fx-border-radius: 12;
     -fx-text-fill: #8a8a8a;
-    -fx-font-size: 12px;
+    -fx-font-size: 14px;
     -fx-padding: 8 18 8 18;
     -fx-cursor: hand;
+}
+
+.search-button:pressed {
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
 }
 
 .textfield-title {
     -fx-font-weight: bold;
     -fx-font-size: 14px;
     -fx-font-family: "Reddit Sans Condensed";
-    -fx-text-till: #305852;
+    -fx-text-fill: #305852;
 }
 
 @font-face {
     font-family: "Reddit Sans Condensed";
     src: url("assets/RedditSansCondensed-Bold.tff");
+}
+
+.profile-button {
+    -fx-background-radius: 1000;
+    -fx-pref-width: 32px;
+    -fx-pref-height: 32px;
+    -fx-min-width: 32px;
+    -fx-min-height: 32px;
+    -fx-max-heigh: 32px;
+    -fx-min-width: 32px;
+    -fx-background-color: #B83A2D;
+    -fx-padding: 0;
+}
+
+.profile-button:pressed {
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+.btn-primary {
+    -fx-background-color: transparent;
+    -fx-font-family: "Reddit Sans Condensed";
+    -fx-text-fill: #305852;
+    -fx-font-size: 27px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 8 0 8;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}
+
+.btn-primary:hover {
+    -fx-text-fill: #642225;
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
 }

@@ -4,6 +4,7 @@ import javafx.geometry.*;
 import javafx.scene.control.*;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
+import javafx.scene.shape.*;
 import javafx.stage.*;
 
 import java.net.URL;
@@ -12,9 +13,9 @@ import java.util.Objects;
 public class HomePageController {
     StackPane root;
     Image image;
-    ImageView imageView, titleView, logoView, titleImage;
+    ImageView imageView, titleView, logoView, titleImage, logoImage;
     VBox titleBox;
-    HBox navBar;
+    HBox navBar, navBtns;
     Button bkBtn, gmBtn, fmBtn, prfBtn, searchBar;
     //TextField searchBar;
 
@@ -26,7 +27,9 @@ public class HomePageController {
         StackPane.setAlignment(titleImage, Pos.CENTER);
         titleImage.setTranslateY(-150);
 
-        navBar = new HBox();
+        navBar = createNavBar();
+        StackPane.setAlignment(navBar, Pos.CENTER);
+        navBar.setTranslateY(-335);
 
         root.getChildren().addAll(titleImage, navBar);
 
@@ -46,7 +49,7 @@ public class HomePageController {
         imageView.setPreserveRatio(true);
         imageView.setSmooth(true);
 
-        imageView.setFitWidth(600);
+        imageView.setFitWidth(500);
         return imageView;
     }
 
@@ -64,28 +67,52 @@ public class HomePageController {
         navBar = new HBox();
         navBar.setAlignment(Pos.CENTER_LEFT);
         navBar.setPadding(new Insets(20, 40, 10, 40));
-        navBar.setSpacing(30);
+        navBar.setSpacing(70);
+
+        logoImage = createLogo();
+        navBtns = createNavBtns();
         searchBar = createSearchBar();
+        prfBtn = createProfileBtn();
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-        navBar.getChildren().addAll(spacer, searchBar);
+        navBar.getChildren().addAll(logoImage, navBtns, spacer, searchBar, prfBtn);
         return navBar;
     }
 
-    /*
     //creating buttons for navigation bar
-    private Button createNavBtns(String text) {
+    private HBox createNavBtns() {
+        bkBtn = new Button("Books");
+        gmBtn = new Button("Games");
+        fmBtn = new Button("Films and TV Shows");
 
-    }*/
+        bkBtn.getStyleClass().add("btn-primary");
+        gmBtn.getStyleClass().add("btn-primary");
+        fmBtn.getStyleClass().add("btn-primary");
+
+        //action listeners for nav bar buttons
+        bkBtn.setOnAction( e -> {
+            System.out.println("Go to books archive");
+        });
+        gmBtn.setOnAction(e -> {
+            System.out.println("Go to Games archive");
+        });
+        fmBtn.setOnAction( e -> {
+            System.out.println("Go to films and tv shows archive");
+        });
+
+        navBtns = new HBox(50, bkBtn, gmBtn, fmBtn);
+        navBtns.setAlignment(Pos.CENTER_LEFT);
+
+        return navBtns;
+    }
 
     //creating serach bar
     private Button createSearchBar() {
-        searchBar = new Button();
+        searchBar = new Button("Search...");
         searchBar.getStyleClass().add("search-button");
-        searchBar.setText("Search...");
-        searchBar.setPrefWidth(90);
-        searchBar.setPrefHeight(30);
+        searchBar.setPrefWidth(200);
+        searchBar.setPrefHeight(40);
 
         //directs user to search scene
         searchBar.setOnAction(e -> {
@@ -93,15 +120,27 @@ public class HomePageController {
         });
         return searchBar;
     }
-    /*
+
     //profile buton
     private Button createProfileBtn() {
-
+        prfBtn = new Button();
+        prfBtn.getStyleClass().add("profile-button");
+        return prfBtn;
     }
 
     //small logo
     private ImageView createLogo() {
+        URL url = getClass().getResource("/ui/assets/tbr.png");
+        if (url == null) {
+            System.out.println("Cannot find: " + url);
+        }
 
-    }*/
+        image = new Image(url.toExternalForm());
+        imageView = new ImageView(image);
+        imageView.setPreserveRatio(true);
+        imageView.setSmooth(true);
+        imageView.setFitWidth(125);
+        return imageView;
+    }
 
 }
