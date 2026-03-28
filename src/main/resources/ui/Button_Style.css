@@ -1,0 +1,7 @@
+.navigate-btn {
+    -fx-background-color:  rgba(185, 120, 51, 1);
+    -fx-background-radius: 10;
+}
+.navigate-btn:hover{
+    -fx-background-color:  #855421;
+}

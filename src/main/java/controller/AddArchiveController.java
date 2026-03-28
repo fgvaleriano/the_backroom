@@ -21,10 +21,9 @@ public class AddArchiveController implements Initializable {
     @FXML private GridPane nameGrid;
 
 
-    @FXML private Button nxtMainBtn;
     @FXML private Button nxtBtn;
-    @FXML private Button addBtn;
     @FXML private Button backBtn;
+    @FXML private Button addBtn;
 
 
     @FXML private TextField nameField;
@@ -33,30 +32,40 @@ public class AddArchiveController implements Initializable {
     @FXML private TextField dateField;
 
     //---------Book Variables--------
-    @FXML private VBox bookBox;
+    @FXML private VBox bookBox1;
+    @FXML private VBox bookBox2;
     @FXML private ComboBox authorMenu;
     @FXML private FlowPane addAuthorPane;
+    @FXML private ScrollPane addAuthorScrollPane;
+    @FXML private ComboBox publisherMenu;
+    @FXML private FlowPane addPublisherPane;
+    @FXML private ScrollPane addPublisherScrollPane;
     @FXML private TextField isbnField;
     @FXML private TextField pageCountField;
     @FXML private TextField editionField;
-    @FXML private ScrollPane addAuthorScrollPane;
+
     private ObservableList<String> authors;
     private FilteredList<String> authorFilter;
+
+    private ObservableList<String> publishers;
+    private FilteredList<String> publisherFilter;
+
+    @FXML private Button book2Back;
+
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        root.getStylesheets().add(getClass().getResource("/ui/Button_Style.css").toExternalForm());
         typeMenu.getItems().addAll("Movie", "TV Shows", "Books", "Games");
         typeMenu.getStylesheets().add(getClass().getResource("/ui/MediaType_ComboBox.css").toExternalForm());
 
         //there is still an issue  with the synopField, dont knwo what to do with it yet...
         synopField.getStylesheets().add(getClass().getResource("/ui/AddArchive_TextArea.css").toExternalForm());
-
-        setAuthorMenu();
-        authorMenu.setItems(authorFilter);
-        authorMenu.getStylesheets().add(getClass().getResource("/ui/MediaType_ComboBox.css").toExternalForm());
-        addListenerAuthorMenu();
-        addAuthorPane.getStylesheets().add(getClass().getResource("/ui/AddAuthor.css").toExternalForm());
+        nxtBtn.getStyleClass().add("navigate-btn");
+        backBtn.getStyleClass().add("navigate-btn");
+        addBtn.getStyleClass().add("navigate-btn");
+        bookInitialize();
     }
 
     @FXML
@@ -71,70 +80,34 @@ public class AddArchiveController implements Initializable {
             if(!checkMainEmpty(name, type, synop, date)){
                 if(type.equals("Books")){
                     mainBox1.setVisible(false);
-                    bookBox.setVisible(true);
+                    bookBox1.setVisible(true);
                 }
             }
-        } else if(bookBox.isVisible()){
+        } else if(bookBox1.isVisible()){
             String isbn = isbnField.getText();
             String pageCount = pageCountField.getText();
             String edition = editionField.getText();
 
-            checkBookEmpty(isbn, pageCount, edition);
+            if(!checkBook1Empty(isbn, pageCount, edition)){
+                bookBox1.setVisible(false);
+                bookBox2.setVisible(true);
+            }
         }
 
     }
     @FXML
     public void goBack(){
-        if(bookBox.isVisible()){
-            bookBox.setVisible(false);
+        if(bookBox1.isVisible()){
+            bookBox1.setVisible(false);
             mainBox1.setVisible(true);
+        }else if(bookBox2.isVisible()){
+            bookBox2.setVisible(false);
+            bookBox1.setVisible(true);
         }
     }
 
-    //---------------Hover Style for buttons-------------------
     @FXML
-    public void nextEnter(){
-        nxtBtn.setStyle("-fx-background-color:  #855421; -fx-background-radius: 10;");
-    }
-
-    @FXML
-    public void nextExit(){
-        nxtBtn.setStyle("-fx-background-color:  rgba(185, 120, 51, 1); -fx-background-radius: 10;");
-    }
-
-    @FXML
-    public void nextMainEnter(){
-        nxtMainBtn.setStyle("-fx-background-color:  #855421; -fx-background-radius: 10;");
-    }
-
-    @FXML
-    public void nextMainExit(){
-        nxtMainBtn.setStyle("-fx-background-color:  rgba(185, 120, 51, 1); -fx-background-radius: 10;");
-    }
-
-    @FXML
-    public void addEnter(){
-        addBtn.setStyle("-fx-background-color:  #855421; -fx-background-radius: 10;");
-    }
-
-    @FXML
-    public void addExit(){
-        addBtn.setStyle("-fx-background-color:  rgba(185, 120, 51, 1); -fx-background-radius: 10;");
-    }
-
-    @FXML
-    public void backEnter(){
-        backBtn.setStyle("-fx-background-color:  #855421; -fx-background-radius: 10;");
-    }
-
-    @FXML
-    public void backExit(){
-        backBtn.setStyle("-fx-background-color:  rgba(185, 120, 51, 1); -fx-background-radius: 10;");
-    }
-
-    //------------------------------------------------------------
-
-
+    public void saveMedia(){}
 
     //This unfocsing anything on the text fields, and stuff...
     @FXML
@@ -147,18 +120,17 @@ public class AddArchiveController implements Initializable {
         addArchiveLabel.getScene().getRoot().requestFocus();
     }
 
-
-    //To be added methods pa toh:
-
-    @FXML
-    public void saveMedia(){}
-
-
     //------------Methods for Putting Values on Combo Boxes and Adding Listeners-------------------
     public void setAuthorMenu(){
         authors = FXCollections.observableArrayList("Saori", "Dalia", "Marika", "Rika");
         authorFilter = new FilteredList<>(authors);
     }
+
+    public void setPublisherMenu(){
+        publishers = FXCollections.observableArrayList("Flins", "Varka", "Itto", "Aether");
+        publisherFilter = new FilteredList<>(publishers);
+    }
+
 
     public void addListenerAuthorMenu(){
         authorMenu.getEditor().textProperty().addListener((obs, oldVal, input) -> {
@@ -166,7 +138,7 @@ public class AddArchiveController implements Initializable {
             //this also let to not do anything below if the person is just picking.....
             if(!authorMenu.isFocused()) return; //this just safeguard kay theres an error if person is typing and then picking
 
-            authorMenu.getSelectionModel().clearAndSelect(-1);
+            authorMenu.getSelectionModel().clearSelection();
 
             //this is our condition on what we want to show on the authorMenu
             authorFilter.setPredicate(item -> {
@@ -191,7 +163,7 @@ public class AddArchiveController implements Initializable {
             if(currentlyFocus){
                 authorMenu.hide();
                 authorMenu.show();
-                authorMenu.getSelectionModel().clearAndSelect(-1);
+                authorMenu.getSelectionModel().clearSelection();
             }else{
 
                 //we only clear if its not on the adding na btn...kay  technically they lost focus
@@ -212,14 +184,71 @@ public class AddArchiveController implements Initializable {
         });
     }
 
+    public void addListenerPublisherMenu(){
+        publisherMenu.getEditor().textProperty().addListener((obs, oldVal, input) -> {
+
+            //this also let to not do anything below if the person is just picking.....
+            if(!publisherMenu.isFocused()) return; //this just safeguard kay theres an error if person is typing and then picking
+
+            publisherMenu.getSelectionModel().clearSelection();
+
+            //this is our condition on what we want to show on the authorMenu
+            publisherFilter.setPredicate(item -> {
+                //if no user input show original list
+                if(input.isEmpty() || input == null) return true;
+
+                //return if any similar input
+                return item.toLowerCase().startsWith(input.toLowerCase());
+            });
+
+            //we force the dropDown Menu to show if user is typing
+            if(publisherMenu.isFocused()){
+                publisherMenu.hide();
+                publisherMenu.show();
+            }
+
+            publisherMenu.getSelectionModel().clearSelection();
+        });
+
+        //this method is for if the user focused on the combobox and then refocus again and did something we clear the selection again
+        publisherMenu.getEditor().focusedProperty().addListener((obs, oldVal, currentlyFocus) -> {
+            if(currentlyFocus){
+                publisherMenu.hide();
+                publisherMenu.show();
+                publisherMenu.getSelectionModel().clearSelection();
+            }else{
+
+                //we only clear if its not on the adding na btn...kay  technically they lost focus
+                if(root.getScene().getFocusOwner() != addBtn) {
+                    //this is when if the user typed something and focus elsewhere and not select it then we clear it automatically
+                    publisherMenu.getEditor().clear();
+                    publisherMenu.getSelectionModel().clearSelection();
+                    publisherMenu.hide();
+                    publisherFilter.setPredicate(null); //this reset the authorFilter
+
+                    //System.out.println("Focused elswhere clearing everything....");
+                    /*if(authorMenu.getSelectionModel().getSelectedItem() == null){
+                        System.out.println("Current select after clearing: " + authorMenu.getSelectionModel().getSelectedItem());
+                    }*/
+                }
+            }
+
+        });
+    }
+
     //since ediatble say, when a user type and then select the item they need, we set the text to that...
     @FXML public void pickAuthor(){
-        authorMenu.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, picked) -> {
-            if(picked != null){
-                authorMenu.getEditor().setText(picked.toString());
-                //System.out.println("Currently Picked: " + picked.toString());
-            }
-        });
+        Object picked = authorMenu.getSelectionModel().getSelectedItem();
+        if(picked != null){
+            authorMenu.getEditor().setText(picked.toString());
+        }
+    }
+
+    @FXML public void pickPublisher(){
+        Object picked = publisherMenu.getSelectionModel().getSelectedItem();
+        if(picked != null){
+            publisherMenu.getEditor().setText(picked.toString());
+        }
 
     }
     //---------------------------------------------------------------------------------------------
@@ -229,12 +258,13 @@ public class AddArchiveController implements Initializable {
     public void addAuthor(){
         Object author = authorMenu.getSelectionModel().getSelectedItem();
 
-        if(author != null){
+        if(author != null && !author.toString().trim().isEmpty()){
             System.out.println("Author Picked: " + author.toString());
 
             //after adding, we reset the menu
             authorMenu.getSelectionModel().clearAndSelect(-1);
             authorFilter.setPredicate(null);
+            authorMenu.getEditor().clear(); //clear any text typed
 
 
 
@@ -255,6 +285,40 @@ public class AddArchiveController implements Initializable {
             });
 
             addAuthorPane.getChildren().add(container);
+
+        }
+    }
+
+    @FXML public void addPublisher(){
+        Object publisher = publisherMenu.getSelectionModel().getSelectedItem();
+
+        if(publisher != null && !publisher.toString().trim().isEmpty()){
+            System.out.println("Author Picked: " + publisher.toString());
+
+            //after adding, we reset the menu
+            publisherMenu.getSelectionModel().clearAndSelect(-1);
+            publisherFilter.setPredicate(null);
+            publisherMenu.getEditor().clear(); //clear any text typed
+
+
+
+            //if previously there is no author pa sa list, and they need it, so we add it to the list...
+            if(!publishers.contains(publisher.toString())){
+                publishers.add(publisher.toString());
+            }
+
+            HBox container = new HBox();
+            container.getStyleClass().add("author_hbox");
+
+            Button rmvBtn = new Button("X");
+            Label labelAuthor = new Label(publisher.toString());
+
+            container.getChildren().addAll(labelAuthor, rmvBtn);
+            rmvBtn.setOnAction(e -> {
+                addPublisherPane.getChildren().remove(container);
+            });
+
+            addPublisherPane.getChildren().add(container);
 
         }
     }
@@ -295,7 +359,7 @@ public class AddArchiveController implements Initializable {
         return hasEmpty;
     }
 
-    public boolean checkBookEmpty(String isbn, String pageCount, String edition){
+    public boolean checkBook1Empty(String isbn, String pageCount, String edition){
         boolean hasEmpty = false;
 
         if(isbn.trim().isEmpty()){//removes any spaces, newlines to check if there is actual content
@@ -322,14 +386,42 @@ public class AddArchiveController implements Initializable {
 
         ObservableList<Node> children = addAuthorPane.getChildren();
         if(children.isEmpty()){
-            addAuthorScrollPane.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #bb443c;");
+            addAuthorScrollPane.getStyleClass().add("error");
+            hasEmpty = true;
         }else{
-            addAuthorScrollPane.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: transparent;");
+            addAuthorScrollPane.getStyleClass().remove("error");
         }
 
 
         return hasEmpty;
     }
+
+    public void bookInitialize(){
+
+        setAuthorMenu();
+        authorMenu.setItems(authorFilter);
+        authorMenu.getStylesheets().add(getClass().getResource("/ui/MediaType_ComboBox.css").toExternalForm());
+        addListenerAuthorMenu();
+        addAuthorScrollPane.getStylesheets().add(getClass().getResource("/ui/AddAuthor.css").toExternalForm());
+        addAuthorScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        addAuthorScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        addAuthorScrollPane.setFocusTraversable(false);
+        addAuthorPane.setFocusTraversable(false);
+
+
+        setPublisherMenu();
+        publisherMenu.setItems(publisherFilter);
+        publisherMenu.getStylesheets().add(getClass().getResource("/ui/MediaType_ComboBox.css").toExternalForm());
+        addListenerPublisherMenu();
+        addPublisherScrollPane.getStylesheets().add(getClass().getResource("/ui/AddAuthor.css").toExternalForm());
+        addPublisherScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        addPublisherScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        addPublisherScrollPane.setFocusTraversable(false);
+        addPublisherPane.setFocusTraversable(false);
+    }
+
+
+    //---------------------------------------------------------------------------------------------
 
 
 }
