@@ -6,10 +6,9 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -21,11 +20,11 @@ public class AddArchiveController implements Initializable {
     @FXML private VBox mainBox1;
     @FXML private GridPane nameGrid;
 
-    @FXML private Label nameLabel;
 
+    @FXML private Button nxtMainBtn;
     @FXML private Button nxtBtn;
     @FXML private Button addBtn;
-    @FXML private Button removeBtn;
+    @FXML private Button backBtn;
 
 
     @FXML private TextField nameField;
@@ -34,10 +33,16 @@ public class AddArchiveController implements Initializable {
     @FXML private TextField dateField;
 
     //---------Book Variables--------
+    @FXML private VBox bookBox;
     @FXML private ComboBox authorMenu;
+    @FXML private FlowPane addAuthorPane;
+    @FXML private TextField isbnField;
+    @FXML private TextField pageCountField;
+    @FXML private TextField editionField;
+    @FXML private ScrollPane addAuthorScrollPane;
     private ObservableList<String> authors;
     private FilteredList<String> authorFilter;
-    private boolean pickedAnAuthor = false;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -51,59 +56,40 @@ public class AddArchiveController implements Initializable {
         authorMenu.setItems(authorFilter);
         authorMenu.getStylesheets().add(getClass().getResource("/ui/MediaType_ComboBox.css").toExternalForm());
         addListenerAuthorMenu();
+        addAuthorPane.getStylesheets().add(getClass().getResource("/ui/AddAuthor.css").toExternalForm());
     }
 
     @FXML
     public void nextAdd(){
-        String name = nameField.getText();
-        String type = (String) typeMenu.getSelectionModel().getSelectedItem();
-        String synop = synopField.getText();
-        String date = dateField.getText();
+        if(mainBox1.isVisible()){
+            String name = nameField.getText();
+            String type = (String) typeMenu.getSelectionModel().getSelectedItem();
+            String synop = synopField.getText();
+            String date = dateField.getText();
 
-        //System.out.println("Name: " + name);
-        checkEmpty(name, type, synop, date);
+            //System.out.println("Name: " + name);
+            if(!checkMainEmpty(name, type, synop, date)){
+                if(type.equals("Books")){
+                    mainBox1.setVisible(false);
+                    bookBox.setVisible(true);
+                }
+            }
+        } else if(bookBox.isVisible()){
+            String isbn = isbnField.getText();
+            String pageCount = pageCountField.getText();
+            String edition = editionField.getText();
+
+            checkBookEmpty(isbn, pageCount, edition);
+        }
 
     }
-
-
-
-    public boolean checkEmpty(String name, String type, String synop, String date){
-        boolean hasEmpty = false;
-
-        if(name.trim().isEmpty()){//removes any spaces, newlines to check if there is actual content
-            nameField.setStyle("-fx-border-color: #bb443c; -fx-border-radius: 10; -fx-border-width: 2; -fx-background-radius: 10;");
-            hasEmpty = true;
-        }else{
-            nameField.setStyle("-fx-border-color: transparent; -fx-border-radius: 0; -fx-border-width: 2; -fx-background-radius: 10;");
+    @FXML
+    public void goBack(){
+        if(bookBox.isVisible()){
+            bookBox.setVisible(false);
+            mainBox1.setVisible(true);
         }
-
-        if(type == null){
-            typeMenu.setStyle("-fx-border-color: #bb443c; -fx-border-radius: 10; -fx-border-width: 2;");
-            hasEmpty = true;
-        }else{
-            typeMenu.setStyle("-fx-border-color: transparent; -fx-border-width: 0;");
-        }
-
-        if(synop.trim().isEmpty()){ //removes any spaces, newlines to check if there is actual content
-            //for the kuan we assume since this add archive is moderator lang, we assume valid input na..so no more crazy stuff..
-            synopField.setStyle("-fx-border-color: #bb443c; -fx-border-radius: 20; -fx-border-width: 2; -fx-background-radius: 20;");
-            hasEmpty = true;
-        }else{
-            synopField.setStyle("-fx-border-color: transparent; -fx-border-width: 0;");
-        }
-
-        if(date.trim().isEmpty()){//removes any spaces, newlines to check if there is actual content
-            dateField.setStyle("-fx-border-color: #bb443c; -fx-border-radius: 10; -fx-border-width: 2; -fx-background-radius: 10;");
-            hasEmpty = true;
-        }else{
-            dateField.setStyle("-fx-border-color: transparent; -fx-border-radius: 0; -fx-border-width: 2; -fx-background-radius: 10;");
-        }
-        return hasEmpty;
     }
-
-
-
-
 
     //---------------Hover Style for buttons-------------------
     @FXML
@@ -117,6 +103,16 @@ public class AddArchiveController implements Initializable {
     }
 
     @FXML
+    public void nextMainEnter(){
+        nxtMainBtn.setStyle("-fx-background-color:  #855421; -fx-background-radius: 10;");
+    }
+
+    @FXML
+    public void nextMainExit(){
+        nxtMainBtn.setStyle("-fx-background-color:  rgba(185, 120, 51, 1); -fx-background-radius: 10;");
+    }
+
+    @FXML
     public void addEnter(){
         addBtn.setStyle("-fx-background-color:  #855421; -fx-background-radius: 10;");
     }
@@ -127,13 +123,13 @@ public class AddArchiveController implements Initializable {
     }
 
     @FXML
-    public void rmvEnter(){
-        removeBtn.setStyle("-fx-background-color:  #855421; -fx-background-radius: 10;");
+    public void backEnter(){
+        backBtn.setStyle("-fx-background-color:  #855421; -fx-background-radius: 10;");
     }
 
     @FXML
-    public void rmvExit(){
-        removeBtn.setStyle("-fx-background-color:  rgba(185, 120, 51, 1); -fx-background-radius: 10;");
+    public void backExit(){
+        backBtn.setStyle("-fx-background-color:  rgba(185, 120, 51, 1); -fx-background-radius: 10;");
     }
 
     //------------------------------------------------------------
@@ -153,14 +149,9 @@ public class AddArchiveController implements Initializable {
 
 
     //To be added methods pa toh:
-    @FXML
-    public void goBack(){}
 
     @FXML
     public void saveMedia(){}
-
-    @FXML
-    public void removeAuthor(){}
 
 
     //------------Methods for Putting Values on Combo Boxes and Adding Listeners-------------------
@@ -236,18 +227,108 @@ public class AddArchiveController implements Initializable {
     //---------------------Book Button Methods-----------------------------------------------------
     @FXML
     public void addAuthor(){
-        String author = authorMenu.getSelectionModel().getSelectedItem().toString();
+        Object author = authorMenu.getSelectionModel().getSelectedItem();
 
         if(author != null){
-            System.out.println("Author Picked: " + author);
+            System.out.println("Author Picked: " + author.toString());
+
+            //after adding, we reset the menu
             authorMenu.getSelectionModel().clearAndSelect(-1);
             authorFilter.setPredicate(null);
 
+
+
             //if previously there is no author pa sa list, and they need it, so we add it to the list...
-            if(!authors.contains(author)){
-                authors.add(author);
+            if(!authors.contains(author.toString())){
+                authors.add(author.toString());
             }
+
+            HBox container = new HBox();
+            container.getStyleClass().add("author_hbox");
+
+            Button rmvBtn = new Button("X");
+            Label labelAuthor = new Label(author.toString());
+
+            container.getChildren().addAll(labelAuthor, rmvBtn);
+            rmvBtn.setOnAction(e -> {
+                addAuthorPane.getChildren().remove(container);
+            });
+
+            addAuthorPane.getChildren().add(container);
+
         }
+    }
+    //---------------------------------------------------------------------------------------------
+
+    //-------------------------------Helper Methods------------------------------------------------
+    public boolean checkMainEmpty(String name, String type, String synop, String date){
+        boolean hasEmpty = false;
+
+        if(name.trim().isEmpty()){//removes any spaces, newlines to check if there is actual content
+            nameField.setStyle("-fx-border-color: #bb443c; -fx-border-radius: 10; -fx-border-width: 2; -fx-background-radius: 10;");
+            hasEmpty = true;
+        }else{
+            nameField.setStyle("-fx-border-color: transparent; -fx-border-radius: 0; -fx-border-width: 2; -fx-background-radius: 10;");
+        }
+
+        if(type == null){
+            typeMenu.setStyle("-fx-border-color: #bb443c; -fx-border-radius: 10; -fx-border-width: 2;");
+            hasEmpty = true;
+        }else{
+            typeMenu.setStyle("-fx-border-color: transparent; -fx-border-width: 0;");
+        }
+
+        if(synop.trim().isEmpty()){ //removes any spaces, newlines to check if there is actual content
+            //for the kuan we assume since this add archive is moderator lang, we assume valid input na..so no more crazy stuff..
+            synopField.setStyle("-fx-border-color: #bb443c; -fx-border-radius: 20; -fx-border-width: 2; -fx-background-radius: 20;");
+            hasEmpty = true;
+        }else{
+            synopField.setStyle("-fx-border-color: transparent; -fx-border-width: 0;");
+        }
+
+        if(date.trim().isEmpty()){//removes any spaces, newlines to check if there is actual content
+            dateField.setStyle("-fx-border-color: #bb443c; -fx-border-radius: 10; -fx-border-width: 2; -fx-background-radius: 10;");
+            hasEmpty = true;
+        }else{
+            dateField.setStyle("-fx-border-color: transparent; -fx-border-radius: 0; -fx-border-width: 2; -fx-background-radius: 10;");
+        }
+        return hasEmpty;
+    }
+
+    public boolean checkBookEmpty(String isbn, String pageCount, String edition){
+        boolean hasEmpty = false;
+
+        if(isbn.trim().isEmpty()){//removes any spaces, newlines to check if there is actual content
+            isbnField.setStyle("-fx-border-color: #bb443c; -fx-border-radius: 10; -fx-border-width: 2; -fx-background-radius: 10;");
+            hasEmpty = true;
+        }else{
+            isbnField.setStyle("-fx-border-color: transparent; -fx-border-radius: 0; -fx-border-width: 2; -fx-background-radius: 10;");
+        }
+
+        if(pageCount.trim().isEmpty()){ //removes any spaces, newlines to check if there is actual content
+            //for the kuan we assume since this add archive is moderator lang, we assume valid input na..so no more crazy stuff..
+            pageCountField.setStyle("-fx-border-color: #bb443c; -fx-border-radius: 20; -fx-border-width: 2; -fx-background-radius: 20;");
+            hasEmpty = true;
+        }else{
+            pageCountField.setStyle("-fx-border-color: transparent; -fx-border-width: 0;");
+        }
+
+        if(edition.trim().isEmpty()){//removes any spaces, newlines to check if there is actual content
+            editionField.setStyle("-fx-border-color: #bb443c; -fx-border-radius: 10; -fx-border-width: 2; -fx-background-radius: 10;");
+            hasEmpty = true;
+        }else{
+            editionField.setStyle("-fx-border-color: transparent; -fx-border-radius: 0; -fx-border-width: 2; -fx-background-radius: 10;");
+        }
+
+        ObservableList<Node> children = addAuthorPane.getChildren();
+        if(children.isEmpty()){
+            addAuthorScrollPane.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #bb443c;");
+        }else{
+            addAuthorScrollPane.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: transparent;");
+        }
+
+
+        return hasEmpty;
     }
 
 

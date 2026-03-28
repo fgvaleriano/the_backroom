@@ -1,0 +1,18 @@
+.author_hbox {
+    -fx-background-color: #c9c9c9;
+    -fx-padding: 0 0 0 20;
+    -fx-spacing: 60;
+}
+
+.button {
+    -fx-font-family: "Reddit Sans ExtraBold";
+    -fx-font-size: 15;
+    -fx-background-color:  rgba(185, 120, 51, 1);
+    -fx-background-radius: 10;
+}
+
+.label {
+    -fx-font-family: "Reddit Sans";
+    -fx-font-size: 20;
+}
+
