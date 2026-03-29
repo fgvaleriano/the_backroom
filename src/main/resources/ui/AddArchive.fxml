@@ -161,7 +161,7 @@
                         </DropShadow>
                      </effect>
                   </VBox>
-                  <VBox fx:id="mainBox2" alignment="TOP_CENTER" onMousePressed="#bg1Click" prefHeight="663.0" prefWidth="1152.0" style="-fx-background-color: D9D4C8; -fx-background-radius: 35 35 0 0;">
+                  <VBox fx:id="mainBox2" alignment="TOP_CENTER" onMousePressed="#bg1Click" prefHeight="663.0" prefWidth="1152.0" style="-fx-background-color: D9D4C8; -fx-background-radius: 35 35 0 0;" visible="false">
                      <children>
                         <Label fx:id="addArchiveLabel213" prefHeight="74.0" prefWidth="328.0" text="ADD ARCHIVE" textFill="#bb443c">
                            <VBox.margin>
@@ -240,7 +240,7 @@
                         </DropShadow>
                      </effect>
                   </VBox>
-                  <VBox fx:id="mainBox3" alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" onMousePressed="#bg1Click" prefHeight="663.0" prefWidth="1152.0" style="-fx-background-color: D9D4C8; -fx-background-radius: 35 35 0 0;">
+                  <VBox fx:id="mainBox3" alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" onMousePressed="#bg1Click" prefHeight="663.0" prefWidth="1152.0" style="-fx-background-color: D9D4C8; -fx-background-radius: 35 35 0 0;" visible="false">
                      <children>
                         <Label fx:id="addArchiveLabel1" prefHeight="74.0" prefWidth="328.0" text="ADD ARCHIVE" textFill="#bb443c">
                            <VBox.margin>
@@ -591,7 +591,7 @@
                                     <Insets left="80.0" />
                                  </HBox.margin>
                               </Label>
-                              <ComboBox fx:id="developerMenu" editable="true" focusTraversable="false" prefHeight="54.0" prefWidth="280.0" promptText="Developer" style="-fx-background-color: white; -fx-background-radius: 10;" visibleRowCount="7">
+                              <ComboBox fx:id="gameDeveloperMenu" editable="true" focusTraversable="false" prefHeight="54.0" prefWidth="280.0" promptText="Developer" style="-fx-background-color: white; -fx-background-radius: 10;" visibleRowCount="7">
                                  <HBox.margin>
                                     <Insets left="100.0" />
                                  </HBox.margin>

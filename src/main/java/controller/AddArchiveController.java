@@ -18,6 +18,8 @@ import java.util.ResourceBundle;
 /*NOTE:
     Do we need to add, wherein if a person typed something on the bookx, and midway
     change to another type, do we clear anything typed???OR let it stay?????
+
+    Task: We are currently at the game publisher na, from the beginning of that....
 */
 
 public class AddArchiveController implements Initializable {
@@ -25,21 +27,22 @@ public class AddArchiveController implements Initializable {
     @FXML private Label addArchiveLabel;
 
     @FXML private AnchorPane root;
-    @FXML private VBox mainBox1;
-    @FXML private GridPane nameGrid;
+
 
 
     @FXML private Button nxtBtn;
     @FXML private Button backBtn;
     @FXML private Button addBtn;
 
-
+    //---------Main Media Variables--------
+    @FXML private VBox mainBox1;
+    @FXML private VBox mainBox2;
     @FXML private TextField nameField;
     @FXML private ComboBox typeMenu;
     @FXML private TextArea synopField;
     @FXML private TextField dateField;
 
-    //---------Book Variables--------
+    //---------Book Variables-------- [Status: Finished]
     @FXML private VBox bookBox1;
     @FXML private VBox bookBox2;
     @FXML private ComboBox authorMenu;
@@ -58,11 +61,12 @@ public class AddArchiveController implements Initializable {
     private ObservableList<String> publishers;
     private FilteredList<String> publisherFilter;
 
-    //----------------------------------
+    //-------------------------------------------------
 
     //---------Game Variables--------
     @FXML private VBox gameBox1;
     @FXML private VBox gameBox2;
+    @FXML private VBox gameBox3;
     @FXML private ComboBox gameEngineMenu;
     @FXML private TextArea systemRequire;
 
@@ -70,9 +74,16 @@ public class AddArchiveController implements Initializable {
     @FXML private FlowPane addGameModePane;
     @FXML private ScrollPane addGameModeScrollPane;
 
+    @FXML private ComboBox gameDeveloperMenu;
+    @FXML private FlowPane addGameDevPane;
+    @FXML private ScrollPane addGameDevScrollPane;
+
     @FXML private ComboBox gamePlatformMenu;
     @FXML private FlowPane addPlatformPane;
     @FXML private ScrollPane addPlatformScrollPane;
+
+    private ObservableList<String> gameDevs;
+    private FilteredList<String> gameDevFilter;
 
     private ObservableList<String> gameModes;
     private FilteredList<String> gameModeFilter;
@@ -117,7 +128,12 @@ public class AddArchiveController implements Initializable {
                 bookBox1.setVisible(false);
                 bookBox2.setVisible(true);
             }
-        } else if(gameBox1.isVisible()){
+        } else if(bookBox2.isVisible()){
+            if(!checkBook2Empty()){
+                bookBox2.setVisible(false);
+                mainBox2.setVisible(true);
+            }
+        }else if(gameBox1.isVisible()){
             String gameEngine = (String) gameEngineMenu.getSelectionModel().getSelectedItem();
             String systemRequirement = systemRequire.getText();
 
@@ -125,7 +141,14 @@ public class AddArchiveController implements Initializable {
                 gameBox1.setVisible(false);
                 gameBox2.setVisible(true);
             }
+        }else if(gameBox2.isVisible()){
+            if(!checkGame2Empty()){
+                gameBox2.setVisible(false);
+                gameBox3.setVisible(true);
+            }
         }
+
+
     }
     @FXML
     public void goBack(){
@@ -141,6 +164,9 @@ public class AddArchiveController implements Initializable {
         }else if(gameBox2.isVisible()){
             gameBox2.setVisible(false);
             gameBox1.setVisible(true);
+        }else if(gameBox3.isVisible()){
+            gameBox3.setVisible(false);
+            gameBox2.setVisible(true);
         }
     }
 
@@ -158,7 +184,9 @@ public class AddArchiveController implements Initializable {
         addArchiveLabel.getScene().getRoot().requestFocus();
     }
 
-    //------------Methods for Putting Values on Combo Boxes and Adding Listeners-------------------
+    // ==================================================================
+    //      Setting Listeners and Values on each Media Boxes
+    // ==================================================================
     public void setAuthorMenu(){
         authors = FXCollections.observableArrayList("Saori", "Dalia", "Marika", "Rika");
         authorFilter = new FilteredList<>(authors);
@@ -172,6 +200,11 @@ public class AddArchiveController implements Initializable {
     public void setGameModeMenu(){
         gameModes = FXCollections.observableArrayList("Single-player", "PvP", "Online Co-op", "Multiplayer");
         gameModeFilter = new FilteredList<>(gameModes);
+    }
+
+    public void setGameDevMenu(){
+        gameDevs = FXCollections.observableArrayList("Mihoyo Gaming", "Ubisoft", "Rockstar North", "Team Cherry");
+        gameDevFilter = new FilteredList<>(gameDevs);
     }
 
     public void setGamePlatformMenu(){
@@ -214,6 +247,8 @@ public class AddArchiveController implements Initializable {
                 Platform.runLater(() -> {
                     String currentText = (String) authorMenu.getSelectionModel().getSelectedItem();
 
+                    authorMenu.getSelectionModel().clearSelection();//we dont automatically focus on aything on the choices sa menu...
+
                     authorFilter.setPredicate(item -> {
                         if(currentText == null || currentText.isEmpty()) return true;
                         return item.toLowerCase().startsWith(currentText.toLowerCase());
@@ -240,6 +275,7 @@ public class AddArchiveController implements Initializable {
                 });
             }
         });
+
     }
 
     public void addListenerPublisherMenu(){
@@ -273,7 +309,20 @@ public class AddArchiveController implements Initializable {
         publisherMenu.getEditor().focusedProperty().addListener((obs, oldVal, isFocus) -> {
             if(isFocus){
                 //slight delay after typing to show the items to be selected..
-                Platform.runLater(() -> publisherMenu.show());
+                Platform.runLater(() -> {
+                    String currentText = (String) publisherMenu.getSelectionModel().getSelectedItem();
+
+                    publisherMenu.getSelectionModel().clearSelection();
+                    publisherFilter.setPredicate(item -> {
+                        if(currentText == null || currentText.isEmpty()) return true;
+                        return item.toLowerCase().startsWith(currentText.toLowerCase());
+                    });
+
+                    if(!publisherFilter.isEmpty()){
+                        publisherMenu.hide();
+                        publisherMenu.show();
+                    }
+                });
             }
         });
 
@@ -322,7 +371,21 @@ public class AddArchiveController implements Initializable {
         gameModeMenu.getEditor().focusedProperty().addListener((obs, oldVal, isFocus) -> {
             if(isFocus){
                 //slight delay after typing to show the items to be selected..
-                Platform.runLater(() -> gameModeMenu.show());
+                Platform.runLater(() -> {
+                    String currentText = (String) gameModeMenu.getSelectionModel().getSelectedItem();
+
+                    gameModeMenu.getSelectionModel().clearSelection();
+
+                    gameModeFilter.setPredicate(item -> {
+                        if(currentText == null || currentText.isEmpty()) return true;
+                        return item.toLowerCase().startsWith(currentText.toLowerCase());
+                    });
+
+                    if(!gameModeFilter.isEmpty()){
+                        gameModeMenu.hide();
+                        gameModeMenu.show();
+                    }
+                });
             }
         });
 
@@ -371,7 +434,21 @@ public class AddArchiveController implements Initializable {
         gamePlatformMenu.getEditor().focusedProperty().addListener((obs, oldVal, isFocus) -> {
             if(isFocus){
                 //slight delay after typing to show the items to be selected..
-                Platform.runLater(() -> gamePlatformMenu.show());
+                Platform.runLater(() -> {
+                    String currentText = (String) gamePlatformMenu.getSelectionModel().getSelectedItem();
+
+                    gamePlatformMenu.getSelectionModel().clearSelection();
+
+                    gamePlatformFilter.setPredicate(item -> {
+                        if(currentText == null || currentText.isEmpty()) return true;
+                        return item.toLowerCase().startsWith(currentText.toLowerCase());
+                    });
+
+                    if(!gamePlatformFilter.isEmpty()){
+                        gamePlatformMenu.hide();
+                        gamePlatformMenu.show();
+                    }
+                });
             }
         });
 
@@ -389,10 +466,73 @@ public class AddArchiveController implements Initializable {
         });
     }
 
-    //---------------------------------------------------------------------------------------------
+    public void addListenerGameDevMenu(){
+        gameDeveloperMenu.getEditor().textProperty().addListener((obs, oldVal, input) -> {
+
+            if(updatingMenu) return; //safeguarders..pra, the texteditor would not do anything, if the program itself is  updating the selected item
+            //especially if the user picked something, then we dont do anythinghere with the text..
+            if(!gameDeveloperMenu.isFocused()) return;
+
+            Platform.runLater(() -> {
+                gameDevFilter.setPredicate(item -> {
+                    //if the user inputted nothing, jsut show the original list
+                    if(input == null || input.isEmpty()) return true;
+
+                    //this returns all items that are macthing as the user types
+                    return item.toLowerCase().startsWith(input.toLowerCase());
+                });
+
+                if(!gameDevFilter.isEmpty()){
+                    //Just refresh the dropdown menu pra ma see, the actual filtered stuff...
+                    gameDeveloperMenu.hide();
+                    gameDeveloperMenu.show();
+                }else{
+                    gameDeveloperMenu.hide();
+                }
+            });
+
+        });
+
+        //this is for handling that if the user is typing something, we show the menu
+        gameDeveloperMenu.getEditor().focusedProperty().addListener((obs, oldVal, isFocus) -> {
+            if(isFocus){
+                //slight delay after typing to show the items to be selected..
+                Platform.runLater(() -> {
+                    String currentText = (String) gameDeveloperMenu.getSelectionModel().getSelectedItem();
+
+                    gameDeveloperMenu.getSelectionModel().clearSelection();
+
+                    gameDevFilter.setPredicate(item -> {
+                        if(currentText == null || currentText.isEmpty()) return true;
+                        return item.toLowerCase().startsWith(currentText.toLowerCase());
+                    });
+
+                    if(!gameDevFilter.isEmpty()){
+                        gameDeveloperMenu.hide();
+                        gameDeveloperMenu.show();
+                    }
+                });
+            }
+        });
+
+        //this is for if instead the user typed something, or selected an item
+        //we update also the text to that
+        gameDeveloperMenu.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, picked) -> {
+            if(picked != null){
+                Platform.runLater(() -> {
+                    updatingMenu = true;
+                    gameDeveloperMenu.getEditor().setText(picked.toString());
+                    gameDeveloperMenu.getEditor().positionCaret(picked.toString().length()); //we move the cursor/typing things, to the last kuan of the string
+                    updatingMenu = false;
+                });
+            }
+        });
+    }
 
 
-    //---------------------Book Button Methods-----------------------------------------------------
+    // ==================================================================
+    //              Book Button Methods
+    // ==================================================================
     @FXML public void addAuthor(){
         Object author = authorMenu.getSelectionModel().getSelectedItem();
 
@@ -462,9 +602,11 @@ public class AddArchiveController implements Initializable {
 
         }
     }
-    //---------------------------------------------------------------------------------------------
 
-    //---------------------Game Button Methods-----------------------------------------------------
+
+    // ==================================================================
+    //              Game Button Methods
+    // ==================================================================
     @FXML public void addGameMode(){
         Object gameMode = gameModeMenu.getSelectionModel().getSelectedItem();
 
@@ -532,9 +674,71 @@ public class AddArchiveController implements Initializable {
 
         }
     }
-    //---------------------------------------------------------------------------------------------
 
-    //-------------------------------Helper Methods------------------------------------------------
+    @FXML public void addGameDeveloper(){
+        Object gameDev = gameDeveloperMenu.getSelectionModel().getSelectedItem();
+
+        if(gameDev != null && !gameDev.toString().trim().isEmpty()){
+            System.out.println("Author Picked: " + gameDev.toString());
+
+            //after adding, we reset the menu
+            gameDeveloperMenu.getSelectionModel().clearAndSelect(-1);
+            gameDevFilter.setPredicate(null);
+            gameDeveloperMenu.getEditor().clear(); //clear any text typed
+
+
+
+            //if previously there is no author pa sa list, and they need it, so we add it to the list...
+            if(!gameDevs.contains(gameDev.toString())){
+                gameDevs.add(gameDev.toString());
+            }
+
+            HBox container = new HBox();
+            container.getStyleClass().add("author_hbox");
+
+            Button rmvBtn = new Button("X");
+            Label labelAuthor = new Label(gameDev.toString());
+
+            container.getChildren().addAll(labelAuthor, rmvBtn);
+            rmvBtn.setOnAction(e -> {
+                addGameDevPane.getChildren().remove(container);
+            });
+
+            addGameDevPane.getChildren().add(container);
+
+        }
+    }
+    @FXML public void addGamePublisher(){}
+
+    // ==================================================================
+    //              Movie Button Methods
+    // ==================================================================
+    @FXML public void addMovieDirector(){}
+    @FXML public void addMovieCast(){}
+    @FXML public void addMovieStudio(){}
+
+
+    // ==================================================================
+    //              TV Shows Button Methods
+    // ==================================================================
+    @FXML public void addShowRunner(){}
+    @FXML public void addShowCast(){}
+    @FXML public void addShowNetwork(){}
+
+
+
+    // ==================================================================
+    //              Main Media Button Methods
+    // ==================================================================
+    @FXML public void addGenre(){}
+    @FXML public void getMediaCover(){}
+
+
+
+
+    // ==================================================================
+    //                      Helper Methods
+    // ==================================================================
     public boolean checkMainEmpty(String name, String type, String synop, String date){
         boolean hasEmpty = false;
 
@@ -604,6 +808,21 @@ public class AddArchiveController implements Initializable {
 
 
         return hasEmpty;
+
+    }
+
+    public boolean checkBook2Empty(){
+        boolean hasEmpty = false;
+
+        ObservableList<Node> children = addPublisherPane.getChildren();
+        if(children.isEmpty()){
+            addPublisherScrollPane.getStyleClass().add("error");
+            hasEmpty = true;
+        }else{
+            addPublisherScrollPane.getStyleClass().remove("error");
+        }
+
+        return hasEmpty;
     }
 
     public boolean checkGame1Empty(String gameEngine, String systemRequirement){
@@ -624,9 +843,44 @@ public class AddArchiveController implements Initializable {
             systemRequire.setStyle("-fx-border-color: transparent; -fx-border-width: 0;");
         }
 
+        ObservableList<Node> children = addGameDevPane.getChildren();
+        if(children.isEmpty()){
+            addGameDevScrollPane.getStyleClass().add("error");
+            hasEmpty = true;
+        }else{
+            addGameDevScrollPane.getStyleClass().remove("error");
+        }
+
         return hasEmpty;
     }
 
+    public boolean checkGame2Empty(){
+        boolean hasEmpty = false;
+
+        ObservableList<Node> children = addGameModePane.getChildren();
+        if(children.isEmpty()){
+            addGameModeScrollPane.getStyleClass().add("error");
+            children.clear();
+            hasEmpty = true;
+        }else{
+            addGameModeScrollPane.getStyleClass().remove("error");
+        }
+
+        children = addPlatformPane.getChildren();
+        if(children.isEmpty()){
+            addPlatformScrollPane.getStyleClass().add("error");
+            children.clear();
+            hasEmpty = true;
+        }else{
+            addPlatformScrollPane.getStyleClass().remove("error");
+        }
+
+        return hasEmpty;
+    }
+
+    // ==================================================================
+    //                      Initializers
+    // ==================================================================
     public void mainInitialize(){
         root.getStylesheets().add(getClass().getResource("/ui/Button_Style.css").toExternalForm());
         typeMenu.getItems().addAll("Movie", "TV Shows", "Books", "Games");
@@ -669,6 +923,16 @@ public class AddArchiveController implements Initializable {
         gameEngineMenu.getStylesheets().add(getClass().getResource("/ui/MediaType_ComboBox.css").toExternalForm());
         systemRequire.getStylesheets().add(getClass().getResource("/ui/AddArchive_TextArea.css").toExternalForm());
 
+        setGameDevMenu();
+        addListenerGameDevMenu();
+        gameDeveloperMenu.setItems(gameDevFilter);
+        gameDeveloperMenu.getStylesheets().add(getClass().getResource("/ui/MediaType_ComboBox.css").toExternalForm());
+        addGameDevScrollPane.getStylesheets().add(getClass().getResource("/ui/AddAuthor.css").toExternalForm());
+        addGameDevScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        addGameDevScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        addGameDevScrollPane.setFocusTraversable(false);
+        addGameDevPane.setFocusTraversable(false);
+
         setGameModeMenu();
         addListenerGameModeMenu();
         gameModeMenu.setItems(gameModeFilter);
@@ -693,7 +957,7 @@ public class AddArchiveController implements Initializable {
 
 
 
-    //---------------------------------------------------------------------------------------------
+
 
 
 }
