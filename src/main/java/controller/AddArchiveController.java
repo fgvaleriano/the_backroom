@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
@@ -9,11 +10,18 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import kotlin.random.PlatformRandomKt;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/*NOTE:
+    Do we need to add, wherein if a person typed something on the bookx, and midway
+    change to another type, do we clear anything typed???OR let it stay?????
+*/
+
 public class AddArchiveController implements Initializable {
+    private boolean updatingMenu = false;
     @FXML private Label addArchiveLabel;
 
     @FXML private AnchorPane root;
@@ -50,22 +58,36 @@ public class AddArchiveController implements Initializable {
     private ObservableList<String> publishers;
     private FilteredList<String> publisherFilter;
 
-    @FXML private Button book2Back;
+    //----------------------------------
+
+    //---------Game Variables--------
+    @FXML private VBox gameBox1;
+    @FXML private VBox gameBox2;
+    @FXML private ComboBox gameEngineMenu;
+    @FXML private TextArea systemRequire;
+
+    @FXML private ComboBox gameModeMenu;
+    @FXML private FlowPane addGameModePane;
+    @FXML private ScrollPane addGameModeScrollPane;
+
+    @FXML private ComboBox gamePlatformMenu;
+    @FXML private FlowPane addPlatformPane;
+    @FXML private ScrollPane addPlatformScrollPane;
+
+    private ObservableList<String> gameModes;
+    private FilteredList<String> gameModeFilter;
+
+    private ObservableList<String> gamePlatforms;
+    private FilteredList<String> gamePlatformFilter;
+    //----------------------------------
 
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        root.getStylesheets().add(getClass().getResource("/ui/Button_Style.css").toExternalForm());
-        typeMenu.getItems().addAll("Movie", "TV Shows", "Books", "Games");
-        typeMenu.getStylesheets().add(getClass().getResource("/ui/MediaType_ComboBox.css").toExternalForm());
-
-        //there is still an issue  with the synopField, dont knwo what to do with it yet...
-        synopField.getStylesheets().add(getClass().getResource("/ui/AddArchive_TextArea.css").toExternalForm());
-        nxtBtn.getStyleClass().add("navigate-btn");
-        backBtn.getStyleClass().add("navigate-btn");
-        addBtn.getStyleClass().add("navigate-btn");
+        mainInitialize();
         bookInitialize();
+        gameInitialize();
     }
 
     @FXML
@@ -81,6 +103,9 @@ public class AddArchiveController implements Initializable {
                 if(type.equals("Books")){
                     mainBox1.setVisible(false);
                     bookBox1.setVisible(true);
+                }else if(type.equals("Games")){
+                    mainBox1.setVisible(false);
+                    gameBox1.setVisible(true);
                 }
             }
         } else if(bookBox1.isVisible()){
@@ -92,8 +117,15 @@ public class AddArchiveController implements Initializable {
                 bookBox1.setVisible(false);
                 bookBox2.setVisible(true);
             }
-        }
+        } else if(gameBox1.isVisible()){
+            String gameEngine = (String) gameEngineMenu.getSelectionModel().getSelectedItem();
+            String systemRequirement = systemRequire.getText();
 
+            if(!checkGame1Empty(gameEngine, systemRequirement)){
+                gameBox1.setVisible(false);
+                gameBox2.setVisible(true);
+            }
+        }
     }
     @FXML
     public void goBack(){
@@ -103,6 +135,12 @@ public class AddArchiveController implements Initializable {
         }else if(bookBox2.isVisible()){
             bookBox2.setVisible(false);
             bookBox1.setVisible(true);
+        } else if(gameBox1.isVisible()){
+            gameBox1.setVisible(false);
+            mainBox1.setVisible(true);
+        }else if(gameBox2.isVisible()){
+            gameBox2.setVisible(false);
+            gameBox1.setVisible(true);
         }
     }
 
@@ -131,142 +169,235 @@ public class AddArchiveController implements Initializable {
         publisherFilter = new FilteredList<>(publishers);
     }
 
+    public void setGameModeMenu(){
+        gameModes = FXCollections.observableArrayList("Single-player", "PvP", "Online Co-op", "Multiplayer");
+        gameModeFilter = new FilteredList<>(gameModes);
+    }
+
+    public void setGamePlatformMenu(){
+        gamePlatforms = FXCollections.observableArrayList("PC", "Play Station", "Mobile", "Nintendo");
+        gamePlatformFilter = new FilteredList<>(gamePlatforms);
+    }
+
 
     public void addListenerAuthorMenu(){
         authorMenu.getEditor().textProperty().addListener((obs, oldVal, input) -> {
 
-            //this also let to not do anything below if the person is just picking.....
-            if(!authorMenu.isFocused()) return; //this just safeguard kay theres an error if person is typing and then picking
+            if(updatingMenu) return; //safeguarders..pra, the texteditor would not do anything, if the program itself is  updating the selected item
+            //especially if the user picked something, then we dont do anythinghere with the text..
+            if(!authorMenu.isFocused()) return;
 
-            authorMenu.getSelectionModel().clearSelection();
+            Platform.runLater(() -> {
+                authorFilter.setPredicate(item -> {
+                    //if the user inputted nothing, jsut show the original list
+                    if(input == null || input.isEmpty()) return true;
 
-            //this is our condition on what we want to show on the authorMenu
-            authorFilter.setPredicate(item -> {
-                //if no user input show original list
-                if(input.isEmpty() || input == null) return true;
+                    //this returns all items that are macthing as the user types
+                    return item.toLowerCase().startsWith(input.toLowerCase());
+                });
 
-                //return if any similar input
-                return item.toLowerCase().startsWith(input.toLowerCase());
+                if(!authorFilter.isEmpty()){
+                    //Just refresh the dropdown menu pra ma see, the actual filtered stuff...
+                    authorMenu.hide();
+                    authorMenu.show();
+                }else{
+                    authorMenu.hide();
+                }
             });
 
-            //we force the dropDown Menu to show if user is typing
-            if(authorMenu.isFocused()){
-                authorMenu.hide();
-                authorMenu.show();
-            }
-
-            authorMenu.getSelectionModel().clearSelection();
         });
 
-        //this method is for if the user focused on the combobox and then refocus again and did something we clear the selection again
-        authorMenu.getEditor().focusedProperty().addListener((obs, oldVal, currentlyFocus) -> {
-            if(currentlyFocus){
-                authorMenu.hide();
-                authorMenu.show();
-                authorMenu.getSelectionModel().clearSelection();
-            }else{
+        //this is for handling that if the user is typing something, we show the menu
+        authorMenu.getEditor().focusedProperty().addListener((obs, oldVal, isFocus) -> {
+            if(isFocus){
+                //slight delay after typing to show the items to be selected/ or the item currently selected after refocusing
+                Platform.runLater(() -> {
+                    String currentText = (String) authorMenu.getSelectionModel().getSelectedItem();
 
-                //we only clear if its not on the adding na btn...kay  technically they lost focus
-                if(root.getScene().getFocusOwner() != addBtn) {
-                    //this is when if the user typed something and focus elsewhere and not select it then we clear it automatically
-                    authorMenu.getEditor().clear();
-                    authorMenu.getSelectionModel().clearAndSelect(-1);
-                    authorMenu.hide();
-                    authorFilter.setPredicate(null); //this reset the authorFilter
+                    authorFilter.setPredicate(item -> {
+                        if(currentText == null || currentText.isEmpty()) return true;
+                        return item.toLowerCase().startsWith(currentText.toLowerCase());
+                    });
 
-                    //System.out.println("Focused elswhere clearing everything....");
-                    /*if(authorMenu.getSelectionModel().getSelectedItem() == null){
-                        System.out.println("Current select after clearing: " + authorMenu.getSelectionModel().getSelectedItem());
-                    }*/
-                }
+                    if(!authorFilter.isEmpty()){
+                        authorMenu.hide();
+                        authorMenu.show();
+                    }
+                });
             }
+        });
 
+        //this is for if instead the user typed something, or selected an item
+        //we update also the text to that
+        authorMenu.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, picked) -> {
+            if(picked != null){
+                Platform.runLater(() -> {
+                    updatingMenu = true;
+                    authorMenu.getEditor().setText(picked.toString());
+                    authorMenu.getEditor().positionCaret(picked.toString().length()); //we move the cursor/typing things, to the last kuan of the string
+                    authorMenu.hide();
+                    updatingMenu = false;
+                });
+            }
         });
     }
 
     public void addListenerPublisherMenu(){
         publisherMenu.getEditor().textProperty().addListener((obs, oldVal, input) -> {
 
-            //this also let to not do anything below if the person is just picking.....
-            if(!publisherMenu.isFocused()) return; //this just safeguard kay theres an error if person is typing and then picking
+            if(updatingMenu) return; //safeguarders..pra, the texteditor would not do anything, if the program itself is  updating the selected item
+            //especially if the user picked something, then we dont do anythinghere with the text..
+            if(!publisherMenu.isFocused()) return;
 
-            publisherMenu.getSelectionModel().clearSelection();
+            Platform.runLater(() -> {
+                publisherFilter.setPredicate(item -> {
+                    //if the user inputted nothing, jsut show the original list
+                    if(input == null || input.isEmpty()) return true;
 
-            //this is our condition on what we want to show on the authorMenu
-            publisherFilter.setPredicate(item -> {
-                //if no user input show original list
-                if(input.isEmpty() || input == null) return true;
+                    //this returns all items that are macthing as the user types
+                    return item.toLowerCase().startsWith(input.toLowerCase());
+                });
 
-                //return if any similar input
-                return item.toLowerCase().startsWith(input.toLowerCase());
+                if(!publisherFilter.isEmpty()){
+                    //Just refresh the dropdown menu pra ma see, the actual filtered stuff...
+                    publisherMenu.hide();
+                    publisherMenu.show();
+                }else{
+                    publisherMenu.hide();
+                }
             });
 
-            //we force the dropDown Menu to show if user is typing
-            if(publisherMenu.isFocused()){
-                publisherMenu.hide();
-                publisherMenu.show();
-            }
-
-            publisherMenu.getSelectionModel().clearSelection();
         });
 
-        //this method is for if the user focused on the combobox and then refocus again and did something we clear the selection again
-        publisherMenu.getEditor().focusedProperty().addListener((obs, oldVal, currentlyFocus) -> {
-            if(currentlyFocus){
-                publisherMenu.hide();
-                publisherMenu.show();
-                publisherMenu.getSelectionModel().clearSelection();
-            }else{
+        //this is for handling that if the user is typing something, we show the menu
+        publisherMenu.getEditor().focusedProperty().addListener((obs, oldVal, isFocus) -> {
+            if(isFocus){
+                //slight delay after typing to show the items to be selected..
+                Platform.runLater(() -> publisherMenu.show());
+            }
+        });
 
-                //we only clear if its not on the adding na btn...kay  technically they lost focus
-                if(root.getScene().getFocusOwner() != addBtn) {
-                    //this is when if the user typed something and focus elsewhere and not select it then we clear it automatically
-                    publisherMenu.getEditor().clear();
-                    publisherMenu.getSelectionModel().clearSelection();
-                    publisherMenu.hide();
-                    publisherFilter.setPredicate(null); //this reset the authorFilter
+        //this is for if instead the user typed something, or selected an item
+        //we update also the text to that
+        publisherMenu.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, picked) -> {
+            if(picked != null){
+                Platform.runLater(() -> {
+                    updatingMenu = true;
+                    publisherMenu.getEditor().setText(picked.toString());
+                    publisherMenu.getEditor().positionCaret(picked.toString().length()); //we move the cursor/typing things, to the last kuan of the string
+                    updatingMenu = false;
+                });
+            }
+        });
+    }
 
-                    //System.out.println("Focused elswhere clearing everything....");
-                    /*if(authorMenu.getSelectionModel().getSelectedItem() == null){
-                        System.out.println("Current select after clearing: " + authorMenu.getSelectionModel().getSelectedItem());
-                    }*/
+    public void addListenerGameModeMenu(){
+        gameModeMenu.getEditor().textProperty().addListener((obs, oldVal, input) -> {
+
+            if(updatingMenu) return; //safeguarders..pra, the texteditor would not do anything, if the program itself is  updating the selected item
+            //especially if the user picked something, then we dont do anythinghere with the text..
+            if(!gameModeMenu.isFocused()) return;
+
+            Platform.runLater(() -> {
+                gameModeFilter.setPredicate(item -> {
+                    //if the user inputted nothing, jsut show the original list
+                    if(input == null || input.isEmpty()) return true;
+
+                    //this returns all items that are macthing as the user types
+                    return item.toLowerCase().startsWith(input.toLowerCase());
+                });
+
+                if(!gameModeFilter.isEmpty()){
+                    //Just refresh the dropdown menu pra ma see, the actual filtered stuff...
+                    gameModeMenu.hide();
+                    gameModeMenu.show();
+                }else{
+                    gameModeMenu.hide();
                 }
-            }
+            });
 
+        });
+
+        //this is for handling that if the user is typing something, we show the menu
+        gameModeMenu.getEditor().focusedProperty().addListener((obs, oldVal, isFocus) -> {
+            if(isFocus){
+                //slight delay after typing to show the items to be selected..
+                Platform.runLater(() -> gameModeMenu.show());
+            }
+        });
+
+        //this is for if instead the user typed something, or selected an item
+        //we update also the text to that
+        gameModeMenu.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, picked) -> {
+            if(picked != null){
+                Platform.runLater(() -> {
+                    updatingMenu = true;
+                    gameModeMenu.getEditor().setText(picked.toString());
+                    gameModeMenu.getEditor().positionCaret(picked.toString().length()); //we move the cursor/typing things, to the last kuan of the string
+                    updatingMenu = false;
+                });
+            }
         });
     }
 
-    //since ediatble say, when a user type and then select the item they need, we set the text to that...
-    @FXML public void pickAuthor(){
-        Object picked = authorMenu.getSelectionModel().getSelectedItem();
-        if(picked != null){
-            authorMenu.getEditor().setText(picked.toString());
-        }
+    public void addListenerGamePlatformMenu(){
+        gamePlatformMenu.getEditor().textProperty().addListener((obs, oldVal, input) -> {
+
+            if(updatingMenu) return; //safeguarders..pra, the texteditor would not do anything, if the program itself is  updating the selected item
+            //especially if the user picked something, then we dont do anythinghere with the text..
+            if(!gamePlatformMenu.isFocused()) return;
+
+            Platform.runLater(() -> {
+                gamePlatformFilter.setPredicate(item -> {
+                    //if the user inputted nothing, jsut show the original list
+                    if(input == null || input.isEmpty()) return true;
+
+                    //this returns all items that are macthing as the user types
+                    return item.toLowerCase().startsWith(input.toLowerCase());
+                });
+
+                if(!gamePlatformFilter.isEmpty()){
+                    //Just refresh the dropdown menu pra ma see, the actual filtered stuff...
+                    gamePlatformMenu.hide();
+                    gamePlatformMenu.show();
+                }else{
+                    gamePlatformMenu.hide();
+                }
+            });
+
+        });
+
+        //this is for handling that if the user is typing something, we show the menu
+        gamePlatformMenu.getEditor().focusedProperty().addListener((obs, oldVal, isFocus) -> {
+            if(isFocus){
+                //slight delay after typing to show the items to be selected..
+                Platform.runLater(() -> gamePlatformMenu.show());
+            }
+        });
+
+        //this is for if instead the user typed something, or selected an item
+        //we update also the text to that
+        gamePlatformMenu.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, picked) -> {
+            if(picked != null){
+                Platform.runLater(() -> {
+                    updatingMenu = true;
+                    gamePlatformMenu.getEditor().setText(picked.toString());
+                    gamePlatformMenu.getEditor().positionCaret(picked.toString().length()); //we move the cursor/typing things, to the last kuan of the string
+                    updatingMenu = false;
+                });
+            }
+        });
     }
 
-    @FXML public void pickPublisher(){
-        Object picked = publisherMenu.getSelectionModel().getSelectedItem();
-        if(picked != null){
-            publisherMenu.getEditor().setText(picked.toString());
-        }
-
-    }
     //---------------------------------------------------------------------------------------------
 
+
     //---------------------Book Button Methods-----------------------------------------------------
-    @FXML
-    public void addAuthor(){
+    @FXML public void addAuthor(){
         Object author = authorMenu.getSelectionModel().getSelectedItem();
 
         if(author != null && !author.toString().trim().isEmpty()){
             System.out.println("Author Picked: " + author.toString());
-
-            //after adding, we reset the menu
-            authorMenu.getSelectionModel().clearAndSelect(-1);
-            authorFilter.setPredicate(null);
-            authorMenu.getEditor().clear(); //clear any text typed
-
-
 
             //if previously there is no author pa sa list, and they need it, so we add it to the list...
             if(!authors.contains(author.toString())){
@@ -285,6 +416,15 @@ public class AddArchiveController implements Initializable {
             });
 
             addAuthorPane.getChildren().add(container);
+
+            Platform.runLater(() -> {
+                //after adding, we reset the menu
+                authorMenu.getSelectionModel().clearSelection();
+                authorFilter.setPredicate(null);
+                authorMenu.getEditor().clear(); //clear any text typed
+                authorMenu.setValue(null);
+            });
+
 
         }
     }
@@ -319,6 +459,76 @@ public class AddArchiveController implements Initializable {
             });
 
             addPublisherPane.getChildren().add(container);
+
+        }
+    }
+    //---------------------------------------------------------------------------------------------
+
+    //---------------------Game Button Methods-----------------------------------------------------
+    @FXML public void addGameMode(){
+        Object gameMode = gameModeMenu.getSelectionModel().getSelectedItem();
+
+        if(gameMode != null && !gameMode.toString().trim().isEmpty()){
+            System.out.println("Author Picked: " + gameMode.toString());
+
+            //after adding, we reset the menu
+            gameModeMenu.getSelectionModel().clearAndSelect(-1);
+            gameModeFilter.setPredicate(null);
+            gameModeMenu.getEditor().clear(); //clear any text typed
+
+
+
+            //if previously there is no author pa sa list, and they need it, so we add it to the list...
+            if(!gameModes.contains(gameMode.toString())){
+                gameModes.add(gameMode.toString());
+            }
+
+            HBox container = new HBox();
+            container.getStyleClass().add("author_hbox");
+
+            Button rmvBtn = new Button("X");
+            Label labelAuthor = new Label(gameMode.toString());
+
+            container.getChildren().addAll(labelAuthor, rmvBtn);
+            rmvBtn.setOnAction(e -> {
+                addGameModePane.getChildren().remove(container);
+            });
+
+            addGameModePane.getChildren().add(container);
+
+        }
+    }
+
+    @FXML public void addGamePlatform(){
+        Object gamePlatform = gamePlatformMenu.getSelectionModel().getSelectedItem();
+
+        if(gamePlatform != null && !gamePlatform.toString().trim().isEmpty()){
+            System.out.println("Author Picked: " + gamePlatform.toString());
+
+            //after adding, we reset the menu
+            gamePlatformMenu.getSelectionModel().clearAndSelect(-1);
+            gamePlatformFilter.setPredicate(null);
+            gamePlatformMenu.getEditor().clear(); //clear any text typed
+
+
+
+            //if previously there is no author pa sa list, and they need it, so we add it to the list...
+            if(!gamePlatforms.contains(gamePlatform.toString())){
+                gamePlatforms.add(gamePlatform.toString());
+            }
+
+            HBox container = new HBox();
+            container.getStyleClass().add("author_hbox");
+
+            Button rmvBtn = new Button("X");
+            Label labelAuthor = new Label(gamePlatform.toString());
+
+            container.getChildren().addAll(labelAuthor, rmvBtn);
+            rmvBtn.setOnAction(e -> {
+                addPlatformPane.getChildren().remove(container);
+            });
+
+            addPlatformPane.getChildren().add(container);
 
         }
     }
@@ -396,6 +606,40 @@ public class AddArchiveController implements Initializable {
         return hasEmpty;
     }
 
+    public boolean checkGame1Empty(String gameEngine, String systemRequirement){
+        boolean hasEmpty = false;
+
+        if(gameEngine == null){
+            gameEngineMenu.setStyle("-fx-border-color: #bb443c; -fx-border-radius: 10; -fx-border-width: 2;");
+            hasEmpty = true;
+        }else{
+            gameEngineMenu.setStyle("-fx-border-color: transparent; -fx-border-width: 0;");
+        }
+
+        if(systemRequirement.trim().isEmpty()){ //removes any spaces, newlines to check if there is actual content
+            //for the kuan we assume since this add archive is moderator lang, we assume valid input na..so no more crazy stuff..
+            systemRequire.setStyle("-fx-border-color: #bb443c; -fx-border-radius: 20; -fx-border-width: 2; -fx-background-radius: 20;");
+            hasEmpty = true;
+        }else{
+            systemRequire.setStyle("-fx-border-color: transparent; -fx-border-width: 0;");
+        }
+
+        return hasEmpty;
+    }
+
+    public void mainInitialize(){
+        root.getStylesheets().add(getClass().getResource("/ui/Button_Style.css").toExternalForm());
+        typeMenu.getItems().addAll("Movie", "TV Shows", "Books", "Games");
+        typeMenu.getStylesheets().add(getClass().getResource("/ui/MediaType_ComboBox.css").toExternalForm());
+
+        //there is still an issue  with the synopField, dont knwo what to do with it yet...
+        synopField.getStylesheets().add(getClass().getResource("/ui/AddArchive_TextArea.css").toExternalForm());
+        nxtBtn.getStyleClass().add("navigate-btn");
+        backBtn.getStyleClass().add("navigate-btn");
+        addBtn.getStyleClass().add("navigate-btn");
+    }
+
+
     public void bookInitialize(){
 
         setAuthorMenu();
@@ -419,6 +663,34 @@ public class AddArchiveController implements Initializable {
         addPublisherScrollPane.setFocusTraversable(false);
         addPublisherPane.setFocusTraversable(false);
     }
+
+    public void gameInitialize(){
+        gameEngineMenu.getItems().addAll("Unity", "Unreal Engine", "Godot", "GameMaker");
+        gameEngineMenu.getStylesheets().add(getClass().getResource("/ui/MediaType_ComboBox.css").toExternalForm());
+        systemRequire.getStylesheets().add(getClass().getResource("/ui/AddArchive_TextArea.css").toExternalForm());
+
+        setGameModeMenu();
+        addListenerGameModeMenu();
+        gameModeMenu.setItems(gameModeFilter);
+        gameModeMenu.getStylesheets().add(getClass().getResource("/ui/MediaType_ComboBox.css").toExternalForm());
+        addGameModeScrollPane.getStylesheets().add(getClass().getResource("/ui/AddAuthor.css").toExternalForm());
+        addGameModeScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        addGameModeScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        addGameModeScrollPane.setFocusTraversable(false);
+        addGameModePane.setFocusTraversable(false);
+
+        setGamePlatformMenu();
+        addListenerGamePlatformMenu();
+        gamePlatformMenu.setItems(gamePlatformFilter);
+        gamePlatformMenu.getStylesheets().add(getClass().getResource("/ui/MediaType_ComboBox.css").toExternalForm());
+        addPlatformScrollPane.getStylesheets().add(getClass().getResource("/ui/AddAuthor.css").toExternalForm());
+        addPlatformScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        addPlatformScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        addPlatformScrollPane.setFocusTraversable(false);
+        addPlatformPane.setFocusTraversable(false);
+    }
+
+
 
 
     //---------------------------------------------------------------------------------------------
