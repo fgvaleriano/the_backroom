@@ -1,0 +1,47 @@
+.author_hbox {
+    -fx-background-color: white;
+    -fx-padding: 0 0 0 20;
+    -fx-spacing: 60;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background: transparent;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-padding: 0;
+}
+
+.scroll-pane.error {
+    -fx-border-color: #bb443c;
+    -fx-border-width: 2;
+}
+
+.scroll-pane > .viewport{
+    -fx-background-color:  #bdbab3;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+
+
+.scroll-pane > .track {
+    -fx-background-color: transparent;
+}
+
+.button {
+    -fx-font-family: "Reddit Sans ExtraBold";
+    -fx-text-fill: white;
+    -fx-font-size: 15;
+    -fx-background-color:  rgba(185, 120, 51, 1);
+    -fx-background-radius: 10;
+}
+
+.label {
+    -fx-font-family: "Reddit Sans";
+    -fx-text-fill: black;
+    -fx-font-size: 20;
+}
+

@@ -1,0 +1,1354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="root" prefHeight="792.7999877929688" prefWidth="1536.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.tangingina.thebackroom.controller.AddArchiveController">
+   <children>
+      <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <columnConstraints>
+          <ColumnConstraints maxWidth="171.8000244140625" minWidth="0.0" percentWidth="11.0" prefWidth="60.799993896484374" />
+          <ColumnConstraints maxWidth="555.2000244140625" minWidth="80.0" percentWidth="75.0" prefWidth="484.0000061035156" />
+            <ColumnConstraints maxWidth="87.59995117187503" minWidth="3.3999755859374545" percentWidth="14.000000000000014" prefWidth="60.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="195.59998168945313" minHeight="0.0" percentHeight="8.59" prefHeight="0.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="793.0" minHeight="10.0" percentHeight="91.41" prefHeight="793.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: rgba(48, 88, 82, 1);" GridPane.columnIndex="1" />
+            <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: rgba(48, 88, 82, 1);" />
+            <Pane prefHeight="358.0" prefWidth="170.0" style="-fx-background-color: rgba(48, 88, 82, 1);" GridPane.rowIndex="1" />
+            <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: rgba(48, 88, 82, 1);" GridPane.columnIndex="2" />
+            <Pane onMousePressed="#bg2Click" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: rgba(48, 88, 82, 1);" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <StackPane prefHeight="641.0" prefWidth="1152.0" style="-fx-background-color: rgba(48, 88, 82, 1);" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <VBox fx:id="mainBox1" alignment="TOP_CENTER" onMousePressed="#bg1Click" prefHeight="663.0" prefWidth="1152.0" style="-fx-background-color: D9D4C8; -fx-background-radius: 35 35 0 0;" visible="true">
+                     <children>
+                        <Label fx:id="addArchiveLabel" prefHeight="74.0" prefWidth="328.0" text="ADD ARCHIVE" textFill="#bb443c">
+                           <VBox.margin>
+                              <Insets top="40.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font name="Reddit Sans ExtraBold" size="46.0" />
+                           </font>
+                        </Label>
+                        <HBox prefWidth="1152.0">
+                           <VBox.margin>
+                              <Insets top="60.0" />
+                           </VBox.margin>
+                           <children>
+                              <Label fx:id="nameLabel" prefHeight="42.0" prefWidth="115.0" text="Name: ">
+                                 <font>
+                                    <Font name="Roboto Serif 28pt Medium" size="34.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="80.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <TextField fx:id="nameField" focusTraversable="false" prefHeight="54.0" prefWidth="682.0" promptText="Name" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;">
+                                 <HBox.margin>
+                                    <Insets left="145.0" />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font name="Reddit Sans Regular" size="17.0" />
+                                 </font>
+                              </TextField>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label fx:id="typeLabel" prefHeight="42.0" prefWidth="103.0" text="Type:">
+                                 <font>
+                                    <Font name="Roboto Serif 28pt Medium" size="34.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="80.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <ComboBox fx:id="typeMenu" prefHeight="54.0" prefWidth="280.0" promptText="Media Type" style="-fx-background-color: white; -fx-background-radius: 10;">
+                                 <HBox.margin>
+                                    <Insets left="160.0" />
+                                 </HBox.margin>
+                              </ComboBox>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="30.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label fx:id="synopLabel" prefHeight="42.0" prefWidth="170.0" text="Synopsis: ">
+                                 <font>
+                                    <Font name="Roboto Serif 28pt Medium" size="34.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="80.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <TextArea fx:id="synopField" focusTraversable="false" prefHeight="166.0" prefWidth="676.0" style="-fx-border-radius: 20; -fx-background-color: white;" styleClass="borde" wrapText="true">
+                                 <opaqueInsets>
+                                    <Insets left="15.0" />
+                                 </opaqueInsets>
+                                 <HBox.margin>
+                                    <Insets left="95.0" />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font name="Reddit Sans Regular" size="17.0" />
+                                 </font>
+                              </TextArea>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="30.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label fx:id="dateLabel" prefHeight="42.0" prefWidth="233.0" text="Release Date:" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font name="Roboto Serif 28pt Medium" size="34.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="80.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <TextField fx:id="dateField" focusTraversable="false" prefHeight="38.0" prefWidth="226.0" promptText="MM/DD/YYYY" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;">
+                                 <HBox.margin>
+                                    <Insets left="30.0" />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font size="17.0" />
+                                 </font>
+                              </TextField>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="30.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <Button fx:id="nxtBtn" mnemonicParsing="false" onAction="#nextAdd" prefHeight="61.0" prefWidth="202.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="Next" textFill="#d9d4c8">
+                           <VBox.margin>
+                              <Insets top="50.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font name="Reddit Sans ExtraBold" size="30.0" />
+                           </font>
+                        </Button>
+                     </children>
+                     <effect>
+                        <DropShadow height="50.25" radius="25.5" spread="0.13" width="53.75">
+                           <color>
+                              <Color opacity="0.3161093294620514" />
+                           </color>
+                        </DropShadow>
+                     </effect>
+                  </VBox>
+                  <VBox fx:id="mainBox2" alignment="TOP_CENTER" onMousePressed="#bg1Click" prefHeight="663.0" prefWidth="1152.0" style="-fx-background-color: D9D4C8; -fx-background-radius: 35 35 0 0;" visible="false">
+                     <children>
+                        <Label fx:id="addArchiveLabel213" prefHeight="74.0" prefWidth="328.0" text="ADD ARCHIVE" textFill="#bb443c">
+                           <VBox.margin>
+                              <Insets top="40.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font name="Reddit Sans ExtraBold" size="46.0" />
+                           </font>
+                        </Label>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label fx:id="publisher3" prefHeight="42.0" prefWidth="175.0" text="Genre:">
+                                 <font>
+                                    <Font name="Roboto Serif 28pt Medium" size="34.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="80.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <ComboBox fx:id="genreMenu" editable="true" focusTraversable="false" prefHeight="54.0" prefWidth="280.0" promptText="Genre" style="-fx-background-color: white; -fx-background-radius: 10;" visibleRowCount="7">
+                                 <HBox.margin>
+                                    <Insets left="85.0" />
+                                 </HBox.margin>
+                              </ComboBox>
+                              <Button fx:id="addBtn1" mnemonicParsing="false" onAction="#addGenre" prefHeight="48.0" prefWidth="62.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="+" textFill="#d9d4c8">
+                                 <HBox.margin>
+                                    <Insets left="40.0" />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="25.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="70.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <AnchorPane prefHeight="154.0" prefWidth="1152.0">
+                           <VBox.margin>
+                              <Insets top="50.0" />
+                           </VBox.margin>
+                           <children>
+                              <ScrollPane fx:id="addGenreScrollPane" layoutX="157.0" layoutY="-9.0" prefHeight="282.0" prefWidth="830.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10;">
+                                 <content>
+                                    <FlowPane fx:id="addGenrePane" hgap="20.0" prefHeight="283.0" prefWidth="814.0" style="-fx-background-color: #bdbab3; -fx-background-radius: 10;" vgap="15.0" />
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                        <HBox alignment="CENTER">
+                           <children>
+                              <Button fx:id="backBtn5" mnemonicParsing="false" onAction="#goBack" prefHeight="61.0" prefWidth="202.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="Back" textFill="#d9d4c8">
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="30.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets right="50.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button fx:id="nxtBtn4" mnemonicParsing="false" onAction="#nextAdd" prefHeight="61.0" prefWidth="202.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="Next" textFill="#d9d4c8">
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="30.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="30.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                     <effect>
+                        <DropShadow height="50.25" radius="25.5" spread="0.13" width="53.75">
+                           <color>
+                              <Color opacity="0.3161093294620514" />
+                           </color>
+                        </DropShadow>
+                     </effect>
+                  </VBox>
+                  <VBox fx:id="mainBox3" alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" onMousePressed="#bg1Click" prefHeight="663.0" prefWidth="1152.0" style="-fx-background-color: D9D4C8; -fx-background-radius: 35 35 0 0;" visible="false">
+                     <children>
+                        <Label fx:id="addArchiveLabel1" prefHeight="74.0" prefWidth="328.0" text="ADD ARCHIVE" textFill="#bb443c">
+                           <VBox.margin>
+                              <Insets top="40.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font name="Reddit Sans ExtraBold" size="46.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="nameLabel1" prefHeight="57.0" prefWidth="1091.0" text="Add Media Cover:">
+                           <font>
+                              <Font name="Roboto Serif 28pt SemiBold" size="34.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets top="30.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Label fx:id="nameLabel11" prefHeight="22.0" prefWidth="1091.0" text="Select an image for the archive display.">
+                           <font>
+                              <Font name="Reddit Sans Regular" size="26.0" />
+                           </font>
+                        </Label>
+                        <StackPane>
+                           <VBox.margin>
+                              <Insets top="50.0" />
+                           </VBox.margin>
+                           <children>
+                              <ImageView fitHeight="287.0" fitWidth="565.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="115.0" fitWidth="104.0" onMousePressed="#getMediaCover" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@new.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </StackPane>
+                        <HBox alignment="CENTER">
+                           <children>
+                              <Button fx:id="backBtn1" mnemonicParsing="false" onAction="#goBack" prefHeight="61.0" prefWidth="202.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="Back" textFill="#d9d4c8">
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="30.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets right="50.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button fx:id="saveBtn" mnemonicParsing="false" onAction="#saveMedia" prefHeight="61.0" prefWidth="202.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="Save" textFill="#d9d4c8">
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="30.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="35.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                     <effect>
+                        <DropShadow height="50.25" radius="25.5" spread="0.13" width="53.75">
+                           <color>
+                              <Color opacity="0.3161093294620514" />
+                           </color>
+                        </DropShadow>
+                     </effect>
+                  </VBox>
+                  <VBox fx:id="bookBox1" alignment="TOP_CENTER" onMousePressed="#bg1Click" prefHeight="663.0" prefWidth="1152.0" style="-fx-background-color: D9D4C8; -fx-background-radius: 35 35 0 0;" visible="false">
+                     <children>
+                        <Label fx:id="addArchiveLabel2" prefHeight="74.0" prefWidth="328.0" text="ADD ARCHIVE" textFill="#bb443c">
+                           <VBox.margin>
+                              <Insets top="40.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font name="Reddit Sans ExtraBold" size="46.0" />
+                           </font>
+                        </Label>
+                        <HBox prefWidth="1152.0">
+                           <VBox.margin>
+                              <Insets top="60.0" />
+                           </VBox.margin>
+                           <children>
+                              <Label fx:id="nameLabel2" prefHeight="42.0" prefWidth="115.0" text="ISBN:">
+                                 <font>
+                                    <Font name="Roboto Serif 28pt Medium" size="34.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="80.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <TextField fx:id="isbnField" focusTraversable="false" prefHeight="54.0" prefWidth="289.0" promptText="ISBN" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;">
+                                 <HBox.margin>
+                                    <Insets left="145.0" />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font name="Reddit Sans Regular" size="17.0" />
+                                 </font>
+                              </TextField>
+                           </children>
+                        </HBox>
+                        <HBox prefWidth="1152.0">
+                           <children>
+                              <Label fx:id="nameLabel21" prefHeight="42.0" prefWidth="213.0" text="Page Count: ">
+                                 <font>
+                                    <Font name="Roboto Serif 28pt Medium" size="34.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="80.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <TextField fx:id="pageCountField" focusTraversable="false" prefHeight="54.0" prefWidth="209.0" promptText="ISBN" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;">
+                                 <HBox.margin>
+                                    <Insets left="47.0" />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font name="Reddit Sans Regular" size="17.0" />
+                                 </font>
+                              </TextField>
+                              <Label fx:id="nameLabel211" prefHeight="27.0" prefWidth="152.0" text="Edition:">
+                                 <font>
+                                    <Font name="Roboto Serif 28pt Medium" size="34.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="90.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <TextField fx:id="editionField" focusTraversable="false" prefHeight="54.0" prefWidth="209.0" promptText="Edition" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;">
+                                 <font>
+                                    <Font name="Reddit Sans Regular" size="17.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="25.0" />
+                                 </HBox.margin>
+                              </TextField>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="30.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label fx:id="typeLabel1" prefHeight="42.0" prefWidth="175.0" text="Author:">
+                                 <font>
+                                    <Font name="Roboto Serif 28pt Medium" size="34.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="80.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <ComboBox fx:id="authorMenu" editable="true" focusTraversable="false" prefHeight="54.0" prefWidth="280.0" promptText="Author" style="-fx-background-color: white; -fx-background-radius: 10;" visibleRowCount="7">
+                                 <HBox.margin>
+                                    <Insets left="85.0" />
+                                 </HBox.margin>
+                              </ComboBox>
+                              <Button fx:id="addBtn" mnemonicParsing="false" onAction="#addAuthor" prefHeight="48.0" prefWidth="62.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="+" textFill="#d9d4c8">
+                                 <HBox.margin>
+                                    <Insets left="40.0" />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="25.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="30.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <AnchorPane prefHeight="154.0" prefWidth="1152.0">
+                           <VBox.margin>
+                              <Insets top="30.0" />
+                           </VBox.margin>
+                           <children>
+                              <ScrollPane fx:id="addAuthorScrollPane" layoutX="337.0" layoutY="-9.0" prefHeight="179.0" prefWidth="554.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10;">
+                                 <content>
+                                    <FlowPane fx:id="addAuthorPane" hgap="20.0" prefHeight="179.0" prefWidth="539.0" style="-fx-background-color: #bdbab3; -fx-background-radius: 10;" vgap="15.0" />
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                        <HBox alignment="CENTER">
+                           <children>
+                              <Button fx:id="backBtn" mnemonicParsing="false" onAction="#goBack" prefHeight="61.0" prefWidth="202.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="Back" textFill="#d9d4c8">
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="30.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets right="50.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button fx:id="nxtBtn" mnemonicParsing="false" onAction="#nextAdd" prefHeight="61.0" prefWidth="202.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="Next" textFill="#d9d4c8">
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="30.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="27.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                     <effect>
+                        <DropShadow height="50.25" radius="25.5" spread="0.13" width="53.75">
+                           <color>
+                              <Color opacity="0.3161093294620514" />
+                           </color>
+                        </DropShadow>
+                     </effect>
+                  </VBox>
+                  <VBox fx:id="bookBox2" alignment="TOP_CENTER" onMousePressed="#bg1Click" prefHeight="663.0" prefWidth="1152.0" style="-fx-background-color: D9D4C8; -fx-background-radius: 35 35 0 0;" visible="false">
+                     <children>
+                        <Label fx:id="addArchiveLabel21" prefHeight="74.0" prefWidth="328.0" text="ADD ARCHIVE" textFill="#bb443c">
+                           <VBox.margin>
+                              <Insets top="40.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font name="Reddit Sans ExtraBold" size="46.0" />
+                           </font>
+                        </Label>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label fx:id="publisher" prefHeight="42.0" prefWidth="175.0" text="Publisher:">
+                                 <font>
+                                    <Font name="Roboto Serif 28pt Medium" size="34.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="80.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <ComboBox fx:id="publisherMenu" editable="true" focusTraversable="false" prefHeight="54.0" prefWidth="280.0" promptText="Publisher" style="-fx-background-color: white; -fx-background-radius: 10;" visibleRowCount="7">
+                                 <HBox.margin>
+                                    <Insets left="85.0" />
+                                 </HBox.margin>
+                              </ComboBox>
+                              <Button fx:id="addBtn" mnemonicParsing="false" onAction="#addPublisher" prefHeight="48.0" prefWidth="62.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="+" textFill="#d9d4c8">
+                                 <HBox.margin>
+                                    <Insets left="40.0" />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="25.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="70.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <AnchorPane prefHeight="154.0" prefWidth="1152.0">
+                           <VBox.margin>
+                              <Insets top="50.0" />
+                           </VBox.margin>
+                           <children>
+                              <ScrollPane fx:id="addPublisherScrollPane" layoutX="337.0" layoutY="-9.0" prefHeight="179.0" prefWidth="554.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10;">
+                                 <content>
+                                    <FlowPane fx:id="addPublisherPane" hgap="20.0" prefHeight="179.0" prefWidth="539.0" style="-fx-background-color: #bdbab3; -fx-background-radius: 10;" vgap="15.0" />
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                        <HBox alignment="CENTER">
+                           <children>
+                              <Button fx:id="backBtn" mnemonicParsing="false" onAction="#goBack" prefHeight="61.0" prefWidth="202.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="Back" textFill="#d9d4c8">
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="30.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets right="50.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button fx:id="nxtBtn" mnemonicParsing="false" onAction="#nextAdd" prefHeight="61.0" prefWidth="202.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="Next" textFill="#d9d4c8">
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="30.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="165.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                     <effect>
+                        <DropShadow height="50.25" radius="25.5" spread="0.13" width="53.75">
+                           <color>
+                              <Color opacity="0.3161093294620514" />
+                           </color>
+                        </DropShadow>
+                     </effect>
+                  </VBox>
+                  <VBox fx:id="gameBox1" alignment="TOP_CENTER" onMousePressed="#bg1Click" prefHeight="663.0" prefWidth="1152.0" style="-fx-background-color: D9D4C8; -fx-background-radius: 35 35 0 0;" visible="false">
+                     <children>
+                        <Label fx:id="addArchiveLabel3" prefHeight="74.0" prefWidth="328.0" text="ADD ARCHIVE" textFill="#bb443c">
+                           <VBox.margin>
+                              <Insets top="40.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font name="Reddit Sans ExtraBold" size="46.0" />
+                           </font>
+                        </Label>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label fx:id="typeLabel2" prefHeight="42.0" prefWidth="246.0" text="Game Engine: ">
+                                 <font>
+                                    <Font name="Roboto Serif 28pt Medium" size="34.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="80.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <ComboBox fx:id="gameEngineMenu" prefHeight="54.0" prefWidth="280.0" promptText="Game Engine" style="-fx-background-color: white; -fx-background-radius: 10;">
+                                 <HBox.margin>
+                                    <Insets left="55.0" />
+                                 </HBox.margin>
+                              </ComboBox>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="60.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" prefHeight="120.0" prefWidth="1152.0">
+                           <children>
+                              <Label fx:id="synopLabel1" prefHeight="111.0" prefWidth="245.0" text="System Requiremnts: " wrapText="true">
+                                 <font>
+                                    <Font name="Roboto Serif 28pt Medium" size="34.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="80.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <TextArea fx:id="systemRequire" focusTraversable="false" prefHeight="134.0" prefWidth="676.0" style="-fx-border-radius: 20; -fx-background-color: white;" styleClass="borde" wrapText="true">
+                                 <opaqueInsets>
+                                    <Insets left="15.0" />
+                                 </opaqueInsets>
+                                 <HBox.margin>
+                                    <Insets left="60.0" />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font name="Reddit Sans Regular" size="17.0" />
+                                 </font>
+                              </TextArea>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="30.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label fx:id="typeLabel11" prefHeight="42.0" prefWidth="202.0" text="Developer:">
+                                 <font>
+                                    <Font name="Roboto Serif 28pt Medium" size="34.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="80.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <ComboBox fx:id="gameDeveloperMenu" editable="true" focusTraversable="false" prefHeight="54.0" prefWidth="280.0" promptText="Developer" style="-fx-background-color: white; -fx-background-radius: 10;" visibleRowCount="7">
+                                 <HBox.margin>
+                                    <Insets left="100.0" />
+                                 </HBox.margin>
+                              </ComboBox>
+                              <Button fx:id="addBtn" mnemonicParsing="false" onAction="#addGameDeveloper" prefHeight="48.0" prefWidth="62.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="+" textFill="#d9d4c8">
+                                 <HBox.margin>
+                                    <Insets left="40.0" />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="25.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="30.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <AnchorPane prefHeight="84.0" prefWidth="1152.0">
+                           <children>
+                              <ScrollPane fx:id="addGameDevScrollPane" layoutX="204.0" layoutY="-9.0" prefHeight="90.0" prefWidth="758.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10;">
+                                 <content>
+                                    <FlowPane fx:id="addGameDevPane" hgap="20.0" prefHeight="106.0" prefWidth="754.0" style="-fx-background-color: #bdbab3; -fx-background-radius: 10;" vgap="15.0" />
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="40.0" />
+                           </VBox.margin>
+                        </AnchorPane>
+                        <HBox alignment="CENTER">
+                           <children>
+                              <Button fx:id="backBtn" mnemonicParsing="false" onAction="#goBack" prefHeight="61.0" prefWidth="202.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="Back" textFill="#d9d4c8">
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="30.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets right="50.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button fx:id="nxtBtn" mnemonicParsing="false" onAction="#nextAdd" prefHeight="61.0" prefWidth="202.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="Next" textFill="#d9d4c8">
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="30.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="40.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                     <effect>
+                        <DropShadow height="50.25" radius="25.5" spread="0.13" width="53.75">
+                           <color>
+                              <Color opacity="0.3161093294620514" />
+                           </color>
+                        </DropShadow>
+                     </effect>
+                  </VBox>
+                  <VBox fx:id="gameBox2" alignment="TOP_CENTER" onMousePressed="#bg1Click" prefHeight="663.0" prefWidth="1152.0" style="-fx-background-color: D9D4C8; -fx-background-radius: 35 35 0 0;" visible="false">
+                     <children>
+                        <Label fx:id="addArchiveLabel211" prefHeight="74.0" prefWidth="328.0" text="ADD ARCHIVE" textFill="#bb443c">
+                           <VBox.margin>
+                              <Insets top="40.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font name="Reddit Sans ExtraBold" size="46.0" />
+                           </font>
+                        </Label>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label fx:id="publisher1" prefHeight="42.0" prefWidth="175.0" text="Mode:">
+                                 <font>
+                                    <Font name="Roboto Serif 28pt Medium" size="34.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="80.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <ComboBox fx:id="gameModeMenu" editable="true" focusTraversable="false" prefHeight="54.0" prefWidth="280.0" promptText="Mode" style="-fx-background-color: white; -fx-background-radius: 10;" visibleRowCount="7">
+                                 <HBox.margin>
+                                    <Insets left="85.0" />
+                                 </HBox.margin>
+                              </ComboBox>
+                              <Button fx:id="addBtn" mnemonicParsing="false" onAction="#addGameMode" prefHeight="48.0" prefWidth="62.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="+" textFill="#d9d4c8">
+                                 <HBox.margin>
+                                    <Insets left="40.0" />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="25.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="70.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <AnchorPane prefHeight="84.0" prefWidth="1152.0">
+                           <VBox.margin>
+                              <Insets top="40.0" />
+                           </VBox.margin>
+                           <children>
+                              <ScrollPane fx:id="addGameModeScrollPane" layoutX="204.0" layoutY="-9.0" prefHeight="90.0" prefWidth="758.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10;">
+                                 <content>
+                                    <FlowPane fx:id="addGameModePane" hgap="20.0" prefHeight="106.0" prefWidth="754.0" style="-fx-background-color: #bdbab3; -fx-background-radius: 10;" vgap="15.0" />
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label fx:id="publisher11" prefHeight="42.0" prefWidth="175.0" text="Platform:">
+                                 <font>
+                                    <Font name="Roboto Serif 28pt Medium" size="34.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="80.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <ComboBox fx:id="gamePlatformMenu" editable="true" focusTraversable="false" prefHeight="54.0" prefWidth="280.0" promptText="Platform" style="-fx-background-color: white; -fx-background-radius: 10;" visibleRowCount="7">
+                                 <HBox.margin>
+                                    <Insets left="85.0" />
+                                 </HBox.margin>
+                              </ComboBox>
+                              <Button fx:id="addBtn" mnemonicParsing="false" onAction="#addGamePlatform" prefHeight="48.0" prefWidth="62.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="+" textFill="#d9d4c8">
+                                 <HBox.margin>
+                                    <Insets left="40.0" />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="25.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="50.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <AnchorPane prefHeight="76.0" prefWidth="1152.0">
+                           <children>
+                              <ScrollPane fx:id="addPlatformScrollPane" layoutX="204.0" layoutY="-9.0" prefHeight="83.0" prefWidth="758.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10;">
+                                 <content>
+                                    <FlowPane fx:id="addPlatformPane" hgap="20.0" prefHeight="106.0" prefWidth="754.0" style="-fx-background-color: #bdbab3; -fx-background-radius: 10;" vgap="15.0" />
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="30.0" />
+                           </VBox.margin>
+                        </AnchorPane>
+                        <HBox alignment="CENTER">
+                           <children>
+                              <Button fx:id="backBtn" mnemonicParsing="false" onAction="#goBack" prefHeight="61.0" prefWidth="202.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="Back" textFill="#d9d4c8">
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="30.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets right="50.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button fx:id="nxtBtn" mnemonicParsing="false" onAction="#nextAdd" prefHeight="61.0" prefWidth="202.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="Next" textFill="#d9d4c8">
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="30.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="40.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                     <effect>
+                        <DropShadow height="50.25" radius="25.5" spread="0.13" width="53.75">
+                           <color>
+                              <Color opacity="0.3161093294620514" />
+                           </color>
+                        </DropShadow>
+                     </effect>
+                  </VBox>
+                  <VBox fx:id="gameBox3" alignment="TOP_CENTER" onMousePressed="#bg1Click" prefHeight="663.0" prefWidth="1152.0" style="-fx-background-color: D9D4C8; -fx-background-radius: 35 35 0 0;" visible="false">
+                     <children>
+                        <Label fx:id="addArchiveLabel212" prefHeight="74.0" prefWidth="328.0" text="ADD ARCHIVE" textFill="#bb443c">
+                           <VBox.margin>
+                              <Insets top="40.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font name="Reddit Sans ExtraBold" size="46.0" />
+                           </font>
+                        </Label>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label fx:id="publisher2" prefHeight="94.0" prefWidth="176.0" text="Game Publisher:" wrapText="true">
+                                 <font>
+                                    <Font name="Roboto Serif 28pt Medium" size="34.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="80.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <ComboBox fx:id="gamePublisherMenu" editable="true" focusTraversable="false" prefHeight="54.0" prefWidth="280.0" promptText="Publisher" style="-fx-background-color: white; -fx-background-radius: 10;" visibleRowCount="7">
+                                 <HBox.margin>
+                                    <Insets left="85.0" />
+                                 </HBox.margin>
+                              </ComboBox>
+                              <Button fx:id="addBtn" mnemonicParsing="false" onAction="#addGamePublisher" prefHeight="48.0" prefWidth="62.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="+" textFill="#d9d4c8">
+                                 <HBox.margin>
+                                    <Insets left="40.0" />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="25.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="70.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <AnchorPane prefHeight="154.0" prefWidth="1152.0">
+                           <VBox.margin>
+                              <Insets top="50.0" />
+                           </VBox.margin>
+                           <children>
+                              <ScrollPane fx:id="gamePublisherScrollPane" layoutX="337.0" layoutY="-9.0" prefHeight="179.0" prefWidth="554.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10;">
+                                 <content>
+                                    <FlowPane fx:id="gamePublisherPane" hgap="20.0" prefHeight="179.0" prefWidth="539.0" style="-fx-background-color: #bdbab3; -fx-background-radius: 10;" vgap="15.0" />
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                        <HBox alignment="CENTER">
+                           <children>
+                              <Button fx:id="backBtn2" mnemonicParsing="false" onAction="#goBack" prefHeight="61.0" prefWidth="202.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="Back" textFill="#d9d4c8">
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="30.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets right="50.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button fx:id="nxtBtn2" mnemonicParsing="false" onAction="#nextAdd" prefHeight="61.0" prefWidth="202.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="Next" textFill="#d9d4c8">
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="30.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="115.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                     <effect>
+                        <DropShadow height="50.25" radius="25.5" spread="0.13" width="53.75">
+                           <color>
+                              <Color opacity="0.3161093294620514" />
+                           </color>
+                        </DropShadow>
+                     </effect>
+                  </VBox>
+                  <VBox fx:id="movieBox1" alignment="TOP_CENTER" onMousePressed="#bg1Click" prefHeight="663.0" prefWidth="1152.0" style="-fx-background-color: D9D4C8; -fx-background-radius: 35 35 0 0;" visible="false">
+                     <children>
+                        <Label fx:id="addArchiveLabel2111" prefHeight="74.0" prefWidth="328.0" text="ADD ARCHIVE" textFill="#bb443c">
+                           <VBox.margin>
+                              <Insets top="40.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font name="Reddit Sans ExtraBold" size="46.0" />
+                           </font>
+                        </Label>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label fx:id="publisher11" prefHeight="42.0" prefWidth="175.0" text="Director:">
+                                 <font>
+                                    <Font name="Roboto Serif 28pt Medium" size="34.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="80.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <ComboBox fx:id="movieDirectorMenu" editable="true" focusTraversable="false" prefHeight="54.0" prefWidth="280.0" promptText="Director" style="-fx-background-color: white; -fx-background-radius: 10;" visibleRowCount="7">
+                                 <HBox.margin>
+                                    <Insets left="85.0" />
+                                 </HBox.margin>
+                              </ComboBox>
+                              <Button fx:id="addBtn" mnemonicParsing="false" onAction="#addMovieDirector" prefHeight="48.0" prefWidth="62.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="+" textFill="#d9d4c8">
+                                 <HBox.margin>
+                                    <Insets left="40.0" />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="25.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="70.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <AnchorPane prefHeight="84.0" prefWidth="1152.0">
+                           <VBox.margin>
+                              <Insets top="40.0" />
+                           </VBox.margin>
+                           <children>
+                              <ScrollPane fx:id="addMovieDirectorScrollPane" layoutX="204.0" layoutY="-9.0" prefHeight="90.0" prefWidth="758.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10;">
+                                 <content>
+                                    <FlowPane fx:id="addMovieDirectorPane" hgap="20.0" prefHeight="106.0" prefWidth="754.0" style="-fx-background-color: #bdbab3; -fx-background-radius: 10;" vgap="15.0" />
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label fx:id="publisher111" prefHeight="42.0" prefWidth="175.0" text="Cast:">
+                                 <font>
+                                    <Font name="Roboto Serif 28pt Medium" size="34.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="80.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <ComboBox fx:id="movieCastMenu" editable="true" focusTraversable="false" prefHeight="54.0" prefWidth="280.0" promptText="Platform" style="-fx-background-color: white; -fx-background-radius: 10;" visibleRowCount="7">
+                                 <HBox.margin>
+                                    <Insets left="85.0" />
+                                 </HBox.margin>
+                              </ComboBox>
+                              <Button fx:id="addBtn" mnemonicParsing="false" onAction="#addMovieCast" prefHeight="48.0" prefWidth="62.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="+" textFill="#d9d4c8">
+                                 <HBox.margin>
+                                    <Insets left="40.0" />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="25.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="50.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <AnchorPane prefHeight="76.0" prefWidth="1152.0">
+                           <children>
+                              <ScrollPane fx:id="addMovieCastScrollPane" layoutX="204.0" layoutY="-9.0" prefHeight="83.0" prefWidth="758.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10;">
+                                 <content>
+                                    <FlowPane fx:id="addMovieCastPane" hgap="20.0" prefHeight="106.0" prefWidth="754.0" style="-fx-background-color: #bdbab3; -fx-background-radius: 10;" vgap="15.0" />
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="30.0" />
+                           </VBox.margin>
+                        </AnchorPane>
+                        <HBox alignment="CENTER">
+                           <children>
+                              <Button fx:id="backBtn3" mnemonicParsing="false" onAction="#goBack" prefHeight="61.0" prefWidth="202.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="Back" textFill="#d9d4c8">
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="30.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets right="50.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button fx:id="nxtBtn1" mnemonicParsing="false" onAction="#nextAdd" prefHeight="61.0" prefWidth="202.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="Next" textFill="#d9d4c8">
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="30.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="40.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                     <effect>
+                        <DropShadow height="50.25" radius="25.5" spread="0.13" width="53.75">
+                           <color>
+                              <Color opacity="0.3161093294620514" />
+                           </color>
+                        </DropShadow>
+                     </effect>
+                  </VBox>
+                  <VBox fx:id="movieBox2" alignment="TOP_CENTER" onMousePressed="#bg1Click" prefHeight="663.0" prefWidth="1152.0" style="-fx-background-color: D9D4C8; -fx-background-radius: 35 35 0 0;" visible="false">
+                     <children>
+                        <Label fx:id="addArchiveLabel21111" prefHeight="74.0" prefWidth="328.0" text="ADD ARCHIVE" textFill="#bb443c">
+                           <VBox.margin>
+                              <Insets top="40.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font name="Reddit Sans ExtraBold" size="46.0" />
+                           </font>
+                        </Label>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label fx:id="publisher111" prefHeight="42.0" prefWidth="175.0" text="Studio:">
+                                 <font>
+                                    <Font name="Roboto Serif 28pt Medium" size="34.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="80.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <ComboBox fx:id="movieDirectorMenu1" editable="true" focusTraversable="false" prefHeight="54.0" prefWidth="280.0" promptText="Studio" style="-fx-background-color: white; -fx-background-radius: 10;" visibleRowCount="7">
+                                 <HBox.margin>
+                                    <Insets left="85.0" />
+                                 </HBox.margin>
+                              </ComboBox>
+                              <Button fx:id="addBtn" mnemonicParsing="false" onAction="#addMovieStudio" prefHeight="48.0" prefWidth="62.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="+" textFill="#d9d4c8">
+                                 <HBox.margin>
+                                    <Insets left="40.0" />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="25.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="70.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <AnchorPane prefHeight="84.0" prefWidth="1152.0">
+                           <VBox.margin>
+                              <Insets top="40.0" />
+                           </VBox.margin>
+                           <children>
+                              <ScrollPane fx:id="addMovieStudioScrollPane" layoutX="204.0" layoutY="-9.0" prefHeight="90.0" prefWidth="758.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10;">
+                                 <content>
+                                    <FlowPane fx:id="addMovieStudioPane" hgap="20.0" prefHeight="106.0" prefWidth="754.0" style="-fx-background-color: #bdbab3; -fx-background-radius: 10;" vgap="15.0" />
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                        <HBox prefWidth="1152.0">
+                           <children>
+                              <Label fx:id="nameLabel22" prefHeight="42.0" prefWidth="165.0" text="Duration:">
+                                 <font>
+                                    <Font name="Roboto Serif 28pt Medium" size="34.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="80.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <TextField fx:id="durationField" focusTraversable="false" prefHeight="54.0" prefWidth="289.0" promptText="Duration" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;">
+                                 <HBox.margin>
+                                    <Insets left="95.0" />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font name="Reddit Sans Regular" size="17.0" />
+                                 </font>
+                              </TextField>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="30.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label fx:id="typeLabel3" prefHeight="42.0" prefWidth="182.0" text="Language: ">
+                                 <font>
+                                    <Font name="Roboto Serif 28pt Medium" size="34.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="80.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <ComboBox fx:id="movieLanguageMenu" prefHeight="54.0" prefWidth="280.0" promptText="Language" style="-fx-background-color: white; -fx-background-radius: 10;">
+                                 <HBox.margin>
+                                    <Insets left="80.0" />
+                                 </HBox.margin>
+                              </ComboBox>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="30.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox alignment="CENTER">
+                           <children>
+                              <Button fx:id="backBtn31" mnemonicParsing="false" onAction="#goBack" prefHeight="61.0" prefWidth="202.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="Back" textFill="#d9d4c8">
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="30.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets right="50.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button fx:id="nxtBtn11" mnemonicParsing="false" onAction="#nextAdd" prefHeight="61.0" prefWidth="202.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="Next" textFill="#d9d4c8">
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="30.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="70.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                     <effect>
+                        <DropShadow height="50.25" radius="25.5" spread="0.13" width="53.75">
+                           <color>
+                              <Color opacity="0.3161093294620514" />
+                           </color>
+                        </DropShadow>
+                     </effect>
+                  </VBox>
+                  <VBox fx:id="showBox1" alignment="TOP_CENTER" onMousePressed="#bg1Click" prefHeight="663.0" prefWidth="1152.0" style="-fx-background-color: D9D4C8; -fx-background-radius: 35 35 0 0;" visible="false">
+                     <children>
+                        <Label fx:id="addArchiveLabel2112" prefHeight="74.0" prefWidth="328.0" text="ADD ARCHIVE" textFill="#bb443c">
+                           <VBox.margin>
+                              <Insets top="40.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font name="Reddit Sans ExtraBold" size="46.0" />
+                           </font>
+                        </Label>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label fx:id="publisher11" prefHeight="42.0" prefWidth="222.0" text="Showrunner:">
+                                 <font>
+                                    <Font name="Roboto Serif 28pt Medium" size="34.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="80.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <ComboBox fx:id="shoowRunnerMenu" editable="true" focusTraversable="false" prefHeight="54.0" prefWidth="280.0" promptText="Show Runner" style="-fx-background-color: white; -fx-background-radius: 10;" visibleRowCount="7">
+                                 <HBox.margin>
+                                    <Insets left="50.0" />
+                                 </HBox.margin>
+                              </ComboBox>
+                              <Button fx:id="addBtn" mnemonicParsing="false" onAction="#addShowRunner" prefHeight="48.0" prefWidth="62.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="+" textFill="#d9d4c8">
+                                 <HBox.margin>
+                                    <Insets left="40.0" />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="25.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="70.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <AnchorPane prefHeight="84.0" prefWidth="1152.0">
+                           <VBox.margin>
+                              <Insets top="40.0" />
+                           </VBox.margin>
+                           <children>
+                              <ScrollPane fx:id="addShowRunnerScrollPane" layoutX="204.0" layoutY="-9.0" prefHeight="90.0" prefWidth="758.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10;">
+                                 <content>
+                                    <FlowPane fx:id="addShowRunnerPane" hgap="20.0" prefHeight="106.0" prefWidth="754.0" style="-fx-background-color: #bdbab3; -fx-background-radius: 10;" vgap="15.0" />
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label fx:id="publisher112" prefHeight="42.0" prefWidth="175.0" text="Cast:">
+                                 <font>
+                                    <Font name="Roboto Serif 28pt Medium" size="34.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="80.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <ComboBox fx:id="showCastMenu" editable="true" focusTraversable="false" prefHeight="54.0" prefWidth="280.0" promptText="Cast" style="-fx-background-color: white; -fx-background-radius: 10;" visibleRowCount="7">
+                                 <HBox.margin>
+                                    <Insets left="85.0" />
+                                 </HBox.margin>
+                              </ComboBox>
+                              <Button fx:id="addBtn" mnemonicParsing="false" onAction="#addShowCast" prefHeight="48.0" prefWidth="62.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="+" textFill="#d9d4c8">
+                                 <HBox.margin>
+                                    <Insets left="40.0" />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="25.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="50.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <AnchorPane prefHeight="76.0" prefWidth="1152.0">
+                           <children>
+                              <ScrollPane fx:id="addShowCastScrollPane" layoutX="204.0" layoutY="-9.0" prefHeight="83.0" prefWidth="758.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10;">
+                                 <content>
+                                    <FlowPane fx:id="addShowCastPane" hgap="20.0" prefHeight="106.0" prefWidth="754.0" style="-fx-background-color: #bdbab3; -fx-background-radius: 10;" vgap="15.0" />
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="30.0" />
+                           </VBox.margin>
+                        </AnchorPane>
+                        <HBox alignment="CENTER">
+                           <children>
+                              <Button fx:id="backBtn4" mnemonicParsing="false" onAction="#goBack" prefHeight="61.0" prefWidth="202.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="Back" textFill="#d9d4c8">
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="30.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets right="50.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button fx:id="nxtBtn3" mnemonicParsing="false" onAction="#nextAdd" prefHeight="61.0" prefWidth="202.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="Next" textFill="#d9d4c8">
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="30.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="40.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                     <effect>
+                        <DropShadow height="50.25" radius="25.5" spread="0.13" width="53.75">
+                           <color>
+                              <Color opacity="0.3161093294620514" />
+                           </color>
+                        </DropShadow>
+                     </effect>
+                  </VBox>
+                  <VBox fx:id="showBox2" alignment="TOP_CENTER" onMousePressed="#bg1Click" prefHeight="663.0" prefWidth="1152.0" style="-fx-background-color: D9D4C8; -fx-background-radius: 35 35 0 0;" visible="false">
+                     <children>
+                        <Label fx:id="addArchiveLabel21121" prefHeight="74.0" prefWidth="328.0" text="ADD ARCHIVE" textFill="#bb443c">
+                           <VBox.margin>
+                              <Insets top="40.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font name="Reddit Sans ExtraBold" size="46.0" />
+                           </font>
+                        </Label>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label fx:id="publisher112" prefHeight="42.0" prefWidth="222.0" text="Network:">
+                                 <font>
+                                    <Font name="Roboto Serif 28pt Medium" size="34.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="80.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <ComboBox fx:id="showNetworkMenu" editable="true" focusTraversable="false" prefHeight="54.0" prefWidth="280.0" promptText="Network" style="-fx-background-color: white; -fx-background-radius: 10;" visibleRowCount="7">
+                                 <HBox.margin>
+                                    <Insets left="50.0" />
+                                 </HBox.margin>
+                              </ComboBox>
+                              <Button fx:id="addBtn" mnemonicParsing="false" onAction="#addShowNetwork" prefHeight="48.0" prefWidth="62.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="+" textFill="#d9d4c8">
+                                 <HBox.margin>
+                                    <Insets left="40.0" />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="25.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="70.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <AnchorPane prefHeight="84.0" prefWidth="1152.0">
+                           <VBox.margin>
+                              <Insets top="40.0" />
+                           </VBox.margin>
+                           <children>
+                              <ScrollPane fx:id="addShowNetworkScrollPane" layoutX="204.0" layoutY="-9.0" prefHeight="90.0" prefWidth="758.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10;">
+                                 <content>
+                                    <FlowPane fx:id="addShowNetworkPane" hgap="20.0" prefHeight="106.0" prefWidth="754.0" style="-fx-background-color: #bdbab3; -fx-background-radius: 10;" vgap="15.0" />
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                        <HBox prefWidth="1152.0">
+                           <children>
+                              <Label fx:id="nameLabel211" prefHeight="42.0" prefWidth="213.0" text="Seasons:">
+                                 <font>
+                                    <Font name="Roboto Serif 28pt Medium" size="34.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="80.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <TextField fx:id="seasonsField" focusTraversable="false" prefHeight="54.0" prefWidth="209.0" promptText="Season Count" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;">
+                                 <HBox.margin>
+                                    <Insets left="47.0" />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font name="Reddit Sans Regular" size="17.0" />
+                                 </font>
+                              </TextField>
+                              <Label fx:id="nameLabel2111" prefHeight="42.0" prefWidth="165.0" text="Episodes:">
+                                 <font>
+                                    <Font name="Roboto Serif 28pt Medium" size="34.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="60.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <TextField fx:id="episodesField" focusTraversable="false" prefHeight="54.0" prefWidth="209.0" promptText="Episodes Count" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;">
+                                 <font>
+                                    <Font name="Reddit Sans Regular" size="17.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="25.0" />
+                                 </HBox.margin>
+                              </TextField>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="30.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label fx:id="typeLabel4" prefHeight="42.0" prefWidth="126.0" text="Status:">
+                                 <font>
+                                    <Font name="Roboto Serif 28pt Medium" size="34.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="80.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <ComboBox fx:id="statusMenu" prefHeight="54.0" prefWidth="280.0" promptText="Status" style="-fx-background-color: white; -fx-background-radius: 10;">
+                                 <HBox.margin>
+                                    <Insets left="135.0" />
+                                 </HBox.margin>
+                              </ComboBox>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="30.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox alignment="CENTER">
+                           <children>
+                              <Button fx:id="backBtn41" mnemonicParsing="false" onAction="#goBack" prefHeight="61.0" prefWidth="202.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="Back" textFill="#d9d4c8">
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="30.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets right="50.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button fx:id="nxtBtn31" mnemonicParsing="false" onAction="#nextAdd" prefHeight="61.0" prefWidth="202.0" styleClass="navigate-btn" stylesheets="@Button_Style.css" text="Next" textFill="#d9d4c8">
+                                 <font>
+                                    <Font name="Reddit Sans ExtraBold" size="30.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="60.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                     <effect>
+                        <DropShadow height="50.25" radius="25.5" spread="0.13" width="53.75">
+                           <color>
+                              <Color opacity="0.3161093294620514" />
+                           </color>
+                        </DropShadow>
+                     </effect>
+                  </VBox>
+               </children>
+            </StackPane>
+         </children>
+      </GridPane>
+   </children>
+</AnchorPane>
