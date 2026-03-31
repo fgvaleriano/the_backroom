@@ -1,0 +1,119 @@
+Check daw teh it at Tables if all are good:
+
+CREATE TABLE media (
+    id VARCHAR(70) PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    release_date DATE DEFAULT NULL,
+    synopsis TEXT DEFAULT NULL,
+    media_type VARCHAR(20) NOT NULL,
+    file_path VARCHAR(100) DEFAULT NULL
+);
+
+//This information, we dont need a unique id nla, auto increment nlang
+CREATE TABLE person (
+    id VARCHAR(70) AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE company (
+    id VARCHAR(70) AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE category (
+    id VARCHAR(70) AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE role (
+    id VARCHAR(70) AUTO_INCREMENT PRIMARY KEY,
+    role_name VARCHAR(100) not null
+);
+
+CREATE TABLE website (
+    id VARCHAR(70) AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) not null,
+    file_path VARCHAR(100) not null
+);
+
+CREATE TABLE AUTO_INCREMENT platform (
+    id VARCHAR(70) PRIMARY KEY,
+    name VARCHAR(100) not null
+);
+
+CREATE TABLE book_details (
+    media_id VARCHAR(70) PRIMARY KEY,
+    isbn VARCHAR(20) not null,
+    page_count INT,
+    edition VARCHAR(50),
+    FOREIGN KEY (media_id) REFERENCES media(id)
+);
+
+CREATE TABLE movie_details (
+    media_id VARCHAR(70) PRIMARY KEY,
+    duration INT not null,
+    language VARCHAR(50) not null,
+    FOREIGN KEY (media_id) REFERENCES media(id)
+);
+
+CREATE TABLE tv_show_details (
+    media_id VARCHAR(70) PRIMARY KEY,
+    season_count INT not null,
+    episode_count INT not null,
+    status VARCHAR(50)  not null,
+    FOREIGN KEY (media_id) REFERENCES media(id)
+);
+
+CREATE TABLE game_details (
+    media_id VARCHAR(70) PRIMARY KEY,
+    game_engine VARCHAR(100),
+    mode VARCHAR(50),
+    system_requirements TEXT not null,
+    FOREIGN KEY (media_id) REFERENCES media(id)
+);
+
+-- many-to-many relationship tables
+CREATE TABLE media_category (
+    media_id VARCHAR(70),
+    category_id VARCHAR(70),
+    PRIMARY KEY (media_id, category_id),
+    FOREIGN KEY (media_id) REFERENCES media(id),
+    FOREIGN KEY (category_id) REFERENCES category(id)
+);
+
+CREATE TABLE media_personnel (
+    media_id VARCHAR(70),
+    person_id VARCHAR(70),
+    role_id VARCHAR(70),
+    PRIMARY KEY (media_id, person_id, role_id),
+    FOREIGN KEY (media_id) REFERENCES media(id),
+    FOREIGN KEY (person_id) REFERENCES person(id),
+    FOREIGN KEY (role_id) REFERENCES role(id)
+);
+
+CREATE TABLE media_company (
+    media_id VARCHAR(70),
+    company_id VARCHAR(70),
+    role_id VARCHAR(70),
+    PRIMARY KEY (media_id, company_id, role_id),
+    FOREIGN KEY (media_id) REFERENCES media(id),
+    FOREIGN KEY (company_id) REFERENCES company(id),
+    FOREIGN KEY (role_id) REFERENCES role(id)
+);
+
+CREATE TABLE media_access (
+    media_id VARCHAR(70),
+    website_id VARCHAR(70),
+    url VARCHAR(255),
+    PRIMARY KEY (media_id, website_id),
+    FOREIGN KEY (media_id) REFERENCES media(id),
+    FOREIGN KEY (website_id) REFERENCES website(id)
+);
+
+CREATE TABLE game_platform (
+    media_id VARCHAR(70),
+    platform_id VARCHAR(70),
+    PRIMARY KEY (media_id, platform_id),
+    FOREIGN KEY (media_id) REFERENCES media(id),
+    FOREIGN KEY (platform_id) REFERENCES platform(id)
+);
