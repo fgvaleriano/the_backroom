@@ -51,6 +51,8 @@ import java.util.Scanner;
        - UI Alerts: Use JavaFX Alerts to display errors thrown by the Impl.
        - Validation: Prevent saving if required fields (Name, Type) are empty.
 
+    [DONE] LOGIN & SIGNUP
+
     [] (ノಠ益ಠ)ノ MAKE EVRYTHING FUCKING WORK........... (ಥ﹏ಥ)(╥﹏╥)(╥﹏╥)(╥﹏╥)
 
  */
@@ -132,13 +134,6 @@ public class TheBackroom extends Application {
             }
 
         }
-
-
-
-
-
-
-
 
     }
 
