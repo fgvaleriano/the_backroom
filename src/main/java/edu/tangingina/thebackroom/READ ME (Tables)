@@ -117,3 +117,11 @@ CREATE TABLE game_platform (
     FOREIGN KEY (media_id) REFERENCES media(id),
     FOREIGN KEY (platform_id) REFERENCES platform(id)
 );
+
+//this is for users table....
+CREATE TABLE users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('ADMIN', 'MEMBER', 'GUEST') NOT NULL DEFAULT 'MEMBER'
+);

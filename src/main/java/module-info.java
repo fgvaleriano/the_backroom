@@ -5,6 +5,10 @@ module edu.tangingina.thebackroom {
     requires java.sql;
     requires java.desktop;
     requires com.google.gson;
+    requires mysql.connector.j;
+    requires de.mkammerer.argon2.nolibs;
+    requires de.mkammerer.argon2;
+    requires com.sun.jna;
 
     opens edu.tangingina.thebackroom.controller to javafx.fxml;
     opens edu.tangingina.thebackroom to javafx.fxml;

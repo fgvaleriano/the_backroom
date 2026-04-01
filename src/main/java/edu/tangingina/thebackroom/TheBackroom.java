@@ -2,15 +2,21 @@ package edu.tangingina.thebackroom;
 
 import edu.tangingina.thebackroom.controller.HomePageController;
 import edu.tangingina.thebackroom.controller.LoginController;
+import edu.tangingina.thebackroom.dao.impl.UserDaoImpl;
+import edu.tangingina.thebackroom.model.Users;
 import edu.tangingina.thebackroom.util.DatabaseManager;
 import edu.tangingina.thebackroom.util.FileManager;
 import edu.tangingina.thebackroom.util.InternetManager;
+import edu.tangingina.thebackroom.util.Utility;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+
+import java.sql.Connection;
+import java.util.Scanner;
 
 /*
 ===================================================
@@ -49,12 +55,18 @@ import javafx.stage.Stage;
 
  */
 public class TheBackroom extends Application {
+    public static Users currUser;
+    public static Connection conn;
+    public static String user;
+    Scanner scan = new Scanner(System.in);
+
     Scene scene;
     StackPane root, homePage;
 
     DatabaseManager dm = new DatabaseManager();
     FileManager fm = new FileManager();
     InternetManager im = new InternetManager();
+    Utility util = new Utility();
 
     @Override
     public void start(Stage primaryStage) {
@@ -68,6 +80,66 @@ public class TheBackroom extends Application {
         //fm.importJSON(primaryStage);
         //fm.importImg(primaryStage);
         //im.openWebsite("https://www.youtube.com/watch?v=Yw7DQhx08ak&pp=ygUEYWhvZg%3D%3D");
+
+
+        //Flow -> Open the app, and when they enter, put this error if not wifi....or down an database...
+        while(true){
+            try{
+                dm.getConnection();
+                System.out.println("Welcome to The Backroom!!!!");
+                user = "Guest";
+                break;
+            }catch (Exception e){
+                //put an error message here......
+                System.out.println(e.getMessage());
+            }
+        }
+
+
+
+        int choice = 0;
+        UserDaoImpl userDao = new UserDaoImpl(); //this would be put in the login stuff, so yeah
+        String username, pass;
+        while(true){
+            //if(user.equals("Guest")) System.out.println("Currently Log-In as " + dm.getUsername() +"\n");
+            if(currUser != null && currUser.getRole().equals("MEMBER")) System.out.println("Currently Log-In as " + currUser.getUsername() + "\n");
+
+            System.out.print("1. Login\n2. SignUp\n3.Exit\nChoice: ");
+            choice = scan.nextInt();
+            scan.nextLine();
+
+            switch (choice){
+                case 1:
+                    System.out.print("Username: "); username = scan.nextLine();
+                    System.out.print("Password: ") ; pass = scan.nextLine();
+                    try{
+                        userDao.login(username, pass);
+                    }catch (Exception e){
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+
+                case 2:
+                    System.out.print("Username: "); username = scan.nextLine();
+                    System.out.print("Password: ") ; pass = scan.nextLine();
+                    try{
+                        userDao.signUp(username, util.getHashPass(pass));
+                    }catch (Exception e){
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+
+            }
+
+        }
+
+
+
+
+
+
+
+
     }
 
     public void showSignUp(Stage stage){

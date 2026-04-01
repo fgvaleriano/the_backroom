@@ -1,0 +1,50 @@
+===========================================================
+          THE BACKROOM - PROJECT ARCHITECTURE & FLOW
+===========================================================
+
+1. DATABASE CONNECTION (AIVEN CLOUD)
+------------------------------------
+* Master Account: We use ONE main Service Account (***REMOVED***).
+* Why only ONE?
+  - PERFORMANCE: Opening new MySQL accounts for every user
+    is slow and uses too many resources.
+  - CONTROL: We don't want users having direct access to
+    the DB engine. Only the Java App has the "Master Key."
+* Security: Use a 'db.properties' file in resources.
+* Portability: Anyone with the zip file can run the app
+  without setting up their own MySQL users in Aiven.
+
+2. USERS TABLE (Run this in Aiven Console)
+-------------------------------------------------
+* Why a Table Schema instead of SQL accounts?
+  - LIMITATIONS: Aiven limits total DB users. A table can
+    hold millions of rows/users without crashing.
+  - FLEXIBILITY: We can add columns like 'profile_pic' or
+    'join_date' easily. You can't do that with SQL accounts.
+
+3. APPLICATION USER FLOW
+-------------------------
+A. GUEST MODE (Default):
+   - User opens app -> Auto-logs into 'guest_user' account.
+   - Logic: if (user.role == GUEST), disable "Add", "Edit".
+
+B. SIGN UP / LOGIN:
+   - Sign Up: Saves new user as 'MEMBER'.
+   - Login: Checks 'users' table.
+   - Role-Based Access: Java logic handles who sees what.
+
+C. REMEMBER ME:
+   - Store 'username' in 'remember.properties'.
+   - SECURITY: NEVER store the raw password in text files!
+
+4. THE "HALA" PREVENTION RULES
+-------------------------------
+* Logic over SQL: We use IF statements in Java to restrict
+  users. Even if they click a button, the DAO should check
+  their ROLE before running the query.
+* Error Handling: All DB methods must throw exceptions to
+  the UI so we can show Alerts to the user.
+
+===========================================================
+      (ノಠ益ಠ)ノ  FAAAHAHAHAHHAHHAHHHAHAHHAH!!!!!!!
+===========================================================
