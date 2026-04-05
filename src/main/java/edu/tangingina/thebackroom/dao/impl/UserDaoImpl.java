@@ -12,6 +12,7 @@ import java.sql.SQLException;
 
 public class UserDaoImpl implements UserDao {
     Utility util = new Utility();
+
     @Override
     public void login(String username, String pass) throws Exception {
         String query = "SELECT * from users where username = ?";
@@ -55,6 +56,24 @@ public class UserDaoImpl implements UserDao {
                 throw new Exception("Something went wrong. Please try again");
             }
 
+        }
+    }
+
+    @Override
+    public void getUser(String username) throws Exception {
+        String query = "SELECT * from users where username = ?";
+
+        try{
+            PreparedStatement stm = DatabaseManager.conn.prepareStatement(query);
+            stm.setString(1, username);
+            ResultSet rs = stm.executeQuery();
+
+            if(rs.next()){
+                TheBackroom.currUser = new Users(rs.getString("username"), rs.getString("role"));
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 

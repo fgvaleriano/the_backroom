@@ -3,6 +3,10 @@ package edu.tangingina.thebackroom.util;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.util.Scanner;
+
 public class Utility {
     Argon2 argon2 = Argon2Factory.create();
 
@@ -35,5 +39,46 @@ public class Utility {
         }
         return logIn;
     }
+
+    public void saveCredentials(String username){
+        try{
+            File file = new File("app.env");
+            FileWriter fw = new FileWriter(file);
+            fw.write(username);
+            fw.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void removeCredentials(){
+        try{
+            File file = new File("app.env");
+            FileWriter fw = new FileWriter(file);
+            fw.write("");
+            fw.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public String checkAppEnv(){
+        String username = null;
+        try{
+            File file = new File("app.env");
+            if(file.exists()){
+                Scanner reader  = new Scanner(file);
+                if(reader.hasNextLine()){
+                    username = reader.nextLine();
+                }
+                reader.close();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return username;
+    }
+
+
 
 }

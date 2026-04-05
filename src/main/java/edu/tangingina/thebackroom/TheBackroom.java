@@ -56,7 +56,9 @@ import java.util.Scanner;
     [] (ノಠ益ಠ)ノ MAKE EVRYTHING FUCKING WORK........... (ಥ﹏ಥ)(╥﹏╥)(╥﹏╥)(╥﹏╥)
 
  */
+
 public class TheBackroom extends Application {
+    public static boolean inSession = false;
     public static Users currUser;
     public static Connection conn;
     public static String user;
@@ -85,40 +87,47 @@ public class TheBackroom extends Application {
 
 
         //Flow -> Open the app, and when they enter, put this error if not wifi....or down an database...
-        while(true){
-            try{
-                dm.getConnection();
-                System.out.println("Welcome to The Backroom!!!!");
-                user = "Guest";
-                break;
-            }catch (Exception e){
-                //put an error message here......
-                System.out.println(e.getMessage());
-            }
-        }
-
-
-
         int choice = 0;
         UserDaoImpl userDao = new UserDaoImpl(); //this would be put in the login stuff, so yeah
         String username, pass;
         while(true){
-            //if(user.equals("Guest")) System.out.println("Currently Log-In as " + dm.getUsername() +"\n");
-            if(currUser != null && currUser.getRole().equals("MEMBER")) System.out.println("Currently Log-In as " + currUser.getUsername() + "\n");
+            if(!inSession && !openDB()) continue; //inSession this means if currently logIN..
 
-            System.out.print("1. Login\n2. SignUp\n3.Exit\nChoice: ");
+            if(currUser == null) {
+                System.out.println("Currently Log-In as GUEST");
+            }else{
+                System.out.println("Currently Log-In as " + currUser.getUsername() + "\n");
+            }
+
+            System.out.print("1. Login\n2. SignUp\n3.Log-Out\n4.Exit\nChoice: ");
             choice = scan.nextInt();
             scan.nextLine();
 
             switch (choice){
                 case 1:
-                    System.out.print("Username: "); username = scan.nextLine();
-                    System.out.print("Password: ") ; pass = scan.nextLine();
-                    try{
-                        userDao.login(username, pass);
-                    }catch (Exception e){
-                        System.out.println(e.getMessage());
+                    //this part should be put after connecting, but lets put it here la anay muba..
+                    username = util.checkAppEnv();
+                    if(username != null){
+                        try{
+                            userDao.getUser(username);
+                        }catch(Exception e){
+
+                        }
+                    }else{
+                        System.out.print("Username: "); username = scan.nextLine();
+                        System.out.print("Password: ") ; pass = scan.nextLine();
+                        try{
+                            userDao.login(username, pass);
+                            System.out.println("Remember me?\n[Y/N]");
+                            String rem;
+                            rem = scan.nextLine();
+
+                            if(rem.toLowerCase().equals("y")) util.saveCredentials(username);
+                        }catch (Exception e){
+                            System.out.println(e.getMessage());
+                        }
                     }
+
                     break;
 
                 case 2:
@@ -126,13 +135,29 @@ public class TheBackroom extends Application {
                     System.out.print("Password: ") ; pass = scan.nextLine();
                     try{
                         userDao.signUp(username, util.getHashPass(pass));
+                        System.out.println("Remember me?\n[Y/N]");
+                        String rem;
+                        rem = scan.nextLine();
+
+                        if(rem.toLowerCase().equals("y")) util.saveCredentials(username);
+
                     }catch (Exception e){
                         System.out.println(e.getMessage());
                     }
                     break;
 
-            }
+                case 3:
+                    if(currUser != null){
+                        System.out.println("Logging out..");
+                        System.out.println("UnRemember:\n[Y/N] ");
+                        currUser = null;
+                        String rem;
+                        rem = scan.nextLine();
+                        if(rem.toLowerCase().equals("y")) util.removeCredentials();
+                    }
 
+                    break;
+            }
         }
 
     }
@@ -221,5 +246,22 @@ public class TheBackroom extends Application {
             throw new RuntimeException(e);
         }
     }
+
+    public boolean openDB(){
+        boolean connected = false;
+
+        try{
+            dm.getConnection();
+            System.out.println("Welcome to The Backroom!!!!");
+            user = "Guest";
+            connected = true;
+            inSession = true;
+        }catch (Exception e){
+            //put an error message here......
+            System.out.println(e.getMessage());
+        }
+        return connected;
+    }
+
 
 }
