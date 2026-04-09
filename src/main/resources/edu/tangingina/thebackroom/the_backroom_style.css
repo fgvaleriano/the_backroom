@@ -2,28 +2,30 @@
     -fx-background-color: #E6E2D7
 }
 
-.main-background {
+/*.main-background {
     -fx-background-color: #305852;
-    -fx-background-image: url("assets/bkg.png");
+    -fx-background-image: url("/edu/tangingina/thebackroom/assets/folder_bkg.png");
     -fx-background-repeat: no-repeat;
     -fx-background-position: center center;
     -fx-background-size: 100% 100%;
-}
+}*/
 
 .image-button {
     -fx-background-color: transparent;
     -fx-padding: 0;
     -fx-cursor: hand;
-}
-
-/*hover effect*/
-.image-button:hover {
-    -fx-effect: dropshadow(three-pass-box, rgba(255,255,255,0.3), 5, 0, 0, 0);
+    -fx-effect: dropshadow(three-pass-box, #EED0AC, 10, 0, 0, 4);
 }
 
 .image-button:pressed {
     -fx-scale-x: 0.95;
     -fx-scale-y: 0.95;
+}
+
+.label {
+    -fx-font-size: 15px;
+    -fx-font-family: "Reddit Sans Condensed";
+    -fx-text-fill: #305852;
 }
 
 .login-input {
@@ -32,7 +34,7 @@
     -fx-border-color: null;
     -fx-border-width: 0 0 5 0;
     -fx-padding: 10;
-    -fx-font-family: "Arial";
+    -fx-font-family: "Reddit Sans Condensed";
     -fx-font-size: 15px;
 }
 
@@ -61,6 +63,11 @@
 @font-face {
     font-family: "Reddit Sans Condensed";
     src: url("assets/RedditSansCondensed-Bold.tff");
+}
+
+@font-face {
+    font-family: "Reddit Sans Condensed-Regular";
+    src: url("/edu/tangingin/thebackroom/assets/RedditSansCondensed-Regular.tff");
 }
 
 .profile-button {

@@ -82,7 +82,7 @@ public class TheBackroom extends Application {
     public void start(Stage primaryStage) {
         System.out.println("Hello World!!!");
 
-        //showLogin(primaryStage);
+        showLogin(primaryStage);
         //showSignUp(primaryStage);
         //showHome(primaryStage);
         //showAddArchive(primaryStage);
@@ -134,7 +134,6 @@ public class TheBackroom extends Application {
                             System.out.println(e.getMessage());
                         }
                     }
-
                     break;
 
                 case 2:
@@ -223,7 +222,8 @@ public class TheBackroom extends Application {
             scene = new Scene(root);
 
             //for styling
-            scene.getStylesheets().add(getClass().getResource("/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource(
+                    "/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm());
 
             stage.setScene(scene);
             stage.setTitle("The Backroom - Login");

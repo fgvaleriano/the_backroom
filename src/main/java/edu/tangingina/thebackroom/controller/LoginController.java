@@ -5,15 +5,15 @@ import javafx.geometry.*;
 import javafx.scene.*;
 import javafx.scene.image.*;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.*;
+import javafx.scene.paint.*;
 import javafx.stage.*;
 
 public class LoginController {
     Button login, guest, btn;
     StackPane root;
     VBox form;
-    Image img;
+    Image img, bkgImage;
     ImageView view;
     Label userLabel, pwLabel;
     TextField userTxt;
@@ -21,7 +21,20 @@ public class LoginController {
 
     public StackPane getLayout(Stage stage ) {
         root = new StackPane();
-        root.getStyleClass().add("main-background");
+        //root.getStyleClass().add("main-background");
+        bkgImage = new Image(getClass().getResourceAsStream(
+                "/edu/tangingina/thebackroom/assets/folder_bkg.png"));
+
+        BackgroundImage BI = new BackgroundImage(
+                bkgImage,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(100, 100, true, true, false, true)
+        );
+        root.setBackground(new Background(new BackgroundFill(Color.web("#305852"),
+                CornerRadii.EMPTY, Insets.EMPTY)));
+        root.setBackground(new Background(BI));
 
         BorderPane content = new BorderPane();
         content.setPadding(new Insets(40, 60, 40, 60));
@@ -33,12 +46,10 @@ public class LoginController {
         //form.setPadding(new Insets(0, 150, 0, 0));
 
         userLabel = new Label("USERNAME");
-        userLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;" +
-                "-fx-font-family: Roboto; -fx-text-fill: #305852");
+        userLabel.getStyleClass().add("label");
 
         pwLabel = new Label("PASSWORD");
-        pwLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;" +
-                "-fx-font-family: Roboto; -fx-text-fill: #305852");
+        pwLabel.getStyleClass().add("label");
 
         userTxt = createUsername();
         pwTxt = createPw();
@@ -63,11 +74,10 @@ public class LoginController {
         btn = new Button();
         btn.getStyleClass().add("image-button");
 
-        img = new Image(getClass().getResourceAsStream("/edu/tangingina/thebackroom/assets/login.png"));
+        img = new Image(getClass().getResourceAsStream("/edu/tangingina/thebackroom/assets/login btn.png"));
         view = new ImageView(img);
         view.setPreserveRatio(true);
-        view.setFitWidth(350);
-
+        view.setFitWidth(275);
         btn.setGraphic(view);
         return btn;
     }
@@ -76,10 +86,10 @@ public class LoginController {
         btn = new Button();
         btn.getStyleClass().add("image-button");
 
-        img = new Image(getClass().getResourceAsStream("/edu/tangingina/thebackroom/assets/guest btn.png"));
+        img = new Image(getClass().getResourceAsStream("/edu/tangingina/thebackroom/assets/sign up.png"));
         view = new ImageView(img);
         view.setPreserveRatio(true);
-        view.setFitWidth(350);
+        view.setFitWidth(275);
 
         btn.setGraphic(view);
         return btn;
