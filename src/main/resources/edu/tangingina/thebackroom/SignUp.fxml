@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
@@ -12,7 +13,6 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
-<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
 <StackPane style="-fx-background-color: rgba(48, 88, 82, 1);" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.tangingina.thebackroom.controller.SignUpController">
@@ -23,123 +23,168 @@
                <children>
                   <Pane maxHeight="710.0" maxWidth="803.0" onMousePressed="#leftPClick" prefHeight="698.0" prefWidth="803.0" style="-fx-background-radius: 35;" HBox.hgrow="ALWAYS">
                      <children>
-                        <Label layoutX="191.0" layoutY="142.0" prefHeight="118.0" prefWidth="436.0" text="Backroom" textFill="#b83a2d">
+                        <Label layoutX="125.0" layoutY="145.0" prefHeight="124.0" prefWidth="619.0" text="Backroom" textFill="#b83a2d">
                            <font>
-                              <Font name="Rowdies Regular" size="82.0" />
+                              <Font name="Rowdies Bold" size="96.0" />
                            </font>
                         </Label>
-                        <Label layoutX="240.0" layoutY="109.0" prefHeight="116.0" prefWidth="141.0" text="The">
+                        <Label layoutX="186.0" layoutY="110.0" prefHeight="116.0" prefWidth="141.0" text="The">
                            <font>
-                              <Font name="Oleo Script Swash Caps" size="73.0" />
+                              <Font name="Oleo Script Swash Caps" size="83.0" />
                            </font>
                         </Label>
-                        <Label layoutX="189.0" layoutY="282.0" prefHeight="174.0" prefWidth="533.0" text="The Backroom is a database-driven platform that enables users to browse and search records of various media such as books, films, games, manga, and more. " textAlignment="CENTER" wrapText="true">
+                        <Label layoutX="72.0" layoutY="343.0" prefHeight="93.0" prefWidth="633.0" text="The Backroom is a database-driven platform that enables users to browse and search records of various media such as books, films, games, manga, and more. " textAlignment="CENTER" wrapText="true">
                            <font>
-                              <Font name="IBM Plex Mono Light Italic" size="15.0" />
+                              <Font name="IBM Plex Mono Light Italic" size="19.0" />
                            </font>
                         </Label>
-                        <Circle fill="#637991" layoutX="30.0" layoutY="475.0" radius="16.0" smooth="false" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
-                        <Label layoutX="279.0" layoutY="246.0" prefHeight="116.0" prefWidth="141.0" text="An Internet Archive and Discovery Hub">
+                        <Label layoutX="184.0" layoutY="252.0" prefHeight="30.0" prefWidth="377.0" text="An Internet Archive and Discovery Hub">
                            <font>
-                              <Font name="Reddit Sans SemiBold" size="73.0" />
+                              <Font name="Reddit Sans SemiBold" size="20.0" />
                            </font>
                         </Label>
+                        <Label layoutX="72.0" layoutY="444.0" prefHeight="60.0" prefWidth="633.0" text="Log in to browse the archive, search of titles, and contribute new entries." textAlignment="CENTER" wrapText="true">
+                           <font>
+                              <Font name="IBM Plex Mono Light Italic" size="19.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="exitbtn" layoutX="26.0" layoutY="30.0" mnemonicParsing="false" onAction="#exitSignUp" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 50; -fx-background-color: rgba(48, 88, 82, 1);" text="X" textFill="WHITE">
+                           <font>
+                              <Font name="Reddit Sans SemiBold" size="27.0" />
+                           </font>
+                           <effect>
+                              <DropShadow height="16.32" radius="7.66" width="16.32">
+                                 <color>
+                                    <Color red="0.18700000643730164" green="0.3400000035762787" blue="0.3170500099658966" opacity="0.8115501403808594" />
+                                 </color>
+                              </DropShadow>
+                           </effect>
+                        </Button>
                      </children>
                   </Pane>
                   <VBox alignment="TOP_CENTER" maxHeight="712.0" maxWidth="570.0" onMousePressed="#rightPClick" prefHeight="698.0" prefWidth="570.0" style="-fx-background-radius: 35; -fx-background-color: rgba(229, 205, 177, 1);" HBox.hgrow="ALWAYS">
                      <children>
-                        <Label prefHeight="54.0" prefWidth="150.0" text="SIGN UP" textAlignment="CENTER" VBox.vgrow="ALWAYS">
+                        <Label prefHeight="62.0" prefWidth="196.0" text="SIGN UP" textAlignment="CENTER" VBox.vgrow="ALWAYS">
                            <VBox.margin>
                               <Insets top="45.0" />
                            </VBox.margin>
                            <font>
-                              <Font name="Reddit Sans ExtraBold" size="35.0" />
+                              <Font name="Reddit Sans ExtraBold" size="47.0" />
                            </font>
                         </Label>
-                        <Label prefHeight="22.0" prefWidth="198.0" text="Welcome to The Backroom!" textAlignment="CENTER">
+                        <Label prefHeight="26.0" prefWidth="241.0" text="Welcome to The Backroom!" textAlignment="CENTER">
                            <font>
-                              <Font name="Reddit Sans Regular" size="15.0" />
+                              <Font name="Reddit Sans Regular" size="19.0" />
                            </font>
                            <VBox.margin>
                               <Insets />
                            </VBox.margin>
                         </Label>
-                        <Label fx:id="usernameLabel" prefHeight="18.0" prefWidth="237.0" text="Username">
+                        <Label fx:id="usernameLabel" prefHeight="18.0" prefWidth="398.0" text="Username">
                            <VBox.margin>
-                              <Insets top="30.0" />
+                              <Insets top="50.0" />
                            </VBox.margin>
                            <font>
-                              <Font name="Inter 24pt SemiBold" size="14.0" />
+                              <Font name="Inter 24pt SemiBold" size="20.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="usernameField" focusTraversable="false" prefHeight="32.0" prefWidth="238.0" promptText="Username" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10; -fx-border-radius: 10;">
+                        <TextField fx:id="usernameField" focusTraversable="false" prefHeight="50.0" prefWidth="403.0" promptText="Username" style="-fx-background-color: rgba(255, 250, 250, 1); -fx-background-radius: 10; -fx-border-radius: 10;">
                            <VBox.margin>
-                              <Insets left="30.0" right="30.0" top="5.0" />
+                              <Insets left="80.0" right="80.0" top="7.0" />
                            </VBox.margin>
                            <padding>
                               <Insets left="15.0" />
                            </padding>
                            <font>
-                              <Font name="Inter 18pt Light" size="12.0" />
+                              <Font name="Inter 18pt Light" size="17.0" />
                            </font>
+                           <effect>
+                              <DropShadow blurType="ONE_PASS_BOX" height="11.71" offsetX="5.0" offsetY="5.0" radius="5.3575" width="11.72">
+                                 <color>
+                                    <Color red="0.9490196108818054" green="0.7882353067398071" blue="0.6000000238418579" />
+                                 </color>
+                              </DropShadow>
+                           </effect>
                         </TextField>
-                        <Label fx:id="passLabel" layoutX="41.0" layoutY="149.0" prefHeight="18.0" prefWidth="237.0" text="Password">
+                        <Label fx:id="passLabel" layoutX="41.0" layoutY="149.0" prefHeight="26.0" prefWidth="400.0" text="Password">
                            <font>
-                              <Font name="Inter 24pt SemiBold" size="14.0" />
+                              <Font name="Inter 24pt SemiBold" size="20.0" />
                            </font>
                            <VBox.margin>
-                              <Insets top="15.0" />
+                              <Insets top="25.0" />
                            </VBox.margin>
                         </Label>
-                        <PasswordField fx:id="passField" focusTraversable="false" prefHeight="32.0" prefWidth="260.0" promptText="Password" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;">
+                        <PasswordField fx:id="passField" focusTraversable="false" prefHeight="50.0" prefWidth="467.0" promptText="Password" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;">
                            <font>
-                              <Font name="Inter 18pt Light" size="12.0" />
+                              <Font name="Inter 18pt Light" size="17.0" />
                            </font>
                            <VBox.margin>
-                              <Insets left="30.0" right="30.0" top="5.0" />
+                              <Insets left="80.0" right="80.0" top="5.0" />
                            </VBox.margin>
                            <padding>
                               <Insets left="15.0" />
                            </padding>
+                           <effect>
+                              <DropShadow blurType="ONE_PASS_BOX" height="11.71" offsetX="5.0" offsetY="5.0" radius="5.3525" width="11.7">
+                                 <color>
+                                    <Color red="0.9490196108818054" green="0.7882353067398071" blue="0.6000000238418579" />
+                                 </color>
+                              </DropShadow>
+                           </effect>
                         </PasswordField>
-                        <Label fx:id="confirmPassLAbel" layoutX="41.0" layoutY="220.0" prefHeight="18.0" prefWidth="237.0" text="Confirm Password">
+                        <Label fx:id="confirmPassLAbel" layoutX="41.0" layoutY="220.0" prefHeight="26.0" prefWidth="398.0" text="Confirm Password">
                            <font>
-                              <Font name="Inter 24pt SemiBold" size="14.0" />
+                              <Font name="Inter 24pt SemiBold" size="20.0" />
                            </font>
                            <VBox.margin>
-                              <Insets top="15.0" />
+                              <Insets top="25.0" />
                            </VBox.margin>
                         </Label>
-                        <PasswordField fx:id="confirmPassField" focusTraversable="false" prefHeight="32.0" prefWidth="260.0" promptText="Password" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;">
+                        <PasswordField fx:id="confirmPassField" focusTraversable="false" prefHeight="50.0" prefWidth="467.0" promptText="Password" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;">
                            <font>
-                              <Font name="Inter 18pt Light" size="12.0" />
+                              <Font name="Inter 18pt Light" size="17.0" />
                            </font>
                            <padding>
                               <Insets left="15.0" />
                            </padding>
                            <VBox.margin>
-                              <Insets left="30.0" right="30.0" top="5.0" />
+                              <Insets left="80.0" right="80.0" top="5.0" />
                            </VBox.margin>
+                           <effect>
+                              <DropShadow blurType="ONE_PASS_BOX" height="11.74" offsetX="5.0" offsetY="5.0" radius="5.359999999999999" width="11.7">
+                                 <color>
+                                    <Color red="0.9490196108818054" green="0.7882353067398071" blue="0.6000000238418579" />
+                                 </color>
+                              </DropShadow>
+                           </effect>
                         </PasswordField>
-                        <Label fx:id="errorLabel" text="Error Display" textAlignment="CENTER" textFill="#b83a2d" wrapText="true">
+                        <CheckBox mnemonicParsing="false" prefHeight="22.0" prefWidth="397.0" styleClass="remember-me-box" stylesheets="@lander_holder.css" text="Remember Me">
                            <font>
-                              <Font name="Reddit Sans Regular" size="16.0" />
+                              <Font name="Inter 24pt SemiBold" size="20.0" />
                            </font>
                            <VBox.margin>
                               <Insets top="15.0" />
                            </VBox.margin>
-                        </Label>
-                        <Button fx:id="signUpBtn" mnemonicParsing="false" onAction="#signUp" onMouseEntered="#signUpEnter" onMouseExited="#signUpExit" prefHeight="39.0" prefWidth="178.0" style="-fx-background-color: rgba(99, 121, 145, 1); -fx-background-radius: 10;" text="Sign Up" textFill="#d9d4c8">
+                        </CheckBox>
+                        <Label fx:id="errorLabel" text="Error Display" textAlignment="CENTER" textFill="#d27e31" wrapText="true">
+                           <font>
+                              <Font name="Reddit Sans Bold" size="28.0" />
+                           </font>
                            <VBox.margin>
-                              <Insets top="15.0" />
+                              <Insets top="20.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Button fx:id="signUpBtn" mnemonicParsing="false" onAction="#signUp" onMouseEntered="#signUpEnter" onMouseExited="#signUpExit" prefHeight="40.0" prefWidth="304.0" style="-fx-background-color: rgba(139, 46, 46, 1); -fx-background-radius: 10;" text="Sign Up" textFill="#d9d4c8">
+                           <VBox.margin>
+                              <Insets top="25.0" />
                            </VBox.margin>
                            <font>
                               <Font name="Reddit Sans ExtraBold" size="20.0" />
                            </font>
                            <effect>
-                              <DropShadow offsetY="3.0" spread="0.17">
+                              <DropShadow blurType="ONE_PASS_BOX" height="93.58" offsetX="10.0" offsetY="10.0" radius="40.44" width="70.18">
                                  <color>
-                                    <Color red="0.6842105388641357" green="0.6217446327209473" blue="0.5549707412719727" />
+                                    <Color red="0.9300000071525574" green="0.7737600207328796" blue="0.5952000021934509" />
                                  </color>
                               </DropShadow>
                            </effect>

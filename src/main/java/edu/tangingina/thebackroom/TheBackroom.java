@@ -82,8 +82,8 @@ public class TheBackroom extends Application {
     public void start(Stage primaryStage) {
         System.out.println("Hello World!!!");
 
-        showLogin(primaryStage);
-        //showSignUp(primaryStage);
+        //showLogin(primaryStage);
+        showSignUp(primaryStage);
         //showHome(primaryStage);
         //showAddArchive(primaryStage);
         //fm.importCSV(primaryStage);
