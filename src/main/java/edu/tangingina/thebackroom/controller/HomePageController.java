@@ -21,22 +21,22 @@ public class HomePageController {
     Button homeBtn, bkBtn, gmBtn, fmBtn, prfBtn, searchBar;
     //TextField searchBar;
 
-    //loading fonts
-    Font bold = FontLoader.bold(27);
 
     public StackPane getLayout (Stage stage) {
-        root = new StackPane();
+        /*root = new StackPane();
         root.getStyleClass().add("home-background");
-        titleImage = createTitle();
-
-        StackPane.setAlignment(titleImage, Pos.CENTER);
-        titleImage.setTranslateY(-150);
 
         navBar = createNavBar();
-        StackPane.setAlignment(navBar, Pos.CENTER);
-        navBar.setTranslateY(-335);
+        titleImage = createTitle();
 
-        root.getChildren().addAll(titleImage, navBar);
+        BorderPane.setAlignment(navBar, Pos.CENTER);
+        root.setTop(navBar);
+
+        StackPane titleContainer = new StackPane(titleImage);
+        titleContainer.setPadding(new Insets(40, 0,0,0));
+        StackPane.setAlignment(titleImage, Pos.TOP_CENTER);
+
+        root.setCenter(titleContainer);*/
 
         return root;
     }
@@ -70,9 +70,10 @@ public class HomePageController {
     //for the navigation bar
     private HBox createNavBar() {
         navBar = new HBox();
+        navBar.getStyleClass().add("nav-header");
         navBar.setAlignment(Pos.CENTER_LEFT);
-        navBar.setPadding(new Insets(20, 40, 10, 40));
-        navBar.setSpacing(70);
+        navBar.setPadding(new Insets(15, 40, 15, 40));
+        navBar.setSpacing(40);
 
         logoImage = createLogo();
         navBtns = createNavBtns();
@@ -88,16 +89,13 @@ public class HomePageController {
     //creating buttons for navigation bar
     private HBox createNavBtns() {
         homeBtn = new Button("Home");
-        homeBtn.setFont(bold);
-
+        homeBtn.setFont(FontLoader.bold(30));
         bkBtn = new Button("Books");
-        bkBtn.setFont(FontLoader.bold(27));
-
+        bkBtn.setFont(FontLoader.bold(30));
         gmBtn = new Button("Games");
-        gmBtn.setFont(FontLoader.bold(27));
-
+        gmBtn.setFont(FontLoader.bold(30));
         fmBtn = new Button("Films and TV Shows");
-        fmBtn.setFont(FontLoader.bold(27));
+        fmBtn.setFont(FontLoader.bold(30));
 
         homeBtn.getStyleClass().add("btn-primary");
         bkBtn.getStyleClass().add("btn-primary");

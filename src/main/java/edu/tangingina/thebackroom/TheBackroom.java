@@ -228,7 +228,8 @@ public class TheBackroom extends Application {
     }
 
     public void fontLoader() {
-        FontLoader load = new  FontLoader();
+        var url = FontLoader.class.getResource("/edu/tangingina/thebackroom/assets/RedditSansCondensed-Bold.ttf");
+        System.out.println(url);
     }
 
 }
