@@ -69,10 +69,10 @@ public class TheBackroom extends Application {
     public void start(Stage primaryStage) {
         System.out.println("Hello World!!!");
 
-        showLogin(primaryStage);
+        //showLogin(primaryStage);
         //fontLoader();
         //showSignUp(primaryStage);
-        //showHome(primaryStage);
+        showHome(primaryStage);
         //showAddArchive(primaryStage);
         //fm.importCSV(primaryStage);
         //fm.importJSON(primaryStage);

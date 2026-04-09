@@ -1,10 +1,12 @@
 package edu.tangingina.thebackroom.controller;
 
+import edu.tangingina.thebackroom.util.FontLoader;
 import javafx.geometry.*;
 import javafx.scene.control.*;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.scene.shape.*;
+import javafx.scene.text.Font;
 import javafx.stage.*;
 
 import java.net.URL;
@@ -16,8 +18,11 @@ public class HomePageController {
     ImageView imageView, titleView, logoView, titleImage, logoImage;
     VBox titleBox;
     HBox navBar, navBtns;
-    Button bkBtn, gmBtn, fmBtn, prfBtn, searchBar;
+    Button homeBtn, bkBtn, gmBtn, fmBtn, prfBtn, searchBar;
     //TextField searchBar;
+
+    //loading fonts
+    Font bold = FontLoader.bold(27);
 
     public StackPane getLayout (Stage stage) {
         root = new StackPane();
@@ -82,15 +87,27 @@ public class HomePageController {
 
     //creating buttons for navigation bar
     private HBox createNavBtns() {
-        bkBtn = new Button("Books");
-        gmBtn = new Button("Games");
-        fmBtn = new Button("Films and TV Shows");
+        homeBtn = new Button("Home");
+        homeBtn.setFont(bold);
 
+        bkBtn = new Button("Books");
+        bkBtn.setFont(FontLoader.bold(27));
+
+        gmBtn = new Button("Games");
+        gmBtn.setFont(FontLoader.bold(27));
+
+        fmBtn = new Button("Films and TV Shows");
+        fmBtn.setFont(FontLoader.bold(27));
+
+        homeBtn.getStyleClass().add("btn-primary");
         bkBtn.getStyleClass().add("btn-primary");
         gmBtn.getStyleClass().add("btn-primary");
         fmBtn.getStyleClass().add("btn-primary");
 
         //action listeners for nav bar buttons
+        homeBtn.setOnAction(e -> {
+            System.out.println("Home");
+        });
         bkBtn.setOnAction( e -> {
             System.out.println("Go to books archive");
         });
@@ -101,7 +118,7 @@ public class HomePageController {
             System.out.println("Go to films and tv shows archive");
         });
 
-        navBtns = new HBox(50, bkBtn, gmBtn, fmBtn);
+        navBtns = new HBox(50, homeBtn, bkBtn, gmBtn, fmBtn);
         navBtns.setAlignment(Pos.CENTER_LEFT);
 
         return navBtns;

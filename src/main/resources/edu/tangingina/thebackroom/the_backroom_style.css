@@ -1,7 +1,3 @@
-.home-background {
-    -fx-background-color: #E6E2D7
-}
-
 .image-button {
     -fx-background-color: transparent;
     -fx-padding: 0;
@@ -72,6 +68,11 @@
 }
 
 /*Main menu stylesheet*/
+
+.home-background {
+    -fx-background-color: #F2E4D3
+}
+
 .search-button {
     -fx-background-color: white;
     -fx-background-radius: 12;
@@ -112,9 +113,9 @@
     -fx-scale-y: 0.95;
 }
 
+/*
 .btn-primary {
     -fx-background-color: transparent;
-    -fx-font-family: "Reddit Sans Condensed";
     -fx-text-fill: #305852;
     -fx-font-size: 27px;
     -fx-font-weight: bold;
@@ -125,6 +126,11 @@
     -fx-faint-focus-color: transparent;
     -fx-background-insets: 0;
     -fx-background-radius: 0;
+}*/
+
+.btn-primary {
+    -fx-background-color: transparent;
+    -fx-text-fill: #305852;
 }
 
 .btn-primary:hover {
@@ -135,7 +141,12 @@
 
 /*font stuff*/
 @font-face {
-    -font-family: "Reddit Sans Semi Bold";
-    -source: url("assets/RedditSansCondensed-SemiBold.ttf");
+    font-family: "Reddit Sans Semi Bold";
+    source: url("assets/RedditSansCondensed-SemiBold.ttf");
+}
+
+@font-face {
+    font-family: "Reddit Sans Bold";
+    source: url("assets/RedditSansCondensed-Bold.ttf");
 }
 
