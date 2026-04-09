@@ -93,6 +93,7 @@ public class TheBackroom extends Application {
 
 
         //Flow -> Open the app, and when they enter, put this error if not wifi....or down an database...
+        /*
         int choice = 0;
         UserDaoImpl userDao = new UserDaoImpl(); //this would be put in the login stuff, so yeah
         String username, pass;
@@ -170,7 +171,7 @@ public class TheBackroom extends Application {
 
 
             }
-        }
+        }*/
 
     }
 
