@@ -1,30 +1,31 @@
 package edu.tangingina.thebackroom.controller;
 
+import edu.tangingina.thebackroom.TheBackroom;
+import edu.tangingina.thebackroom.dao.impl.UserDaoImpl;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 //This class handles with controlling the components in the fxml file....
 public class SignUpController implements Initializable {
-    //this would get the components in the fxml, and it must be the names are all the same....
     @FXML private Label errorLabel;
     @FXML private TextField usernameField;
     @FXML private PasswordField passField;
     @FXML private PasswordField confirmPassField;
     @FXML private Button signUpBtn;
+    @FXML private Button exitBtn;
+    @FXML private CheckBox rememberBox;
+
+    private UserDaoImpl userDao = new UserDaoImpl();
+    private boolean saveCredentials = false;
 
 
     @FXML
     public void signUp(){
         //set style color...for clicking the button, style choice.. (this means, every chang, we have to change everything back..)
-        signUpBtn.setStyle("-fx-background-color: rgba(74, 91, 109, 1); -fx-background-radius: 10;");
         String user = usernameField.getText();
         String pass = passField.getText();
         String confirmPass = confirmPassField.getText();
@@ -39,19 +40,47 @@ public class SignUpController implements Initializable {
             errorLabel.setText("Passwords don't match.");
             hideError(false);
         } else{
-            System.out.println("Welcome new member!!!");
-        }
+            validateSignUp(user, pass);
+            //add something here after validated sigup...
 
-        signUpBtn.setStyle("-fx-background-color: rgb(99, 121, 145); -fx-background-radius: 10;");
+        }
+    }
+
+    @FXML
+    public void exitSignUp(){
+
+    }
+
+    @FXML
+    public void rememberChecked(){
+        if(rememberBox.isSelected()){
+            saveCredentials = true;
+        }else{
+            saveCredentials = false;
+        }
     }
 
     public void hideError(boolean hide){
         if(hide){
             errorLabel.setVisible(false);
+            errorLabel.setManaged(false);
             //errorLabel.setManaged(false);
         }else{
             errorLabel.setVisible(true);
-            //errorLabel.setManaged(true);
+            errorLabel.setManaged(true);
+        }
+    }
+
+    public void validateSignUp(String user, String pass){
+        try{
+            userDao.signUp(user, TheBackroom.util.getHashPass(pass));
+            if(saveCredentials){
+                TheBackroom.util.saveCredentials(user);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            errorLabel.setText(e.getMessage());
+            hideError(false);
         }
     }
 
@@ -59,16 +88,27 @@ public class SignUpController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         hideError(true);
+        rememberBox.setStyle("-fx-font-family: 'Inter 24pt SemiBold'; -fx-font-size: 15");
     }
 
     @FXML
     public void signUpEnter(){
-        signUpBtn.setStyle("-fx-background-color: rgba(74, 91, 109, 1); -fx-background-radius: 10;");
+        signUpBtn.setStyle("-fx-background-color: #612222; -fx-background-radius: 10;");
     }
 
     @FXML
     public void signUpExit(){
-        signUpBtn.setStyle("-fx-background-color: rgb(99, 121, 145); -fx-background-radius: 10;");
+        signUpBtn.setStyle("-fx-background-color:  rgba(139, 46, 46, 1); -fx-background-radius: 10;");
+    }
+
+    @FXML
+    public void exitEnter(){
+        exitBtn.setStyle("-fx-background-color: #25403c; -fx-background-radius:  50;");
+    }
+
+    @FXML
+    public void exitExit(){
+        exitBtn.setStyle("-fx-background-color:   rgba(48, 88, 82, 1); -fx-background-radius:  50;");
     }
 
     //this methods is to hover away from the fields, artistic choice....just rewiring the focus elswehere here the errorLabel...

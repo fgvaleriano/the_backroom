@@ -74,13 +74,14 @@ public class TheBackroom extends Application {
     StackPane root, homePage;
 
     public static DatabaseManager dm = new DatabaseManager();
+    public static Utility util = new Utility();
     FileManager fm = new FileManager();
     InternetManager im = new InternetManager();
-    Utility util = new Utility();
 
     @Override
     public void start(Stage primaryStage) {
         System.out.println("Hello World!!!");
+        openDB();
 
         //showLogin(primaryStage);
         showSignUp(primaryStage);

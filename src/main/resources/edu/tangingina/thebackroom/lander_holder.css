@@ -1,5 +1,6 @@
 .remember-me-box{
     -fx-text-font-family: "Inter 24pt SemiBold";
+    src:url("/edu/tangingina/thebackroom/assets/Lander's Used Fonts/Inter_24pt-SemiBold.ttf");
     -fx-text-fill: black;
     -fx-font-size: 15;
 }

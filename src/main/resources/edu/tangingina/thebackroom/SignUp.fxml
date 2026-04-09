@@ -48,7 +48,7 @@
                               <Font name="IBM Plex Mono Light Italic" size="19.0" />
                            </font>
                         </Label>
-                        <Button fx:id="exitbtn" layoutX="26.0" layoutY="30.0" mnemonicParsing="false" onAction="#exitSignUp" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 50; -fx-background-color: rgba(48, 88, 82, 1);" text="X" textFill="WHITE">
+                        <Button fx:id="exitBtn" layoutX="26.0" layoutY="30.0" mnemonicParsing="false" onAction="#exitSignUp" onMouseEntered="#exitEnter" onMouseExited="#exitExit" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 50; -fx-background-color: rgba(48, 88, 82, 1);" text="X" textFill="WHITE">
                            <font>
                               <Font name="Reddit Sans SemiBold" size="27.0" />
                            </font>
@@ -158,7 +158,7 @@
                               </DropShadow>
                            </effect>
                         </PasswordField>
-                        <CheckBox mnemonicParsing="false" prefHeight="22.0" prefWidth="397.0" styleClass="remember-me-box" stylesheets="@lander_holder.css" text="Remember Me">
+                        <CheckBox fx:id="rememberBox" mnemonicParsing="false" onAction="#rememberChecked" prefHeight="22.0" prefWidth="397.0" styleClass="remember-me-box" stylesheets="@lander_holder.css" text="Remember Me">
                            <font>
                               <Font name="Inter 24pt SemiBold" size="20.0" />
                            </font>

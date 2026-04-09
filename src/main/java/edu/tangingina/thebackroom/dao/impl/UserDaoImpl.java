@@ -57,6 +57,7 @@ public class UserDaoImpl implements UserDao {
             if(e.getErrorCode() == 1062){
                 throw new Exception("Username already exists.");
             }else{
+                e.printStackTrace();
                 throw new Exception("Something went wrong. Please try again");
             }
 
