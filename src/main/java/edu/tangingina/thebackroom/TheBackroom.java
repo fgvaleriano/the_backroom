@@ -83,8 +83,8 @@ public class TheBackroom extends Application {
         System.out.println("Hello World!!!");
         openDB();
 
-        //showLogin(primaryStage);
-        showSignUp(primaryStage);
+        showLogin(primaryStage);
+        //showSignUp(primaryStage);
         //showHome(primaryStage);
         //showAddArchive(primaryStage);
         //fm.importCSV(primaryStage);

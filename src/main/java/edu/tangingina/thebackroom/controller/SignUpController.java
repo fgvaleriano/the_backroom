@@ -22,6 +22,7 @@ public class SignUpController implements Initializable {
     private UserDaoImpl userDao = new UserDaoImpl();
     private boolean saveCredentials = false;
 
+    //The signup label, change it to omehting parehas ha left panel....pra cohesive feels..
 
     @FXML
     public void signUp(){
