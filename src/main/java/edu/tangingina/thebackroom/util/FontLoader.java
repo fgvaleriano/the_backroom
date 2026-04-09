@@ -4,7 +4,6 @@ import javafx.scene.text.Font;
 
 public class FontLoader {
     //loads font for easy access cuz css be breaking down
-
     public static final String regular_family;
     public static final String bold_family;
     public static final String semi_bold_family;
@@ -35,5 +34,21 @@ public class FontLoader {
         bold_family = bold.getFamily();
         semi_bold_family =  semi_bold.getFamily();
         light_family = light.getFamily();
+    }
+
+    public static Font regular(double size) {
+        return Font.font(regular_family, size);
+    }
+
+    public static Font bold(double size) {
+        return Font.font(bold_family, size);
+    }
+
+    public static Font light(double size) {
+        return Font.font(light_family, size);
+    }
+
+    public static Font semibold(double size) {
+        return Font.font(semi_bold_family, size);
     }
 }

@@ -4,10 +4,7 @@ import edu.tangingina.thebackroom.controller.HomePageController;
 import edu.tangingina.thebackroom.controller.LoginController;
 import edu.tangingina.thebackroom.dao.impl.UserDaoImpl;
 import edu.tangingina.thebackroom.model.Users;
-import edu.tangingina.thebackroom.util.DatabaseManager;
-import edu.tangingina.thebackroom.util.FileManager;
-import edu.tangingina.thebackroom.util.InternetManager;
-import edu.tangingina.thebackroom.util.Utility;
+import edu.tangingina.thebackroom.util.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -73,6 +70,7 @@ public class TheBackroom extends Application {
         System.out.println("Hello World!!!");
 
         showLogin(primaryStage);
+        //fontLoader();
         //showSignUp(primaryStage);
         //showHome(primaryStage);
         //showAddArchive(primaryStage);
@@ -215,7 +213,8 @@ public class TheBackroom extends Application {
             HomePageController home = new HomePageController();
             homePage = home.getLayout(stage);
             scene = new Scene(homePage);
-            scene.getStylesheets().add(getClass().getResource("/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource(
+                    "/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm());
 
             stage.setScene(scene);
             stage.setTitle("The Backroom");
@@ -226,6 +225,10 @@ public class TheBackroom extends Application {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void fontLoader() {
+        FontLoader load = new  FontLoader();
     }
 
 }

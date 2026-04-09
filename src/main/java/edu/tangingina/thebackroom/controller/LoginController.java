@@ -1,25 +1,32 @@
 package edu.tangingina.thebackroom.controller;
 
-import edu.tangingina.thebackroom.util.FontLoader;
+import edu.tangingina.thebackroom.util.*;
 import javafx.geometry.*;
 import javafx.scene.image.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;
+import javafx.scene.control.*;
+import javafx.animation.*;
+import javafx.util.*;
 import javafx.stage.*;
 import javafx.scene.text.*;
+import javafx.event.*;
 
 public class LoginController {
-    Button login, guest, btn;
+    Button login, signUp, btn, guest;
     StackPane root;
-    VBox form;
+    VBox form, btn_holder;
     Image img, bkgImage;
     ImageView view;
     Label userLabel, pwLabel;
     TextField userTxt;
+    CheckBox rememberMe_checkBox;
     PasswordField pwTxt;
+    Alert invalid;
 
     public StackPane getLayout(Stage stage ) {
+
         root = new StackPane();
         //root.getStyleClass().add("main-background");
         bkgImage = new Image(getClass().getResourceAsStream(
@@ -43,23 +50,22 @@ public class LoginController {
         form = new VBox(20);
         form.setAlignment(Pos.CENTER_LEFT);
         form.setMaxWidth(380);
-        //form.setPadding(new Insets(0, 150, 0, 0));
 
         userLabel = new Label("Username");
+        userLabel.setFont(FontLoader.regular(20));
 
         pwLabel = new Label("Password");
-        pwLabel.setFont(Font.font(FontLoader.regular_family,18));
+        pwLabel.setFont(FontLoader.regular(20));
 
         userTxt = createUsername();
         pwTxt = createPw();
-        login = loginBtn();
-        guest = guestBtn();
+        btn_holder = button_holder();
 
-        form.getChildren().addAll(userLabel, userTxt, pwLabel, pwTxt, login, guest);
+        form.getChildren().addAll(userLabel, userTxt, pwLabel, pwTxt, btn_holder);
 
         StackPane rightWraper = new StackPane(form);
         rightWraper.setAlignment(Pos.CENTER_RIGHT);
-        rightWraper.setPadding(new Insets(0, 80,0,0));
+        rightWraper.setPadding(new Insets(120, 80,0,0));
 
         content.setRight(rightWraper);
 
@@ -68,6 +74,19 @@ public class LoginController {
         return root;
     }
 
+    private VBox button_holder(){
+        VBox holder = new VBox(20);
+        holder.setAlignment(Pos.CENTER);
+
+        rememberMe_checkBox = remember();
+        login = loginBtn();
+        signUp = signUp();
+        guest = guest();
+
+        holder.getChildren().addAll(rememberMe_checkBox, login, signUp, guest);
+
+        return holder;
+    }
     //buttons
     private Button loginBtn(){
         btn = new Button();
@@ -76,22 +95,46 @@ public class LoginController {
         img = new Image(getClass().getResourceAsStream("/edu/tangingina/thebackroom/assets/login btn.png"));
         view = new ImageView(img);
         view.setPreserveRatio(true);
-        view.setFitWidth(275);
+        view.setFitWidth(250);
         btn.setGraphic(view);
+
+        //button action
+        btn.setOnAction(e -> {
+            String username = userTxt.getText().trim();
+            String password = pwTxt.getText().trim();
+
+            if (username.isEmpty() || password.isEmpty()) {
+                invalidInput("Invalid Username or Password", "Please try again");
+                return;
+            }
+
+            System.out.println("Good to login");
+        });
+
+
         return btn;
     }
 
-    private Button guestBtn(){
+    //button for sign up
+    private Button signUp(){
         btn = new Button();
         btn.getStyleClass().add("image-button");
 
         img = new Image(getClass().getResourceAsStream("/edu/tangingina/thebackroom/assets/sign up.png"));
         view = new ImageView(img);
         view.setPreserveRatio(true);
-        view.setFitWidth(275);
+        view.setFitWidth(250);
 
         btn.setGraphic(view);
         return btn;
+    }
+
+    //button for guest sign in
+    private Button guest(){
+        guest = new Button("Continue as Guest");
+        guest.setFont(FontLoader.semibold(20));
+        guest.getStyleClass().add("btn-guest");
+        return guest;
     }
 
     //text field for username
@@ -113,6 +156,35 @@ public class LoginController {
         pass.getStyleClass().add("login-input");
         pass.setPrefWidth(350);
         return pass;
+    }
+
+    //remeber me check box for logging in
+    private CheckBox remember() {
+        rememberMe_checkBox = new CheckBox("Remember Me");
+        rememberMe_checkBox.setFont(FontLoader.light(12));
+
+        return rememberMe_checkBox;
+    }
+    //error dialog, for invalide inputs
+    private void invalidInput(String header, String message) {
+        Alert invalid = new Alert(Alert.AlertType.NONE);
+
+        invalid.setHeaderText(header);
+        invalid.setContentText(message);
+        invalid.initStyle(StageStyle.UNDECORATED);
+
+        String css = getClass()
+                .getResource("/edu/tangingina/thebackroom/the_backroom_style.css")
+                .toExternalForm();
+
+        invalid.getDialogPane().getStylesheets().add(css);
+        invalid.getDialogPane().getStyleClass().add("custom-alert");
+
+        invalid.show();
+
+        PauseTransition delay = new PauseTransition(Duration.seconds(2));
+        delay.setOnFinished(e -> invalid.close());
+        delay.play();
     }
 
 }
