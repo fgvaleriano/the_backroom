@@ -84,6 +84,7 @@ public class TheBackroom extends Application {
         openDB();
 
         showLogin(primaryStage);
+        //fontLoader();
         //showSignUp(primaryStage);
         //showHome(primaryStage);
         //showAddArchive(primaryStage);
@@ -249,7 +250,8 @@ public class TheBackroom extends Application {
             HomePageController home = new HomePageController();
             homePage = home.getLayout(stage);
             scene = new Scene(homePage);
-            scene.getStylesheets().add(getClass().getResource("/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource(
+                    "/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm());
 
             stage.setScene(scene);
             stage.setTitle("The Backroom");
@@ -278,5 +280,9 @@ public class TheBackroom extends Application {
         return connected;
     }
 
+
+    public void fontLoader() {
+        FontLoader load = new  FontLoader();
+    }
 
 }

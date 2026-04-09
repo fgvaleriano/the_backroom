@@ -16,4 +16,5 @@ module edu.tangingina.thebackroom {
     exports edu.tangingina.thebackroom;
     exports edu.tangingina.thebackroom.controller;
     exports edu.tangingina.thebackroom.util;
+    opens edu.tangingina.thebackroom.util to javafx.fxml;
 }
