@@ -72,7 +72,7 @@ public class TheBackroom extends Application {
     public void start(Stage primaryStage) {
         System.out.println("Hello World!!!");
 
-        //showLogin(primaryStage);
+        showLogin(primaryStage);
         //showSignUp(primaryStage);
         //showHome(primaryStage);
         //showAddArchive(primaryStage);
@@ -83,7 +83,7 @@ public class TheBackroom extends Application {
 
 
         //Flow -> Open the app, and when they enter, put this error if not wifi....or down an database...
-        while(true){
+        /*while(true){
             try{
                 dm.getConnection();
                 System.out.println("Welcome to The Backroom!!!!");
@@ -93,11 +93,11 @@ public class TheBackroom extends Application {
                 //put an error message here......
                 System.out.println(e.getMessage());
             }
-        }
+        }*/
 
 
 
-        int choice = 0;
+        /*int choice = 0;
         UserDaoImpl userDao = new UserDaoImpl(); //this would be put in the login stuff, so yeah
         String username, pass;
         while(true){
@@ -131,7 +131,7 @@ public class TheBackroom extends Application {
 
             }
 
-        }
+        }*/
 
 
 
@@ -190,7 +190,8 @@ public class TheBackroom extends Application {
             scene = new Scene(root);
 
             //for styling
-            scene.getStylesheets().add(getClass().getResource("/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource(
+                    "/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm());
 
             stage.setScene(scene);
             stage.setTitle("The Backroom - Login");

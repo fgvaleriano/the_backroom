@@ -46,12 +46,10 @@ public class LoginController {
         //form.setPadding(new Insets(0, 150, 0, 0));
 
         userLabel = new Label("USERNAME");
-        userLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;" +
-                "-fx-font-family: Roboto; -fx-text-fill: #305852");
+        userLabel.getStyleClass().add("label");
 
         pwLabel = new Label("PASSWORD");
-        pwLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;" +
-                "-fx-font-family: Roboto; -fx-text-fill: #305852");
+        pwLabel.getStyleClass().add("label");
 
         userTxt = createUsername();
         pwTxt = createPw();
@@ -79,8 +77,7 @@ public class LoginController {
         img = new Image(getClass().getResourceAsStream("/edu/tangingina/thebackroom/assets/login btn.png"));
         view = new ImageView(img);
         view.setPreserveRatio(true);
-        view.setFitWidth(350);
-
+        view.setFitWidth(275);
         btn.setGraphic(view);
         return btn;
     }
@@ -92,7 +89,7 @@ public class LoginController {
         img = new Image(getClass().getResourceAsStream("/edu/tangingina/thebackroom/assets/sign up.png"));
         view = new ImageView(img);
         view.setPreserveRatio(true);
-        view.setFitWidth(350);
+        view.setFitWidth(275);
 
         btn.setGraphic(view);
         return btn;
