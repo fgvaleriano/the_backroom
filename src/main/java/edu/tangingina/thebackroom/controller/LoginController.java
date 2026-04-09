@@ -1,13 +1,13 @@
 package edu.tangingina.thebackroom.controller;
 
-import javafx.application.*;
+import edu.tangingina.thebackroom.util.FontLoader;
 import javafx.geometry.*;
-import javafx.scene.*;
 import javafx.scene.image.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;
 import javafx.stage.*;
+import javafx.scene.text.*;
 
 public class LoginController {
     Button login, guest, btn;
@@ -45,11 +45,10 @@ public class LoginController {
         form.setMaxWidth(380);
         //form.setPadding(new Insets(0, 150, 0, 0));
 
-        userLabel = new Label("USERNAME");
-        userLabel.getStyleClass().add("label");
+        userLabel = new Label("Username");
 
-        pwLabel = new Label("PASSWORD");
-        pwLabel.getStyleClass().add("label");
+        pwLabel = new Label("Password");
+        pwLabel.setFont(Font.font(FontLoader.regular_family,18));
 
         userTxt = createUsername();
         pwTxt = createPw();
@@ -115,4 +114,5 @@ public class LoginController {
         pass.setPrefWidth(350);
         return pass;
     }
+
 }

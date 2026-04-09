@@ -2,14 +2,6 @@
     -fx-background-color: #E6E2D7
 }
 
-/*.main-background {
-    -fx-background-color: #305852;
-    -fx-background-image: url("/edu/tangingina/thebackroom/assets/folder_bkg.png");
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center center;
-    -fx-background-size: 100% 100%;
-}*/
-
 .image-button {
     -fx-background-color: transparent;
     -fx-padding: 0;
@@ -25,6 +17,7 @@
 .label {
     -fx-font-size: 15px;
     -fx-font-family: "Reddit Sans Condensed";
+    -fx-font-weight: bold;
     -fx-text-fill: #305852;
 }
 
@@ -56,19 +49,10 @@
 .textfield-title {
     -fx-font-weight: bold;
     -fx-font-size: 14px;
-    -fx-font-family: "Reddit Sans Condensed";
+    -fx-font-family: "Reddit Bold";
     -fx-text-fill: #305852;
 }
 
-@font-face {
-    font-family: "Reddit Sans Condensed";
-    src: url("assets/RedditSansCondensed-Bold.tff");
-}
-
-@font-face {
-    font-family: "Reddit Sans Condensed-Regular";
-    src: url("/edu/tangingin/thebackroom/assets/RedditSansCondensed-Regular.tff");
-}
 
 .profile-button {
     -fx-background-radius: 1000;
