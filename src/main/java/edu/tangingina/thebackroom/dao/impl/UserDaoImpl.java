@@ -26,6 +26,10 @@ public class UserDaoImpl implements UserDao {
                 String hashedFromDb = rs.getString("password");
                 if(util.verifyPass(hashedFromDb, pass)){
                     TheBackroom.currUser = new Users(rs.getString("username"), rs.getString("role"));
+
+                    if(rs.getString("role").equals("MODERATOR")){
+                        TheBackroom.dm.updateConnection();
+                    }
                 }else{
                     throw new Exception("Invalid username or password");
                 }

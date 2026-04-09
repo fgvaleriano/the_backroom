@@ -60,6 +60,12 @@ import java.util.Scanner;
 public class TheBackroom extends Application {
     public static boolean inSession = false;
     public static Users currUser;
+
+    //(ノಠ益ಠ)ノ CURRUSER ISSUE:
+    //what if someone iinputted or created here a username in the databse
+    //but they are allowed na to do things sa database, even without  kuan checking they are indeed sa dataabse, and limited only
+    //to their role
+
     public static Connection conn;
     public static String user;
     Scanner scan = new Scanner(System.in);
@@ -67,7 +73,7 @@ public class TheBackroom extends Application {
     Scene scene;
     StackPane root, homePage;
 
-    DatabaseManager dm = new DatabaseManager();
+    public static DatabaseManager dm = new DatabaseManager();
     FileManager fm = new FileManager();
     InternetManager im = new InternetManager();
     Utility util = new Utility();
@@ -109,7 +115,7 @@ public class TheBackroom extends Application {
                     username = util.checkAppEnv();
                     if(username != null){
                         try{
-                            userDao.getUser(username);
+                            userDao.getUser(username); //this verifies if there is truly a user with that username on the app.env
                         }catch(Exception e){
 
                         }
@@ -117,6 +123,7 @@ public class TheBackroom extends Application {
                         System.out.print("Username: "); username = scan.nextLine();
                         System.out.print("Password: ") ; pass = scan.nextLine();
                         try{
+
                             userDao.login(username, pass);
                             System.out.println("Remember me?\n[Y/N]");
                             String rem;
@@ -149,14 +156,20 @@ public class TheBackroom extends Application {
                 case 3:
                     if(currUser != null){
                         System.out.println("Logging out..");
+                        dm.resetConnection();
                         System.out.println("UnRemember:\n[Y/N] ");
                         currUser = null;
                         String rem;
                         rem = scan.nextLine();
                         if(rem.toLowerCase().equals("y")) util.removeCredentials();
                     }
-
                     break;
+
+                case 4:
+                    System.out.println("Exiting the app");
+                    return;
+
+
             }
         }
 
