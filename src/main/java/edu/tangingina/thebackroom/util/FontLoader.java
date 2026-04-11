@@ -51,4 +51,19 @@ public class FontLoader {
     public static Font semibold(double size) {
         return Font.font(semi_bold_family, size);
     }
+
+    public static void debug() {
+        System.out.println("--- FontLoader Debug ---");
+        String[] families = {regular_family, bold_family, semi_bold_family, light_family};
+        String[] names = {"Regular", "Bold", "Semi-Bold", "Light"};
+
+        for (int i = 0; i < families.length; i++) {
+            if (families[i] == null) {
+                System.err.println("❌ " + names[i] + ": FAILED (File not found or invalid)");
+            } else {
+                System.out.println("✅ " + names[i] + ": LOADED (Family: " + families[i] + ")");
+            }
+        }
+        System.out.println("-------------------------");
+    }
 }

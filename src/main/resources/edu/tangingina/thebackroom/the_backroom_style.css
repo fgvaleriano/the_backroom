@@ -133,9 +133,24 @@
     -fx-scale-y: 0.95;
 }
 
+/*add archive bkg*/
+
+.green-bkg {
+    -fx-background-color: #305852;
+}
+
+.title-text {
+    -fx-font-family: "Reddit Extra";
+    -fx-font-weight: Bold;
+}
+
 /*font stuff*/
 @font-face {
-    -font-family: "Reddit Sans Semi Bold";
-    -source: url("assets/RedditSansCondensed-SemiBold.ttf");
+    font-family: "Reddit Sans Semi Bold";
+    source: url("/assets/RedditSansCondensed-SemiBold.ttf");
+}
+@font-face {
+    font-family: "Reddit Extra";
+    source: url("/assets/RedditSansCondensed-ExtraBold.ttf");
 }
 
