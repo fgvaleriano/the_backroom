@@ -1,6 +1,7 @@
 package edu.tangingina.thebackroom;
 
 //import edu.tangingina.thebackroom.controller.AddArchive_v2;
+import edu.tangingina.thebackroom.controller.AddArchive_v2;
 import edu.tangingina.thebackroom.controller.HomePageController;
 import edu.tangingina.thebackroom.controller.LoginController;
 import edu.tangingina.thebackroom.dao.impl.UserDaoImpl;
@@ -59,7 +60,7 @@ public class TheBackroom extends Application {
     Scanner scan = new Scanner(System.in);
 
     Scene scene;
-    StackPane root, homePage;
+    StackPane root, homePage, addPage;
 
     DatabaseManager dm = new DatabaseManager();
     FileManager fm = new FileManager();
@@ -228,14 +229,15 @@ public class TheBackroom extends Application {
         }
     }
 
-    /*public void showAddArchive_v2(Stage stage) {
+    public void showAddArchive_v2(Stage stage) {
         try {
             AddArchive_v2 add = new AddArchive_v2();
+
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }*/
+    }
 
     public void fontLoader() {
         FontLoader load = new  FontLoader();
