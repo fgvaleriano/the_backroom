@@ -8,6 +8,7 @@ public class FontLoader {
     public static final String bold_family;
     public static final String semi_bold_family;
     public static final String light_family;
+    public static final String extra_family;
 
     static {
         Font regular = Font.loadFont(
@@ -30,10 +31,16 @@ public class FontLoader {
                 10
         );
 
+        Font extra = Font.loadFont(
+                FontLoader.class.getResourceAsStream("/edu/tangingina/thebackroom/assets/RedditSansCondensed-ExtraBold.ttf"),
+                10
+        );
+
         regular_family = regular.getFamily();
         bold_family = bold.getFamily();
         semi_bold_family =  semi_bold.getFamily();
         light_family = light.getFamily();
+        extra_family = extra.getFamily();
     }
 
     public static Font regular(double size) {
@@ -50,5 +57,24 @@ public class FontLoader {
 
     public static Font semibold(double size) {
         return Font.font(semi_bold_family, size);
+    }
+
+    public static Font extra(double size) {
+        return Font.font(extra_family, size);
+    }
+
+    public static void debug() {
+        System.out.println("--- FontLoader Debug ---");
+        String[] families = {regular_family, bold_family, semi_bold_family, light_family};
+        String[] names = {"Regular", "Bold", "Semi-Bold", "Light"};
+
+        for (int i = 0; i < families.length; i++) {
+            if (families[i] == null) {
+                System.err.println("❌ " + names[i] + ": FAILED (File not found or invalid)");
+            } else {
+                System.out.println("✅ " + names[i] + ": LOADED (Family: " + families[i] + ")");
+            }
+        }
+        System.out.println("-------------------------");
     }
 }
