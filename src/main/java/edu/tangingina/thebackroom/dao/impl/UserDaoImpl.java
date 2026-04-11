@@ -82,20 +82,4 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
-    @Override
-    public void guestLogin() throws Exception {
-        String query = "SELECT * from users where role = 'GUEST' limit 1;";
-
-        try{
-            PreparedStatement stm = DatabaseManager.conn.prepareStatement(query);
-            ResultSet rs = stm.executeQuery();
-            if(rs.next()){
-                TheBackroom.currUser = new Users(rs.getString("username"), rs.getString("role"));
-            }
-        }catch (Exception e){
-            throw new Exception("Invalid username or password");
-        }
-    }
-
-
 }

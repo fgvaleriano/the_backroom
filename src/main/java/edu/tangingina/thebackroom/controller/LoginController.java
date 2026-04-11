@@ -28,6 +28,7 @@ public class LoginController {
     Alert invalid;
 
     private UserDaoImpl userDao = new UserDaoImpl();
+    private boolean saveCredentials = false;
 
     public StackPane getLayout(Stage stage ) {
 
@@ -111,6 +112,9 @@ public class LoginController {
                 try{
                     userDao.login(username, password);
                     TheBackroom.sm.showHome();System.out.println("Good to login");
+                    if(saveCredentials){
+                        TheBackroom.util.saveCredentials(username);
+                    }
                 } catch (Exception ex) {
                     System.out.println(ex.getMessage());
                 }
@@ -184,6 +188,19 @@ public class LoginController {
     private CheckBox remember() {
         rememberMe_checkBox = new CheckBox("Remember Me");
         rememberMe_checkBox.setFont(FontLoader.light(12));
+
+        //added the styling na for remmeber me, but u nlang sa positioning...
+        rememberMe_checkBox.getStylesheets().add(getClass().getResource("/edu/tangingina/thebackroom/lander_holder.css").toExternalForm());
+        rememberMe_checkBox.getStyleClass().add("remember-me-box");
+        rememberMe_checkBox.setStyle("-fx-font-family: 'Inter 24pt SemiBold'; -fx-font-size: 15");
+
+        rememberMe_checkBox.setOnAction(e -> {
+            if(rememberMe_checkBox.isSelected()){
+                saveCredentials = true;
+            }else{
+                saveCredentials = false;
+            }
+        });
 
         return rememberMe_checkBox;
     }

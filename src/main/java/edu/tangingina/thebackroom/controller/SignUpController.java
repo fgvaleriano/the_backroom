@@ -41,8 +41,9 @@ public class SignUpController implements Initializable {
             errorLabel.setText("Passwords don't match.");
             hideError(false);
         } else{
-            validateSignUp(user, pass);
-            //add something here after validated sigup...
+            if(validateSignUp(user, pass)){
+                TheBackroom.sm.showHome();
+            }
 
         }
     }
@@ -72,17 +73,20 @@ public class SignUpController implements Initializable {
         }
     }
 
-    public void validateSignUp(String user, String pass){
+    public boolean validateSignUp(String user, String pass){
         try{
             userDao.signUp(user, TheBackroom.util.getHashPass(pass));
             if(saveCredentials){
                 TheBackroom.util.saveCredentials(user);
             }
+            return true;
         }catch(Exception e){
-            e.printStackTrace();
+            //e.printStackTrace();
             errorLabel.setText(e.getMessage());
             hideError(false);
         }
+
+        return false;
     }
 
     //this means that when a window opens do this things first....

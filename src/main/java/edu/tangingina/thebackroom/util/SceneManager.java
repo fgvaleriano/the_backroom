@@ -16,10 +16,18 @@ public class SceneManager {
     private FXMLLoader addArchive;
     private Stage stage;
     private Scene scene;
+    private UserDaoImpl userDao = new UserDaoImpl();
 
     public SceneManager(Stage stage){
         this.stage =  stage;
-        initializeLogin();
+
+        //before everything, we need to check if there is an app env, so that if there is automatic home
+        if(checkAppEnv()){
+            showHome();
+        }else{
+            initializeLogin();
+        }
+
     }
 
     public void initializeLogin(){
@@ -86,11 +94,26 @@ public class SceneManager {
         try {
             HomePageController home = new HomePageController();
             StackPane homePage = home.getLayout(stage);
-            scene.setRoot(homePage);
-            scene.getStylesheets().add(getClass().getResource(
-                    "/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm());
 
-            stage.setScene(scene);
+            //this is for handling on if there is rememeber me, since the intialization with scene is during initialize login, but here
+            //if rememebr me, then we intialize sa showHOme
+
+            String url = getClass().getResource(
+                    "/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm();
+
+            if(scene == null){
+                scene = new Scene(homePage);
+                scene.getStylesheets().add(url);
+
+                stage.setScene(scene);
+                stage.setMaximized(true);
+                stage.show();
+                stage.setResizable(true);
+                scene.setRoot(homePage);
+            }else{
+                scene.getStylesheets().add(url);
+                scene.setRoot(homePage);
+            }
             stage.setTitle("The Backroom");
             homePage.requestFocus();
 
@@ -100,6 +123,19 @@ public class SceneManager {
     }
 
     public void clearStage(){
+    }
+
+    public boolean checkAppEnv(){
+        String username = TheBackroom.util.checkAppEnv();
+        if(username != null){
+            try{
+                userDao.getUser(username);
+                return true;
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        return false;
     }
 
 }

@@ -83,8 +83,9 @@ public class TheBackroom extends Application {
     @Override
     public void start(Stage primaryStage) {
         System.out.println("Hello World!!!");
-        sm = new SceneManager(primaryStage);
         openDB();
+        sm = new SceneManager(primaryStage);
+
 
         //showLogin(primaryStage);
         fontLoader();
