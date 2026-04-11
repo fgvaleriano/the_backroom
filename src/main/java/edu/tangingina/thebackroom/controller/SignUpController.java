@@ -49,7 +49,7 @@ public class SignUpController implements Initializable {
 
     @FXML
     public void exitSignUp(){
-
+        TheBackroom.sm.showLogin();
     }
 
     @FXML

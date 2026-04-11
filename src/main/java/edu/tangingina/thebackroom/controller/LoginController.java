@@ -1,5 +1,7 @@
 package edu.tangingina.thebackroom.controller;
 
+import edu.tangingina.thebackroom.TheBackroom;
+import edu.tangingina.thebackroom.dao.impl.UserDaoImpl;
 import edu.tangingina.thebackroom.util.*;
 import javafx.geometry.*;
 import javafx.scene.image.*;
@@ -24,6 +26,8 @@ public class LoginController {
     CheckBox rememberMe_checkBox;
     PasswordField pwTxt;
     Alert invalid;
+
+    private UserDaoImpl userDao = new UserDaoImpl();
 
     public StackPane getLayout(Stage stage ) {
 
@@ -103,12 +107,21 @@ public class LoginController {
             String username = userTxt.getText().trim();
             String password = pwTxt.getText().trim();
 
+            if(!username.isEmpty() && !password.isEmpty()){
+                try{
+                    userDao.login(username, password);
+                    TheBackroom.sm.showHome();System.out.println("Good to login");
+                } catch (Exception ex) {
+                    System.out.println(ex.getMessage());
+                }
+            }
+            /*
             if (username.isEmpty() || password.isEmpty()) {
                 invalidInput("Invalid Username or Password", "Please try again");
                 return;
-            }
+            }*/
 
-            System.out.println("Good to login");
+
         });
 
 
@@ -126,6 +139,10 @@ public class LoginController {
         view.setFitWidth(250);
 
         btn.setGraphic(view);
+        btn.setOnAction(e -> {
+            TheBackroom.sm.showSignUp();
+        });
+
         return btn;
     }
 
@@ -134,6 +151,11 @@ public class LoginController {
         guest = new Button("Continue as Guest");
         guest.setFont(FontLoader.semibold(20));
         guest.getStyleClass().add("btn-guest");
+
+        guest.setOnAction(e -> {
+            TheBackroom.sm.showHome();
+        });
+
         return guest;
     }
 
@@ -165,6 +187,7 @@ public class LoginController {
 
         return rememberMe_checkBox;
     }
+
     //error dialog, for invalide inputs
     private void invalidInput(String header, String message) {
         Alert invalid = new Alert(Alert.AlertType.NONE);

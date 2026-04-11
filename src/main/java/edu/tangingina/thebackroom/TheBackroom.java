@@ -4,10 +4,7 @@ import edu.tangingina.thebackroom.controller.HomePageController;
 import edu.tangingina.thebackroom.controller.LoginController;
 import edu.tangingina.thebackroom.dao.impl.UserDaoImpl;
 import edu.tangingina.thebackroom.model.Users;
-import edu.tangingina.thebackroom.util.DatabaseManager;
-import edu.tangingina.thebackroom.util.FileManager;
-import edu.tangingina.thebackroom.util.InternetManager;
-import edu.tangingina.thebackroom.util.Utility;
+import edu.tangingina.thebackroom.util.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -75,15 +72,21 @@ public class TheBackroom extends Application {
 
     public static DatabaseManager dm = new DatabaseManager();
     public static Utility util = new Utility();
+
+    public static SceneManager sm;
+
     FileManager fm = new FileManager();
     InternetManager im = new InternetManager();
 
     @Override
     public void start(Stage primaryStage) {
         System.out.println("Hello World!!!");
+        sm = new SceneManager(primaryStage);
         openDB();
 
-        showLogin(primaryStage);
+        //sm.showLogin();
+
+        //showLogin(primaryStage);
         //fontLoader();
         //showSignUp(primaryStage);
         //showHome(primaryStage);
