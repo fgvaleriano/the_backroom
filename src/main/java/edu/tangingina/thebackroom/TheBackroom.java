@@ -1,6 +1,5 @@
 package edu.tangingina.thebackroom;
 
-//import edu.tangingina.thebackroom.controller.AddArchive_v2;
 import edu.tangingina.thebackroom.controller.AddArchive_v2;
 import edu.tangingina.thebackroom.controller.HomePageController;
 import edu.tangingina.thebackroom.controller.LoginController;
@@ -71,8 +70,8 @@ public class TheBackroom extends Application {
     public void start(Stage primaryStage) {
         System.out.println("Hello World!!!");
 
-        //showLogin(primaryStage);
-        fontLoader();
+        showLogin(primaryStage);
+        //fontLoader();
         //showSignUp(primaryStage);
         //showHome(primaryStage);
         //showAddArchive(primaryStage);
@@ -224,16 +223,6 @@ public class TheBackroom extends Application {
             stage.setMaximized(true);
             stage.show();
             stage.setResizable(false);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void showAddArchive_v2(Stage stage) {
-        try {
-            AddArchive_v2 add = new AddArchive_v2();
-
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

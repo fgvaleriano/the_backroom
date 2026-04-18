@@ -134,6 +134,12 @@ public class LoginController {
         guest = new Button("Continue as Guest");
         guest.setFont(FontLoader.semibold(20));
         guest.getStyleClass().add("btn-guest");
+
+        guest.setOnAction(e -> {
+            System.out.println("Opeining add archive for trial");
+
+            AddArchive_v2.addArchiveView();
+        });
         return guest;
     }
 
