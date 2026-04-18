@@ -62,8 +62,8 @@ public class LoginController {
         pwLabel = new Label("Password");
         pwLabel.setFont(FontLoader.regular(20));
 
-        userTxt = createUsername();
-        pwTxt = createPw();
+        userTxt = inputUsername();
+        pwTxt = inputPW();
         btn_holder = button_holder();
 
         form.getChildren().addAll(userLabel, userTxt, pwLabel, pwTxt, btn_holder);
@@ -164,7 +164,7 @@ public class LoginController {
     }
 
     //text field for username
-    private TextField createUsername(){
+    private TextField inputUsername(){
         TextField username = new TextField();
         username.setPromptText("Enter Username");
 
@@ -175,7 +175,7 @@ public class LoginController {
     }
 
     //text field for password
-    private PasswordField createPw(){
+    private PasswordField inputPW(){
         PasswordField pass = new PasswordField();
         pass.setPromptText("Enter Password");
 
