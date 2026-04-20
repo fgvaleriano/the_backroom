@@ -25,6 +25,12 @@ public class  AddArchive_v2 {
     private static TextField archiveInput;
     private static TextArea textArea;
 
+    //modular forms that handles input
+    private static BaseMediaForm baseMediaForm;
+    private static BookDetailsForm bookDetailsForm;
+    private static GameDetailsForm gameDetailsForm;
+    private static FilmDetailsForm filmDetailsForm;
+    private static TVShowDetailsForm tvShowDetailsForm;
 
     public static void addArchiveView() {
 
@@ -54,26 +60,13 @@ public class  AddArchive_v2 {
         mediaTypeRow = getMediaType();
         dynamicForm = getDynamicForm();
 
-        //---- ADD BUTTON ----
-        /*addBtn = new Button();
-        addBtn.getStyleClass().add("image-button");
-        btnImage = new Image(AddArchive_v2.class.getResourceAsStream(
-                "edu/tangingina/thebackroom/assets/add_btn.png"));
-        ImageView imageView = new ImageView(btnImage);
-        imageView.setFitWidth(150);
-        imageView.setPreserveRatio(true);*/
-
-        //will be hidden until media is selected
-        //addBtn.setVisible(false);
-        //addBtn.setManaged(false);
-
         formContent.getChildren().addAll(mediaTypeRow, dynamicForm);
         innerCard.getChildren().addAll(header, inputHolder);
         root.getChildren().add(innerCard);
 
         StackPane.setAlignment(innerCard, Pos.CENTER);
 
-        scene = new Scene(root, 800, 600);
+        scene = new Scene(root, 950, 600);
         scene.getStylesheets().add(AddArchive_v2.class.getResource(
                 "/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm());
 
@@ -94,7 +87,7 @@ public class  AddArchive_v2 {
         innerCard = new VBox();
         innerCard.getStyleClass().add("card-inner");
         innerCard.setPrefWidth(700);
-        innerCard.setMaxSize(700, 500);
+        innerCard.setMaxSize(890, 530);
         innerCard.setFillWidth(true);
 
         return innerCard;
@@ -121,7 +114,7 @@ public class  AddArchive_v2 {
         mediaTypeSelector = new ComboBox<>();
         mediaTypeSelector.getItems().addAll("Book", "Game", "Film", "TV Show");
         mediaTypeSelector.setPromptText("Select Media Type");
-        //set font and color later
+        mediaTypeSelector.getStyleClass().add("combo-box");
 
         //dyanmic listener
         mediaTypeSelector.setOnAction(e -> {
@@ -156,75 +149,32 @@ public class  AddArchive_v2 {
         }
 
         switch (selectedType) {
-            case "Book" -> dynamicForm.getChildren().addAll(
-                    createField("Title"),
-                    createField("Author"),
-                    createField("Synopsis"),
-                    createField("Publish Date"),
-                    createField("Genre"),
-                    createField("ISBN"),
-                    createField("Page Count"),
-                    createField("Edition")
-            );
-
-            case "Game" -> dynamicForm.getChildren().addAll(
-                    createField("Title"),
-                    createField("Author"),
-                    createField("Synopsis"),
-                    createField("Publish Date"),
-                    createField("Genre"),
-                    createField("ISBN"),
-                    createField("Page Count"),
-                    createField("Edition")
-            );
-
-            case "Film" -> dynamicForm.getChildren().addAll(
-                    createField("Title"),
-                    createField("Author"),
-                    createField("Synopsis"),
-                    createField("Publish Date"),
-                    createField("Genre"),
-                    createField("ISBN"),
-                    createField("Page Count"),
-                    createField("Edition")
-            );
-
-            case "TV Show" -> dynamicForm.getChildren().addAll(
-                    createField("Title"),
-                    createField("Author"),
-                    createField("Synopsis"),
-                    createField("Publish Date"),
-                    createField("Genre"),
-                    createField("ISBN"),
-                    createField("Page Count"),
-                    createField("Edition")
-            );
+            case "Book" -> {
+                System.out.println("");
+                bookDetailsForm = new BookDetailsForm();
+                dynamicForm.getChildren().addAll(
+                        bookDetailsForm.getView()
+                );
+            }
+            case "Game" -> {
+                gameDetailsForm = new GameDetailsForm();
+                dynamicForm.getChildren().addAll(
+                        gameDetailsForm.getView()
+                );
+            }
+            case "Film" -> {
+                filmDetailsForm = new FilmDetailsForm();
+                dynamicForm.getChildren().addAll(
+                        filmDetailsForm.getView()
+                );
+            }
+            case "TV Show" -> {
+                tvShowDetailsForm = new TVShowDetailsForm();
+                dynamicForm.getChildren().addAll(
+                        tvShowDetailsForm.getView()
+                );
+            }
         }
-    }
-
-    //input fields
-    private static VBox createField (String labelText) {
-        inputLabel = new Label(labelText);
-        archiveInput = new TextField();
-        inputLabel.getStyleClass().add("input-label");
-
-        VBox fieldBox = new VBox(8, inputLabel, archiveInput);
-        fieldBox.setMaxWidth(320);
-
-        return fieldBox;
-    }
-
-    private static VBox createTextAreaField(String labelText) {
-        Label label = new Label(labelText);
-        TextArea textArea = new TextArea();
-        textArea.setPromptText("Enter " + labelText);
-        textArea.setPrefRowCount(4);
-        textArea.setWrapText(true);
-
-        VBox fieldBox = new VBox(6, label, textArea);
-        fieldBox.setMaxWidth(420);
-
-        return fieldBox;
     }
 
 }
