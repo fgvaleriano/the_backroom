@@ -1,0 +1,36 @@
+2026.04.19 21:01:43 INFO  Started: Metals version 1.6.7 in folders 'C:\Users\Avril Dominique\Documents\2025-2026\CMSC 127\The Backroom\the_backroom' for client Visual Studio Code 1.116.0.
+2026.04.19 21:01:43 INFO  Memory monitor started
+2026.04.19 21:01:45 WARN  Using H2 2.4.240 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.
+2026.04.19 21:01:45 INFO  no build target found for C:\Users\Avril Dominique\Documents\2025-2026\CMSC 127\The Backroom\the_backroom\src\main\java\edu\tangingina\thebackroom\Launcher.java. Using fallback presentation compiler.
+2026.04.19 21:01:47 INFO  no build target found for C:\Users\Avril Dominique\Documents\2025-2026\CMSC 127\The Backroom\the_backroom\src\main\java\edu\tangingina\thebackroom\Launcher.java. Using fallback presentation compiler.
+2026.04.19 21:01:48 INFO  no build target found for C:\Users\Avril Dominique\Documents\2025-2026\CMSC 127\The Backroom\the_backroom\src\main\java\edu\tangingina\thebackroom\Launcher.java. Using fallback presentation compiler.
+2026.04.19 21:01:50 INFO  no build target found for C:\Users\Avril Dominique\Documents\2025-2026\CMSC 127\The Backroom\the_backroom\src\main\java\edu\tangingina\thebackroom\Launcher.java. Using fallback presentation compiler.
+2026.04.19 21:01:50 INFO  no build target found for C:\Users\Avril Dominique\Documents\2025-2026\CMSC 127\The Backroom\the_backroom\src\main\java\edu\tangingina\thebackroom\controller\AddArchive_v2.java. Using fallback presentation compiler.
+2026.04.19 21:01:52 INFO  no build target found for C:\Users\Avril Dominique\Documents\2025-2026\CMSC 127\The Backroom\the_backroom\src\main\java\edu\tangingina\thebackroom\controller\AddArchive_v2.java. Using fallback presentation compiler.
+Apr 19, 2026 9:01:52 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 11
+2026.04.19 21:01:52 INFO  no build target found for C:\Users\Avril Dominique\Documents\2025-2026\CMSC 127\The Backroom\the_backroom\src\main\java\edu\tangingina\thebackroom\controller\AddArchive_v2.java. Using fallback presentation compiler.
+2026.04.19 21:01:56 INFO  no build target found for C:\Users\Avril Dominique\Documents\2025-2026\CMSC 127\The Backroom\the_backroom\src\main\java\edu\tangingina\thebackroom\TheBackroom.java. Using fallback presentation compiler.
+2026.04.19 21:01:56 INFO  no build target found for C:\Users\Avril Dominique\Documents\2025-2026\CMSC 127\The Backroom\the_backroom\src\main\java\edu\tangingina\thebackroom\TheBackroom.java. Using fallback presentation compiler.
+2026.04.19 21:01:56 INFO  no build target found for C:\Users\Avril Dominique\Documents\2025-2026\CMSC 127\The Backroom\the_backroom\src\main\java\edu\tangingina\thebackroom\TheBackroom.java. Using fallback presentation compiler.
+2026.04.19 21:01:56 INFO  no build target found for C:\Users\Avril Dominique\Documents\2025-2026\CMSC 127\The Backroom\the_backroom\src\main\java\edu\tangingina\thebackroom\TheBackroom.java. Using fallback presentation compiler.
+2026.04.19 21:01:57 INFO  no build target found for C:\Users\Avril Dominique\Documents\2025-2026\CMSC 127\The Backroom\the_backroom\src\main\java\edu\tangingina\thebackroom\TheBackroom.java. Using fallback presentation compiler.
+2026.04.19 21:01:58 INFO  no build target found for C:\Users\Avril Dominique\Documents\2025-2026\CMSC 127\The Backroom\the_backroom\src\main\java\edu\tangingina\thebackroom\TheBackroom.java. Using fallback presentation compiler.
+2026.04.19 21:02:09 INFO  no build target found for C:\Users\Avril Dominique\Documents\2025-2026\CMSC 127\The Backroom\the_backroom\src\main\java\edu\tangingina\thebackroom\TheBackroom.java. Using fallback presentation compiler.
+2026.04.19 21:03:15 INFO  Shutting down server
+2026.04.19 21:03:15 INFO  Memory monitor stopped
+2026.04.19 21:03:15 INFO  shutting down Metals
+2026.04.19 21:03:15 INFO  Exiting server
+2026.04.19 21:03:15 ERROR Unexpected error initializing server: 
+org.eclipse.lsp4j.jsonrpc.ResponseErrorException: Request window/showMessageRequest failed with message: Canceled
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.handleResponse(RemoteEndpoint.java:214)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.consume(RemoteEndpoint.java:198)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.handleMessage(StreamMessageProducer.java:189)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.listen(StreamMessageProducer.java:97)
+	at org.eclipse.lsp4j.jsonrpc.json.ConcurrentMessageProcessor.run(ConcurrentMessageProcessor.java:97)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.lang.Thread.run(Thread.java:1575)
+
