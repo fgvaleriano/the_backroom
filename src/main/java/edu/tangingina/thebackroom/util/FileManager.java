@@ -7,6 +7,8 @@ import javafx.stage.Stage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 public class FileManager {
 
@@ -98,5 +100,34 @@ public class FileManager {
 
         return file;
     }
+
+    public String saveIMGRelative(File file){
+        //First we create the directory on our project folder
+        File dir = new File("uploads/mediaIcon");
+
+        //if it doesnt exist yeah we create the directory
+        if(!dir.exists()){
+            dir.mkdirs();
+        }
+
+        //Here we get the file extension pra kuan for the naming
+        int dotIndex = file.getName().indexOf(".");
+        String imgExtension = "";
+        if(dotIndex > 0){
+            imgExtension = file.getName().substring(dotIndex);
+        }
+
+        String newFileName = System.currentTimeMillis() + imgExtension;
+
+        File newFile = new File(dir, file.getName());
+        try{
+            Files.copy(file.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        }catch(Exception e){
+
+        }
+
+        return "edu/tangingina/thebackroom/mediaIcon/" + newFileName;
+    }
+
 
 }
