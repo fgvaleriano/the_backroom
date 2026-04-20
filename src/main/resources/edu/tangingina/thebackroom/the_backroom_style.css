@@ -171,6 +171,10 @@
     -fx-background- color: transparent;
 }
 
+.input-label {
+    -fx-text-fill: #000000;
+}
+
 .header-text {
     -fx-text-fill: #9E3D3D;
     -fx-padding: 0 0 20 0;
