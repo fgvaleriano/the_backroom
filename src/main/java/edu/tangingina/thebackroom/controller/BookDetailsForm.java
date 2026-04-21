@@ -19,16 +19,15 @@ public class BookDetailsForm extends BaseMediaForm {
     public BookDetailsForm() {
 
         view.getChildren().addAll(
-                FormFieldFactory.createTextField("Title"),
-                FormFieldFactory.createTextField("Author"),
-                FormFieldFactory.createTextArea("Synopsis"),
-                FormFieldFactory.createTextArea("Genre"),
-                //add button here
-                //change to date picker
-                FormFieldFactory.createTextField("Release Year"),
-                FormFieldFactory.createTextField("Edition"),
-                FormFieldFactory.createTextField("Access Link"),
-                FormFieldFactory.createTextField("Widget"),
+                FormFieldFactory.createTextField("Title", 520),
+                FormFieldFactory.createTextField("Author", 175),
+                FormFieldFactory.createTextField("Publisher", 175),
+                FormFieldFactory.createTextArea("Synopsis", 520),
+                FormFieldFactory.createTextField("Genre", 120),
+                FormFieldFactory.createYearPicker("Release Year", 120),
+                FormFieldFactory.createTextField("Edition", 120),
+                FormFieldFactory.createTextField("Access Link", 520),
+                FormFieldFactory.createTextField("Book Cover", 520),
                 addButton()
         );
     }

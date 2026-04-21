@@ -10,7 +10,7 @@ public class FormFieldFactory {
         keep on coding the same thing for input fields
      */
 
-    public static VBox createTextField (String labelText) {
+    public static VBox createTextField (String labelText, Integer size) {
         Label inputLabel = new Label(labelText);
         TextField inputField = new TextField();
         inputLabel.setFont(FontLoader.regular(15));
@@ -20,12 +20,29 @@ public class FormFieldFactory {
         inputLabel.getStyleClass().add("input-label");
 
         VBox holder = new VBox(6, inputLabel, inputField);
-        holder.setMaxWidth(320);
+        holder.setMaxWidth(size);
 
         return holder;
     }
 
-    public static VBox createTextArea (String labelText) {
+    public static VBox createYearPicker(String labelText, Integer size) {
+        Label inputLabel = new Label(labelText);
+        ComboBox<Integer> yearPicker = new ComboBox<>();
+        inputLabel.setFont(FontLoader.regular(15));
+
+        inputLabel.getStyleClass().add("input-label");
+
+        for (int i = 1800; i <= 2100; i++) {
+            yearPicker.getItems().add(i);
+        }
+
+        VBox holder = new VBox(6, inputLabel, yearPicker);
+        yearPicker.setMaxWidth(size);
+
+        return holder;
+    }
+
+    public static VBox createTextArea (String labelText, Integer size) {
         Label inputLabel = new Label(labelText);
         TextArea inputArea = new TextArea();
         inputLabel.setFont(FontLoader.regular(15));
@@ -38,7 +55,7 @@ public class FormFieldFactory {
         inputLabel.getStyleClass().add("input-label");
 
         VBox holder = new VBox(6, inputLabel, inputArea);
-        holder.setMaxWidth(420);
+        holder.setMaxWidth(size);
 
         return holder;
     }

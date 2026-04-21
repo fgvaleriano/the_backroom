@@ -15,15 +15,17 @@ public class GameDetailsForm extends BaseMediaForm{
 
     public GameDetailsForm() {
         view.getChildren().addAll(
-                FormFieldFactory.createTextField("Title"),
-                FormFieldFactory.createTextField("Creator"),
-                FormFieldFactory.createTextArea("Synopsis"),
-                FormFieldFactory.createTextField("Mode"),
-                FormFieldFactory.createTextArea("Game Engine"),
-                //release year
-                FormFieldFactory.createTextField("System Requirements"),
-                FormFieldFactory.createTextField("Access Link"),
-                FormFieldFactory.createTextField("Widget"),
+                FormFieldFactory.createTextField("Title", 520),
+                FormFieldFactory.createTextField("Game Developer", 175),
+                FormFieldFactory.createTextField("Game Studio", 175),
+                FormFieldFactory.createTextArea("Synopsis", 520),
+                FormFieldFactory.createTextField("Mode", 120),
+                FormFieldFactory.createTextField("Game Engine", 120),
+                FormFieldFactory.createTextField("Genre", 120),
+                FormFieldFactory.createYearPicker("Release Year", 120),
+                FormFieldFactory.createTextArea("System Requirements", 520),
+                FormFieldFactory.createTextField("Access Link", 520),
+                FormFieldFactory.createTextField("Cover Art", 520),
                 addButton()
         );
     }

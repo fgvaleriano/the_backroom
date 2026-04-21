@@ -14,15 +14,16 @@ public class FilmDetailsForm extends BaseMediaForm{
 
     public FilmDetailsForm() {
         view.getChildren().addAll(
-                FormFieldFactory.createTextField("Title"),
-                FormFieldFactory.createTextField("Director"),
-                FormFieldFactory.createTextArea("Synopsis"),
-                FormFieldFactory.createTextArea("Genre"),
-                FormFieldFactory.createTextField("Duration"),
-                FormFieldFactory.createTextField("Language"),
-                //release year
-                FormFieldFactory.createTextField("Access Link"),
-                FormFieldFactory.createTextField("Widget"),
+                FormFieldFactory.createTextField("Title", 520),
+                FormFieldFactory.createTextField("Director", 175),
+                FormFieldFactory.createTextArea("Studio", 175),
+                FormFieldFactory.createTextArea("Synopsis", 520),
+                FormFieldFactory.createTextArea("Genre", 120),
+                FormFieldFactory.createTextField("Duration", 120),
+                FormFieldFactory.createTextField("Language", 120),
+                FormFieldFactory.createYearPicker("Release Year", 120),
+                FormFieldFactory.createTextField("Access Link", 520),
+                FormFieldFactory.createTextField("Film Poster", 520),
                 addButton()
         );
     }

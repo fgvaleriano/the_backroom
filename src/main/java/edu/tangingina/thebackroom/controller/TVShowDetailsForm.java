@@ -14,16 +14,17 @@ public class TVShowDetailsForm extends BaseMediaForm{
      */
     public TVShowDetailsForm() {
         view.getChildren().addAll(
-                FormFieldFactory.createTextField("Title"),
-                FormFieldFactory.createTextField("Director"),
-                FormFieldFactory.createTextArea("Synopsis"),
-                FormFieldFactory.createTextArea("Genre"),
-                FormFieldFactory.createTextField("Season Count"),
-                FormFieldFactory.createTextField("Episode Count"),
-                //release year
-                FormFieldFactory.createTextArea("Status"),
-                FormFieldFactory.createTextField("Access Link"),
-                FormFieldFactory.createTextField("Widget"),
+                FormFieldFactory.createTextField("Title", 520),
+                FormFieldFactory.createTextField("Director", 175),
+                FormFieldFactory.createTextArea("Studio", 175),
+                FormFieldFactory.createTextArea("Synopsis", 520),
+                FormFieldFactory.createTextArea("Genre", 120),
+                FormFieldFactory.createTextField("Season Count", 120),
+                FormFieldFactory.createTextField("Episode Count", 120),
+                FormFieldFactory.createYearPicker("Release Year", 120),
+                FormFieldFactory.createTextArea("Status", 120),
+                FormFieldFactory.createTextField("Access Link", 520),
+                FormFieldFactory.createTextField("Show Poster", 520),
                 addButton()
         );
     }
