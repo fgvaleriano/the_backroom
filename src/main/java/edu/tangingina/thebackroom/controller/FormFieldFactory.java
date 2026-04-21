@@ -1,7 +1,10 @@
 package edu.tangingina.thebackroom.controller;
 
 import edu.tangingina.thebackroom.util.FontLoader;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
 public class FormFieldFactory {
@@ -10,23 +13,39 @@ public class FormFieldFactory {
         keep on coding the same thing for input fields
      */
 
-    public static VBox createTextField (String labelText, Integer size) {
-        Label inputLabel = new Label(labelText);
+    private static final double labelSectionWidth = 100;
+
+    private static Label createLabel(String labelText) {
+        Label label = new Label(labelText);
+        label.setFont(FontLoader.regular(15));
+        label.getStyleClass().add("input-label");
+
+        label.setMinWidth(labelSectionWidth);
+        label.setPrefWidth(labelSectionWidth);
+        label.setMaxWidth(labelSectionWidth);
+
+        label.setAlignment(Pos.CENTER_LEFT);
+        return label;
+    }
+
+    public static HBox createTextField (String labelText, Integer size) {
+        Label inputLabel = createLabel(labelText);
         TextField inputField = new TextField();
-        inputLabel.setFont(FontLoader.regular(15));
+
         inputField.setFont(FontLoader.regular(15));
-
         inputField.getStyleClass().add("input-field");
-        inputLabel.getStyleClass().add("input-label");
+        inputField.setPrefWidth(size);
+        inputField.setMinWidth(Control.USE_PREF_SIZE);
+        inputField.setMaxWidth(Control.USE_PREF_SIZE);
 
-        VBox holder = new VBox(6, inputLabel, inputField);
-        holder.setMaxWidth(size);
+        HBox holder = new HBox(20, inputLabel, inputField);
+        holder.setAlignment(Pos.CENTER_LEFT);
 
         return holder;
     }
 
-    public static VBox createYearPicker(String labelText, Integer size) {
-        Label inputLabel = new Label(labelText);
+    public static HBox createYearPicker(String labelText, Integer size) {
+        Label inputLabel = createLabel(labelText);
         ComboBox<Integer> yearPicker = new ComboBox<>();
         inputLabel.setFont(FontLoader.regular(15));
 
@@ -36,29 +55,37 @@ public class FormFieldFactory {
             yearPicker.getItems().add(i);
         }
 
-        VBox holder = new VBox(6, inputLabel, yearPicker);
-        yearPicker.setMaxWidth(size);
+        yearPicker.setPrefWidth(size);
+        yearPicker.setMinWidth(Control.USE_PREF_SIZE);
+        yearPicker.setMaxWidth(Control.USE_PREF_SIZE);
+
+        HBox holder = new HBox(20, inputLabel, yearPicker);
+        holder.setAlignment(Pos.CENTER_LEFT);
 
         return holder;
     }
 
-    public static VBox createTextArea (String labelText, Integer size) {
-        Label inputLabel = new Label(labelText);
+    public static HBox createTextArea (String labelText, Integer size) {
+        Label inputLabel = createLabel(labelText);
         TextArea inputArea = new TextArea();
-        inputLabel.setFont(FontLoader.regular(15));
         inputArea.setFont(FontLoader.regular(15));
 
-        inputArea.setPrefRowCount(5);
+        inputArea.setPrefWidth(size);
         inputArea.setWrapText(true);
-
         inputArea.getStyleClass().add("input-field");
-        inputLabel.getStyleClass().add("input-label");
 
-        VBox holder = new VBox(6, inputLabel, inputArea);
-        holder.setMaxWidth(size);
+        HBox holder = new HBox(20, inputLabel, inputArea);
+        holder.setAlignment(Pos.TOP_LEFT);
 
         return holder;
     }
+
+    public static HBox createFieldWithButton(HBox fieldBox, Button plusBtn) {
+        fieldBox.getChildren().add(plusBtn);
+        fieldBox.setSpacing(12);
+        return fieldBox;
+    }
+
 }
 
 class FormFieldGroup {

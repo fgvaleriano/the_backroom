@@ -7,16 +7,6 @@ import javafx.scene.layout.*;
 import javafx.geometry.*;
 
 public abstract class BaseMediaForm {
-    protected VBox view = new VBox(15);
-
-    public VBox getView() {
-        return view;
-    }
-}
-
-
-
-//public class BaseMediaForm {
     /*
         Builds the shared UI for media types such as:
             - title/name
@@ -27,28 +17,20 @@ public abstract class BaseMediaForm {
 
         Also handles shared input validation
      */
-/*
-    private static DatePicker releaseYearPicker;
-    private static VBox view, titleField, synopsisField, widgetField, accessField;
+    protected VBox view = new VBox(10);
+    protected VBox formColumn = new VBox(40);
 
     public VBox getView() {
         return view;
     }
 
-    public BaseMediaForm(String selectedType) {
-        view = new VBox(18);
+    public BaseMediaForm() {
         view.setAlignment(Pos.TOP_LEFT);
-        view.setPadding(new Insets(25, 30, 25, 30));
-
-        titleField = FormFieldFactory.createTextField("Title");
-        synopsisField = FormFieldFactory.createTextField("Synopsis");
-        //releaseYearPicker = FormFieldFactory.createDatePicker("Release");
-        accessField = FormFieldFactory.createTextField("Access Link");
-        widgetField = FormFieldFactory.createTextField("Widget");
-
-        view.getChildren().addAll(titleField, synopsisField, accessField, widgetField);
-
+        view.setFillWidth(false);
     }
 
+    public VBox formColumn () {
+        formColumn.setAlignment(Pos.TOP_LEFT);
+        return formColumn;
+    }
 }
-*/

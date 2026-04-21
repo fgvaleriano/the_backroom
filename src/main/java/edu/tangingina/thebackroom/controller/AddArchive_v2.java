@@ -43,7 +43,7 @@ public class  AddArchive_v2 {
         innerCard = getInnerCard();                         //inner beige card
 
         formContent = new VBox(20);
-        formContent.setAlignment(Pos.TOP_CENTER);
+        formContent.setAlignment(Pos.TOP_LEFT);
         formContent.setPadding(new Insets(20, 40, 30, 40));
 
         inputHolder = getInputHolder();                     //scrolable pane for the formContent
@@ -135,7 +135,7 @@ public class  AddArchive_v2 {
         dynamicForm = new VBox();
         dynamicForm.getStyleClass().add("form-content");
         dynamicForm.setAlignment(Pos.TOP_LEFT);
-        dynamicForm.setPadding(new Insets(10, 0,0, 140));
+        dynamicForm.setPadding(new Insets(10, 0,0, 15));
 
         return dynamicForm;
     }

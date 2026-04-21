@@ -1,5 +1,6 @@
 package edu.tangingina.thebackroom.controller;
 
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -13,20 +14,26 @@ public class TVShowDetailsForm extends BaseMediaForm{
             - status
      */
     public TVShowDetailsForm() {
-        view.getChildren().addAll(
+        view.getChildren().addAll(formColumn());
+        formColumn().getChildren().addAll(
                 FormFieldFactory.createTextField("Title", 520),
-                FormFieldFactory.createTextField("Director", 175),
-                FormFieldFactory.createTextArea("Studio", 175),
+                FormFieldFactory.createFieldWithButton(FormFieldFactory.createTextField("Director", 175),
+                        plusBtn()),
+                FormFieldFactory.createTextField("Studio", 175),
                 FormFieldFactory.createTextArea("Synopsis", 520),
-                FormFieldFactory.createTextArea("Genre", 120),
+                FormFieldFactory.createFieldWithButton(FormFieldFactory.createTextField("Genre", 120),
+                        plusBtn()),
                 FormFieldFactory.createTextField("Season Count", 120),
                 FormFieldFactory.createTextField("Episode Count", 120),
                 FormFieldFactory.createYearPicker("Release Year", 120),
-                FormFieldFactory.createTextArea("Status", 120),
+                FormFieldFactory.createTextField("Status", 120),
                 FormFieldFactory.createTextField("Access Link", 520),
                 FormFieldFactory.createTextField("Show Poster", 520),
                 addButton()
         );
+
+        Node lastNode = formColumn().getChildren().get(formColumn().getChildren().size() - 1);
+        VBox.setMargin(lastNode, new javafx.geometry.Insets(0, 0, 0, 0));
     }
 
     private Button addButton(){
@@ -41,5 +48,18 @@ public class TVShowDetailsForm extends BaseMediaForm{
 
         btn.setGraphic(view);
         return btn;
+    }
+
+    private Button plusBtn() {
+        Button plsBtn = new Button();
+        plsBtn.getStyleClass().add("image-button");
+        Image img = new Image(getClass().getResourceAsStream(
+                "/edu/tangingina/thebackroom/assets/plus_btn.png"));
+        ImageView view = new ImageView(img);
+        view.setPreserveRatio(true);
+        view.setFitWidth(32);
+
+        plsBtn.setGraphic(view);
+        return plsBtn;
     }
 }
