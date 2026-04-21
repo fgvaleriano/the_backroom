@@ -1,5 +1,6 @@
 package edu.tangingina.thebackroom.dao.impl;
 
+import edu.tangingina.thebackroom.TheBackroom;
 import edu.tangingina.thebackroom.dao.MediaDao;
 import edu.tangingina.thebackroom.model.*;
 import edu.tangingina.thebackroom.util.DatabaseManager;
@@ -8,16 +9,171 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MediaDaoImpl implements MediaDao {
     @Override
     public void findMedia() {
-
+        //We do not need this na since we are caching all of the database info we have...
     }
 
     @Override
-    public void getMedia() {
+    public HashMap<Integer, Media> getAllMedia() {
+        String query = "Select * from media";
+        HashMap<Integer, Media> mediaList = new HashMap<>();
 
+        try{
+            PreparedStatement stm = DatabaseManager.conn.prepareStatement(query);
+            ResultSet rs = stm.executeQuery();
+
+            while(rs.next()){
+                String mediaType = rs.getString("media_type");
+                int id = rs.getInt("media_id");
+
+                Media media = new Media(id, rs.getString("name"), rs.getString("media_type"),
+                        rs.getString("release_year"),rs.getString("synopsis"), rs.getString("icon_path"),
+                        getMediaAccess(id), getMediaGenre(id));
+
+                if(mediaType.equals("Book")){
+                    media.setBookDetails(rs.getString("isbn"), rs.getString("page_count"),
+                            rs.getString("edition"), getMediaPersonnel(id), getMediaCompany(id));
+                }else if(mediaType.equals("Movie")){
+                    media.setMovieDetails(rs.getString("duration"), rs.getString("language"), getMediaPersonnel(id), getMediaCompany(id));
+                }else if(mediaType.equals("TvShow")){
+                    media.setTvShowDetails(rs.getString("season_count"), rs.getString("episode_count"),
+                            rs.getString("status"), getMediaPersonnel(id), getMediaCompany(id));
+                }else if(mediaType.equals("Game")){
+                    media.setGameDetails(rs.getString("game_engine"), rs.getString("system_requirements"),
+                            getMediaPersonnel(id), getMediaCompany(id), getMediaGamePlatform(id), getMediaGameMode(id));
+                }
+
+                mediaList.put(id, media);
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
+        return mediaList;
+    }
+
+    @Override
+    public ArrayList<Category> getMediaGenre(int id) {
+        ArrayList<Category> categoryList = new ArrayList<>();
+        String query = "Select c.category_id, c.name from media_category natural join category c where media_id = ?";
+
+        try{
+            PreparedStatement stm = DatabaseManager.conn.prepareStatement(query);
+            stm.setInt(1, id);
+            ResultSet rs = stm.executeQuery();
+
+            while(rs.next()){
+                categoryList.add(new Category(rs.getInt("category_id"), rs.getString("name")));
+            }
+        }catch (Exception e){
+
+        }
+
+        return categoryList;
+    }
+
+    @Override
+    public ArrayList<Website> getMediaAccess(int id) {
+        ArrayList<Website> websiteList = new ArrayList<>();
+        String query = "Select w.website_id, w.name, m.url from media_access as m join website w using(website_id) where media_id = ?";
+
+        try{
+            PreparedStatement stm = DatabaseManager.conn.prepareStatement(query);
+            stm.setInt(1, id);
+            ResultSet rs = stm.executeQuery();
+
+            while(rs.next()){
+                websiteList.add(new Website(rs.getInt("website_id"), rs.getString("name"), rs.getString("url")));
+            }
+        }catch (Exception e){
+
+        }
+
+        return websiteList;
+    }
+
+    @Override
+    public ArrayList<Company> getMediaCompany(int id) {
+        String query = "Select c.company_id, c.name, r.role_id, r.name from media_company join company as c using(company_id) join role as r using(role_id) where media_id = ?";
+        ArrayList<Company> companyList = new ArrayList<>();
+
+        try{
+            PreparedStatement stm = DatabaseManager.conn.prepareStatement(query);
+            stm.setInt(1, id);
+            ResultSet rs = stm.executeQuery();
+
+            while(rs.next()){
+                companyList.add(new Company(rs.getInt("company_id"), rs.getString(2), rs.getString(4), rs.getInt(3)));
+            }
+        }catch (Exception e){
+
+        }
+
+        return companyList;
+    }
+
+    @Override
+    public ArrayList<Person> getMediaPersonnel(int id) {
+        String query = "Select p.person_id, p.name, r.role_id, r.name from media_personnel join person as p using(person_id) join role as r using(role_id) where media_id = ?";
+        ArrayList<Person> personList = new ArrayList<>();
+
+        try{
+            PreparedStatement stm = DatabaseManager.conn.prepareStatement(query);
+            stm.setInt(1, id);
+            ResultSet rs = stm.executeQuery();
+
+            while(rs.next()){
+                personList.add(new Person(rs.getInt(1), rs.getString(2), rs.getString(4), rs.getInt(3)));
+            }
+        }catch (Exception e){
+
+        }
+
+        return personList;
+    }
+
+    @Override
+    public ArrayList<GameMode> getMediaGameMode(int id) {
+        String query = "Select m.mode_id, m.name from media_game_mode join mode as m using(mode_id) where media_id = ?";
+        ArrayList<GameMode> gameModeList = new ArrayList<>();
+
+        try{
+            PreparedStatement stm = DatabaseManager.conn.prepareStatement(query);
+            stm.setInt(1, id);
+            ResultSet rs = stm.executeQuery();
+
+            while(rs.next()){
+                gameModeList.add(TheBackroom.gameModeList.get(rs.getString(2)));
+            }
+        }catch (Exception e){
+
+        }
+
+        return gameModeList;
+    }
+
+    @Override
+    public ArrayList<Platform> getMediaGamePlatform(int id) {
+        String query = "Select p.platform_id, p.name from media_game_platform join platform as p using(platform_id) where media_id = ?";
+        ArrayList<Platform> gamePlatformList = new ArrayList<>();
+
+        try{
+            PreparedStatement stm = DatabaseManager.conn.prepareStatement(query);
+            stm.setInt(1, id);
+            ResultSet rs = stm.executeQuery();
+
+            while(rs.next()){
+                gamePlatformList.add(TheBackroom.platformList.get(rs.getString(2)));
+            }
+        }catch (Exception e){
+
+        }
+
+        return gamePlatformList;
     }
 
     @Override

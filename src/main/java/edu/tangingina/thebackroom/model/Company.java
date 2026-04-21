@@ -26,4 +26,10 @@ public class Company {
     }
 
     public Integer getCompanyRoleId(){return companyRoleId;}
+
+    public void setCompanyRole(String role){
+        this.companyRole = role;
+    }
+
+    public void setCompanyRoleID(int roleID){this.companyRoleId = roleID;}
 }

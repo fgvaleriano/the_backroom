@@ -85,12 +85,33 @@ public class TheBackroom extends Application {
     FileManager fm = new FileManager();
     InternetManager im = new InternetManager();
 
+    public static CategoryDaoImpl categoryDao = new CategoryDaoImpl();
+    public static WebsiteDaoImpl websiteDao = new WebsiteDaoImpl();
+    public static PersonDaoImpl personDao = new PersonDaoImpl();
+    public static CompanyDaoImpl companyDao = new CompanyDaoImpl();
+    public static RoleDaoImpl roleDao = new RoleDaoImpl();
+    public static MediaDaoImpl mediaDao = new MediaDaoImpl();
+    public static PlatformDaoImpl platformDao = new PlatformDaoImpl();
+    public static GameModeDaoImpl gameModeDao = new GameModeDaoImpl();
+
+
+    public static HashMap<String, Category> categoryList;
+    public static HashMap<String, Website> websiteList;
+    public static HashMap<String, Person> personList;
+    public static HashMap<String, Company> companyList;
+    public static HashMap<String, Role> roleList;
+    public static HashMap<String, Platform> platformList;
+    public static HashMap<String, GameMode> gameModeList;
+    public static HashMap<Integer, Media> mediaList;
+
     @Override
     public void start(Stage primaryStage) {
         System.out.println("Hello World!!!");
         openDB();
+        loadCache();
+        printMediaList();
 
-        addMedia(primaryStage);
+        //addMedia(primaryStage);
 
         //fm.importImg(primaryStage);
         //sm = new SceneManager(primaryStage);
@@ -195,27 +216,152 @@ public class TheBackroom extends Application {
     }
 
     //current holder for logic Muna
+
+    public void printMediaList() {
+        if (mediaList == null || mediaList.isEmpty()) {
+            System.out.println("(ノಠ益ಠ)ノ THE ARCHIVE IS EMPTY! Records found: 0");
+            return;
+        }
+
+        System.out.println("\n" + "=".repeat(50));
+        System.out.println("📂 DATABASE SCAN COMPLETE: " + mediaList.size() + " ITEMS FOUND");
+        System.out.println("=".repeat(50));
+
+        for (Media m : mediaList.values()) {
+            System.out.println("Name: " + m.getMediaName());
+            System.out.println("Media Type: " + m.getMediaType());
+            System.out.println("Synopsis: " + m.getSynopsis());
+            System.out.println("Release Year: " + m.getReleaseYear());
+            System.out.println("Media Icon: " + m.getMediaIcon());
+
+            System.out.print("Category: ");
+            for(Category category : m.getMediaGenres()){
+                System.out.print(category.getCategoryName() + ", ");
+            }
+            System.out.println();
+
+            switch(m.getMediaType()){
+                case "Book":
+                    System.out.println("ISBN: " + m.getISBN());
+                    System.out.println("Page Count: " + m.getPageCount());
+                    System.out.println("Edition: " + m.getEdition());
+                    System.out.print("Author: ");
+                    for(Person person : m.getMediaPersonnel()){
+                        System.out.print(person.getPersonName() + ", ");
+                    }
+                    System.out.println();
+                    System.out.print("Publisher: ");
+                    for(Company company : m.getMediaCompany()){
+                        System.out.print(company.getCompanyName() + ", ");
+                    }
+                    System.out.println();
+
+                    break;
+
+                case "Movie":
+                    System.out.println("Duration: " + m.getDuration());
+                    System.out.println("Language: " + m.getLanguage());
+                    System.out.print("Director: ");
+                    for(Person person : m.getMediaPersonnel()){
+                        System.out.print(person.getPersonName() + ", ");
+                    }
+                    System.out.println();
+                    System.out.print("Studio: ");
+                    for(Company company : m.getMediaCompany()){
+                        System.out.print(company.getCompanyName() + ", ");
+                    }
+                    System.out.println();
+                    break;
+
+                case "TvShow":
+                    System.out.println("Season Count: " + m.getSeasonCount());
+                    System.out.println("Episode Count: " + m.getEpisodeCount());
+                    System.out.println("Status: " + m.getStatus());
+                    System.out.print("Director: ");
+                    for(Person person : m.getMediaPersonnel()){
+                        System.out.print(person.getPersonName() + ", ");
+                    }
+                    System.out.println();
+                    System.out.print("Studio: ");
+                    for(Company company : m.getMediaCompany()){
+                        System.out.print(company.getCompanyName() + ", ");
+                    }
+                    System.out.println();
+
+                    break;
+
+                case "Game":
+                    ArrayList<Person> gameDev = new ArrayList<>();
+                    ArrayList<Company> gameStudio = new ArrayList<>();
+                    ArrayList<Company> gamePublisher = new ArrayList<>();
+
+                    for(Person person : m.getMediaPersonnel()){
+                        if(person.getPersonRole().equals("Game Developer")) gameDev.add(person);
+                    }
+
+                    for(Company company : m.getMediaCompany()){
+                        if(company.getCompanyRole().equals("Game Studio")) gameStudio.add(company);
+                        else if(company.getCompanyRole().equals("Publisher")) gamePublisher.add(company);
+                    }
+
+                    System.out.println("Game Engine: " + m.getGameEngine());
+                    System.out.println("System Requirement: " + m.getSystemRequirements());
+
+                    System.out.print("Game Mode: ");
+                    for(GameMode mode : m.getGameMode()){
+                        System.out.print(mode.getGameModeName() + ", ");
+                    }
+                    System.out.println();
+                    System.out.print("Game Platform: ");
+                    for(Platform platform : m.getGamePlatform()){
+                        System.out.print(platform.getPlatformName() + ", ");
+                    }
+                    System.out.println();
+
+                    if(!gameDev.isEmpty()){
+                        System.out.print("Game Developer: ");
+                        for(Person person : gameDev){
+                            System.out.print(person.getPersonName() + ", ");
+                        }
+                        System.out.println();
+                    }
+
+                    if(!gameStudio.isEmpty()){
+                        System.out.print("Game Studio: ");
+                        for(Company company : gameStudio){
+                            System.out.print(company.getCompanyName() + ", ");
+                        }
+                        System.out.println();
+                    }
+
+                    System.out.print("Game Publisher: ");
+                    for(Company company : gamePublisher){
+                        System.out.print(company.getCompanyName() + ", ");
+                    }
+                    System.out.println();
+
+
+
+
+
+                    break;
+            }
+
+
+            System.out.print("Online Access: ");
+            for(Website website : m.getOnlineAccess()){
+                System.out.println(website.getWebisteName() + ": " + website.getWebsiteURL());
+            }
+            System.out.println();
+
+            System.out.println("_".repeat(50));
+        }
+    }
+
     private void addMedia(Stage stage){
+        //For the add here, every after add, for anything, include it also to the cache....
         Scanner scan = new Scanner(System.in);
-        CategoryDaoImpl categoryDao = new CategoryDaoImpl();
-        WebsiteDaoImpl websiteDao = new WebsiteDaoImpl();
-        PersonDaoImpl personDao = new PersonDaoImpl();
-        CompanyDaoImpl companyDao = new CompanyDaoImpl();
-        RoleDaoImpl roleDao = new RoleDaoImpl();
-        MediaDaoImpl mediaDao = new MediaDaoImpl();
-        PlatformDaoImpl platformDao = new PlatformDaoImpl();
-        GameModeDaoImpl gameModeDao = new GameModeDaoImpl();
-
         while(true) {
-
-            //For the getters of All should only be called once
-            HashMap<String, Category> categoryList = categoryDao.getAllCategory();
-            HashMap<String, Website> websiteList = websiteDao.getAllWebsite();
-            HashMap<String, Person> personList = personDao.getAllPersons();
-            HashMap<String, Company> companyList = companyDao.getAllCompany();
-            HashMap<String, Role> roleList = roleDao.getAllRole();
-            HashMap<String, Platform> platformList = platformDao.getAllPlatform();
-            HashMap<String, GameMode> gameModeList = gameModeDao.getAllGameMode();
 
 
             System.out.println("Adding Media\n");
@@ -818,6 +964,18 @@ public class TheBackroom extends Application {
         FontLoader load = new  FontLoader();
         load.debug();
         return;
+    }
+
+
+    public void loadCache(){
+        categoryList = categoryDao.getAllCategory();
+        websiteList = websiteDao.getAllWebsite();
+        personList = personDao.getAllPersons();
+        companyList = companyDao.getAllCompany();
+        roleList = roleDao.getAllRole();
+        platformList = platformDao.getAllPlatform();
+        gameModeList = gameModeDao.getAllGameMode();
+        mediaList = mediaDao.getAllMedia();
     }
 
 }

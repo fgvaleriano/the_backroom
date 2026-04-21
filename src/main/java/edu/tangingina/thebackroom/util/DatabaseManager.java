@@ -34,8 +34,8 @@ public class DatabaseManager {
             prop.load(getClass().getResourceAsStream("/edu/tangingina/thebackroom/config.properties"));
             username = prop.getProperty("default_user_username");
             password = prop.getProperty("default_user_password");
-            username = prop.getProperty("mod_username");
-            password = prop.getProperty("mod_password");
+            //username = prop.getProperty("mod_username");
+            //password = prop.getProperty("mod_password");
         }catch (Exception e){
             e.printStackTrace();
         }
