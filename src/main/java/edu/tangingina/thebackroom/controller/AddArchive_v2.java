@@ -74,6 +74,11 @@ public class  AddArchive_v2 {
         window.showAndWait();
     }
 
+    //closing dialog box
+    public static void closeWindow() {
+        window.close();
+    }
+
     //dark background
     private static StackPane getBkgCard() {
         bkgCard = new StackPane();

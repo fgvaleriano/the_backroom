@@ -13,21 +13,32 @@ public class FilmDetailsForm extends BaseMediaForm{
             - language
      */
 
+    private MultiValueField directorField, genreField;
+    private FormFieldGroup titleField, studioField, durationField, languageField, linkField, widgetField;
+
     public FilmDetailsForm() {
         view.getChildren().add(formColumn());
+
+        titleField = FormFieldFactory.createTextField("Title", 520);
+        directorField = FormFieldFactory.createMultiValueField("Director", 175);
+        studioField = FormFieldFactory.createTextField("Studio", 175);
+        genreField = FormFieldFactory.createMultiValueField("Genre", 120);
+        durationField = FormFieldFactory.createTextField("Duration", 120);
+        languageField = FormFieldFactory.createTextField("Language", 120);
+        linkField = FormFieldFactory.createTextField("Access Link", 520);
+        widgetField = FormFieldFactory.createTextField("Book Cover", 520);
+
         formColumn().getChildren().addAll(
-                FormFieldFactory.createTextField("Title", 520),
-                FormFieldFactory.createFieldWithButton(FormFieldFactory.createTextField("Director", 175),
-                        plusBtn()),
-                FormFieldFactory.createTextField("Studio", 175),
+                titleField.getView(),
+                directorField.getView(),
+                studioField.getView(),
                 FormFieldFactory.createTextArea("Synopsis", 520),
-                FormFieldFactory.createFieldWithButton(FormFieldFactory.createTextField("Genre", 120),
-                        plusBtn()),
-                FormFieldFactory.createTextField("Duration", 120),
-                FormFieldFactory.createTextField("Language", 120),
+                genreField.getView(),
+                durationField.getView(),
+                languageField.getView(),
                 FormFieldFactory.createYearPicker("Release Year", 120),
-                FormFieldFactory.createTextField("Access Link", 520),
-                FormFieldFactory.createTextField("Film Poster", 520),
+                linkField.getView(),
+                widgetField.getView(),
                 addButton()
         );
 
@@ -46,19 +57,47 @@ public class FilmDetailsForm extends BaseMediaForm{
         view.setFitWidth(125);
 
         btn.setGraphic(view);
+        btn.setOnAction(e -> {
+            validateInputs();
+
+            if (validateInputs()) {
+                AddArchive_v2.closeWindow();
+            }
+        });
         return btn;
     }
 
-    private Button plusBtn() {
-        Button plsBtn = new Button();
-        plsBtn.getStyleClass().add("image-button");
-        Image img = new Image(getClass().getResourceAsStream(
-                "/edu/tangingina/thebackroom/assets/plus_btn.png"));
-        ImageView view = new ImageView(img);
-        view.setPreserveRatio(true);
-        view.setFitWidth(32);
+    //input validation
+    private boolean validateInputs() {
+        boolean isFilled = false;
 
-        plsBtn.setGraphic(view);
-        return plsBtn;
+        titleField.clearError();
+        durationField.clearError();
+        languageField.clearError();
+
+        if (titleField.isEmpty()) {
+            titleField.showError();
+            isFilled = false;
+        }
+
+        if (durationField.isEmpty()) {
+            durationField.showError();
+            isFilled = false;
+        }
+
+        if (languageField.isEmpty()) {
+            languageField.showError();
+            isFilled = false;
+        }
+
+        return true;
+    }
+
+    public MultiValueField getDirectorField() {
+        return directorField;
+    }
+
+    public MultiValueField getGenreField() {
+        return genreField;
     }
 }

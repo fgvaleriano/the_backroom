@@ -14,23 +14,33 @@ public class GameDetailsForm extends BaseMediaForm{
             - system requirements
      */
 
+    private MultiValueField gameDevField, gameStudioField, genreField;
+    private FormFieldGroup titleField, modeField, engineField, linkField, widgetField;
+
     public GameDetailsForm() {
         view.getChildren().addAll(formColumn());
+
+        titleField = FormFieldFactory.createTextField("Title", 520);
+        gameDevField = FormFieldFactory.createMultiValueField("Game Developer", 120);
+        gameStudioField = FormFieldFactory.createMultiValueField("Game Studio", 120);
+        modeField = FormFieldFactory.createTextField("Game Mode", 120);
+        engineField = FormFieldFactory.createTextField("Game Engine", 120);
+        genreField = FormFieldFactory.createMultiValueField("Genre", 120);
+        linkField = FormFieldFactory.createTextField("Access Link", 520);
+        widgetField = FormFieldFactory.createTextField("Cover Art", 520);
+
         formColumn().getChildren().addAll(
-                FormFieldFactory.createTextField("Title", 520),
-                FormFieldFactory.createFieldWithButton(FormFieldFactory.createTextField("Game Developer", 175),
-                        plusBtn()),
-                FormFieldFactory.createFieldWithButton(FormFieldFactory.createTextField("Game Studio", 175),
-                        plusBtn()),
+                titleField.getView(),
+                gameDevField.getView(),
+                gameStudioField.getView(),
                 FormFieldFactory.createTextArea("Synopsis", 520),
-                FormFieldFactory.createTextField("Mode", 120),
-                FormFieldFactory.createTextField("Game Engine", 120),
-                FormFieldFactory.createFieldWithButton(FormFieldFactory.createTextField("Genre", 120),
-                        plusBtn()),
+                modeField.getView(),
+                engineField.getView(),
+                genreField.getView(),
                 FormFieldFactory.createYearPicker("Release Year", 120),
                 FormFieldFactory.createTextArea("System Requirements", 520),
-                FormFieldFactory.createTextField("Access Link", 520),
-                FormFieldFactory.createTextField("Cover Art", 520),
+                linkField.getView(),
+                widgetField.getView(),
                 addButton()
         );
 
@@ -49,19 +59,60 @@ public class GameDetailsForm extends BaseMediaForm{
         view.setFitWidth(125);
 
         btn.setGraphic(view);
+        btn.setOnAction(e -> {
+            validateInputs();
+
+            if (validateInputs()) {
+                AddArchive_v2.closeWindow();
+            }
+        });
         return btn;
     }
 
-    private Button plusBtn() {
-        Button plsBtn = new Button();
-        plsBtn.getStyleClass().add("image-button");
-        Image img = new Image(getClass().getResourceAsStream(
-                "/edu/tangingina/thebackroom/assets/plus_btn.png"));
-        ImageView view = new ImageView(img);
-        view.setPreserveRatio(true);
-        view.setFitWidth(32);
+    //input validation
+    private boolean validateInputs() {
+        boolean isFilled = false;
 
-        plsBtn.setGraphic(view);
-        return plsBtn;
+        titleField.clearError();
+        modeField.clearError();
+        engineField.clearError();
+        linkField.clearError();
+        //inlcude system reqs
+
+        if (titleField.isEmpty()) {
+            titleField.showError();
+            isFilled = false;
+        }
+
+        if (modeField.isEmpty()) {
+            modeField.showError();
+            isFilled = false;
+        }
+
+        if (engineField.isEmpty()) {
+            engineField.showError();
+            isFilled = false;
+        }
+
+        if (linkField.isEmpty()) {
+            linkField.showError();
+            isFilled = false;
+        }
+
+        return true;
     }
+
+    public MultiValueField getGameDevField() {
+        return gameDevField;
+    }
+
+    public MultiValueField getGameStudioField() {
+        return gameStudioField;
+    }
+
+    public MultiValueField getGenreField() {
+        return genreField;
+    }
+
+
 }

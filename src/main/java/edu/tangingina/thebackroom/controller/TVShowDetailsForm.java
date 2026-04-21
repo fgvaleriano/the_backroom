@@ -13,22 +13,36 @@ public class TVShowDetailsForm extends BaseMediaForm{
             - episode count
             - status
      */
+
+    private MultiValueField directorField, genreField;
+    private FormFieldGroup titleField, studioField, seasonField, episodeField, statusField, linkField, widgetField;
+
+
     public TVShowDetailsForm() {
         view.getChildren().addAll(formColumn());
+
+        titleField = FormFieldFactory.createTextField("Title", 520);
+        directorField = FormFieldFactory.createMultiValueField("Director", 175);
+        studioField = FormFieldFactory.createTextField("Studio", 120);
+        genreField = FormFieldFactory.createMultiValueField("Genre", 120);
+        seasonField = FormFieldFactory.createTextField("Season Count", 120);
+        episodeField = FormFieldFactory.createTextField("Episode Count", 120);
+        statusField = FormFieldFactory.createTextField("Status", 120);
+        linkField = FormFieldFactory.createTextField("Access Link", 520);
+        widgetField = FormFieldFactory.createTextField("Book Cover", 520);
+
         formColumn().getChildren().addAll(
-                FormFieldFactory.createTextField("Title", 520),
-                FormFieldFactory.createFieldWithButton(FormFieldFactory.createTextField("Director", 175),
-                        plusBtn()),
-                FormFieldFactory.createTextField("Studio", 175),
+                titleField.getView(),
+                directorField.getView(),
+                studioField.getView(),
                 FormFieldFactory.createTextArea("Synopsis", 520),
-                FormFieldFactory.createFieldWithButton(FormFieldFactory.createTextField("Genre", 120),
-                        plusBtn()),
-                FormFieldFactory.createTextField("Season Count", 120),
-                FormFieldFactory.createTextField("Episode Count", 120),
+                genreField.getView(),
+                seasonField.getView(),
+                episodeField.getView(),
                 FormFieldFactory.createYearPicker("Release Year", 120),
-                FormFieldFactory.createTextField("Status", 120),
-                FormFieldFactory.createTextField("Access Link", 520),
-                FormFieldFactory.createTextField("Show Poster", 520),
+                statusField.getView(),
+                linkField.getView(),
+                widgetField.getView(),
                 addButton()
         );
 
@@ -47,19 +61,59 @@ public class TVShowDetailsForm extends BaseMediaForm{
         view.setFitWidth(125);
 
         btn.setGraphic(view);
+        btn.setOnAction(e -> {
+            validateInputs();
+
+            if (validateInputs()) {
+                AddArchive_v2.closeWindow();
+            }
+        });
         return btn;
     }
 
-    private Button plusBtn() {
-        Button plsBtn = new Button();
-        plsBtn.getStyleClass().add("image-button");
-        Image img = new Image(getClass().getResourceAsStream(
-                "/edu/tangingina/thebackroom/assets/plus_btn.png"));
-        ImageView view = new ImageView(img);
-        view.setPreserveRatio(true);
-        view.setFitWidth(32);
+    //input validation
+    private boolean validateInputs() {
+        boolean isFilled = false;
 
-        plsBtn.setGraphic(view);
-        return plsBtn;
+        titleField.clearError();
+        seasonField.clearError();
+        episodeField.clearError();
+        statusField.clearError();
+        linkField.clearError();
+
+        if (titleField.isEmpty()) {
+            titleField.showError();
+            isFilled = false;
+        }
+
+        if (seasonField.isEmpty()) {
+            seasonField.showError();
+            isFilled = false;
+        }
+
+        if (episodeField.isEmpty()) {
+            episodeField.showError();
+            isFilled = false;
+        }
+
+        if (statusField.isEmpty()) {
+            statusField.showError();
+            isFilled = false;
+        }
+
+        if (linkField.isEmpty()) {
+            linkField.showError();
+            isFilled = false;
+        }
+
+        return true;
+    }
+
+    public MultiValueField getDirectorField() {
+        return directorField;
+    }
+
+    public MultiValueField getGenreField() {
+        return genreField;
     }
 }

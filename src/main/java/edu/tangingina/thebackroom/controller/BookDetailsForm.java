@@ -19,21 +19,35 @@ public class BookDetailsForm extends BaseMediaForm {
             - Page Count
             - Edition
      */
+
+    private MultiValueField authorField, genreField;
+    private FormFieldGroup titleField, publisherField, ISBNfield, pageField, editionField, linkField, widgetField;
+
     public BookDetailsForm() {
         view.getChildren().add(formColumn());
+
+        titleField = FormFieldFactory.createTextField("Title", 520);
+        authorField = FormFieldFactory.createMultiValueField("Author", 175);
+        genreField = FormFieldFactory.createMultiValueField("Genre", 120);
+        publisherField = FormFieldFactory.createTextField("Publisher", 175);
+        pageField = FormFieldFactory.createTextField("Page Count", 120);
+        ISBNfield = FormFieldFactory.createTextField("ISBN", 120);
+        editionField = FormFieldFactory.createTextField("Edition", 120);
+        linkField = FormFieldFactory.createTextField("Access Link", 520);
+        widgetField = FormFieldFactory.createTextField("Book Cover", 520);
+
         formColumn().getChildren().addAll(
-                FormFieldFactory.createTextField("Title", 520),
-                FormFieldFactory.createFieldWithButton(
-                        FormFieldFactory.createTextField("Author", 175),
-                        plusBtn()),
-                FormFieldFactory.createTextField("Publisher", 175),
+                titleField.getView(),
+                authorField.getView(),
+                publisherField.getView(),
                 FormFieldFactory.createTextArea("Synopsis", 520),
-                FormFieldFactory.createFieldWithButton(FormFieldFactory.createTextField("Genre", 120),
-                        plusBtn()),
+                genreField.getView(),
                 FormFieldFactory.createYearPicker("Release Year", 120),
-                FormFieldFactory.createTextField("Edition", 120),
-                FormFieldFactory.createTextField("Access Link", 520),
-                FormFieldFactory.createTextField("Book Cover", 520),
+                pageField.getView(),
+                ISBNfield.getView(),
+                editionField.getView(),
+                linkField.getView(),
+                widgetField.getView(),
                 addButton()
         );
 
@@ -51,20 +65,55 @@ public class BookDetailsForm extends BaseMediaForm {
         view.setFitWidth(125);
 
         btn.setGraphic(view);
+        btn.setOnAction(e -> {
+            validateInputs();
+
+            if (validateInputs()) {
+                AddArchive_v2.closeWindow();
+            }
+        });
+
         return btn;
     }
 
-    private Button plusBtn() {
-        Button plsBtn = new Button();
-        plsBtn.getStyleClass().add("image-button");
-        Image img = new Image(getClass().getResourceAsStream(
-                "/edu/tangingina/thebackroom/assets/plus_btn.png"));
-        ImageView view = new ImageView(img);
-        view.setPreserveRatio(true);
-        view.setFitWidth(32);
+    //input validation
+    private boolean validateInputs() {
+        boolean isFilled = false;
 
-        plsBtn.setGraphic(view);
-        return plsBtn;
+        titleField.clearError();
+        ISBNfield.clearError();
+        pageField.clearError();
+        linkField.clearError();
+
+        if (titleField.isEmpty()) {
+            titleField.showError();
+            isFilled = false;
+        }
+
+        if (ISBNfield.isEmpty()) {
+            ISBNfield.showError();
+            isFilled = false;
+        }
+
+        if (pageField.isEmpty()) {
+            pageField.showError();
+            isFilled = false;
+        }
+
+        if (linkField.isEmpty()) {
+            linkField.showError();
+            isFilled = false;
+        }
+
+        return true;
+    }
+
+    public MultiValueField getAuthorField() {
+        return authorField;
+    }
+
+    public MultiValueField getGenreField() {
+        return genreField;
     }
 
 }

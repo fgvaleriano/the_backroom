@@ -15,7 +15,7 @@ public class FormFieldFactory {
 
     private static final double labelSectionWidth = 100;
 
-    private static Label createLabel(String labelText) {
+    public static Label createLabel(String labelText) {
         Label label = new Label(labelText);
         label.setFont(FontLoader.regular(15));
         label.getStyleClass().add("input-label");
@@ -28,7 +28,7 @@ public class FormFieldFactory {
         return label;
     }
 
-    public static HBox createTextField (String labelText, Integer size) {
+    public static FormFieldGroup createTextField (String labelText, Integer size) {
         Label inputLabel = createLabel(labelText);
         TextField inputField = new TextField();
 
@@ -41,7 +41,7 @@ public class FormFieldFactory {
         HBox holder = new HBox(20, inputLabel, inputField);
         holder.setAlignment(Pos.CENTER_LEFT);
 
-        return holder;
+        return new FormFieldGroup(holder, inputField);
     }
 
     public static HBox createYearPicker(String labelText, Integer size) {
@@ -80,28 +80,13 @@ public class FormFieldFactory {
         return holder;
     }
 
-    public static HBox createFieldWithButton(HBox fieldBox, Button plusBtn) {
-        fieldBox.getChildren().add(plusBtn);
-        fieldBox.setSpacing(12);
-        return fieldBox;
+    public static MultiValueField createMultiValueField(String labelText, Integer fieldWidth) {
+        return new MultiValueField(labelText, fieldWidth);
+    }
+
+    public static Double getLabelSectionWidth() {
+        return labelSectionWidth;
     }
 
 }
 
-class FormFieldGroup {
-    private VBox container;
-    private TextInputControl input;
-
-    public FormFieldGroup(VBox container, TextInputControl input) {
-        this.container = container;
-        this.input = input;
-    }
-
-    public VBox getContainer() {
-        return container;
-    }
-
-    public TextInputControl getInput() {
-        return input;
-    }
-}

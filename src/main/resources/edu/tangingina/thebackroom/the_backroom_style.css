@@ -180,12 +180,21 @@
     -fx-padding: 0 0 20 0;
 }
 
-.combo-box, .input-field {
+.combo-box, .input-field, .input-chip{
     -fx-background-radius: 10;
-
     -fx-background-color: #FFFAFA;
     -fx-padding: 6 10 6 10;
     -fx-effect: dropshadow(gaussian, #EED0AC, 15, 0, 0, 0);
+}
+
+.input-field-error {
+    -fx-text-fill: #000000;
+    -fx-background-radius: 10;
+    -fx-background-color: #FFFAFA;
+    -fx-padding: 6 10 6 10;
+    -fx-effect: dropshadow(gaussian, #D27E31, 15, 0, 0, 0);
+    -fx-border-color: #D27E31;
+    -fx-border-radius: 10;
 }
 
 /* SIGN UP PAGE STYLING
