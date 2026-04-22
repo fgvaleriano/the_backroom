@@ -1,9 +1,11 @@
 package edu.tangingina.thebackroom.controller;
 
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class FilmDetailsForm extends BaseMediaForm{
@@ -46,7 +48,7 @@ public class FilmDetailsForm extends BaseMediaForm{
         VBox.setMargin(lastNode, new javafx.geometry.Insets(0, 0, 0, 0));
     }
 
-    private Button addButton(){
+    private Node addButton(){
         Button btn = new Button();
         btn.getStyleClass().add("image-button");
 
@@ -64,7 +66,11 @@ public class FilmDetailsForm extends BaseMediaForm{
                 AddArchive_v2.closeWindow();
             }
         });
-        return btn;
+        HBox container = new HBox(btn);
+        container.setAlignment(Pos.CENTER);
+        container.setPrefWidth(520);
+
+        return container;
     }
 
     //input validation

@@ -55,7 +55,7 @@ public class BookDetailsForm extends BaseMediaForm {
         VBox.setMargin(lastNode, new javafx.geometry.Insets(0, 0, 0, 0));
     }
 
-    private Button addButton(){
+    private Node addButton(){
         Button btn = new Button();
         btn.getStyleClass().add("image-button");
         Image img = new Image(getClass().getResourceAsStream(
@@ -73,7 +73,11 @@ public class BookDetailsForm extends BaseMediaForm {
             }
         });
 
-        return btn;
+        HBox container = new HBox(btn);
+        container.setAlignment(Pos.CENTER);
+        container.setPrefWidth(520);
+
+        return container;
     }
 
     //input validation
