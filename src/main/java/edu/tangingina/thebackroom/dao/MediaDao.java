@@ -21,6 +21,12 @@ public interface MediaDao {
     void addMediaAccess(Media media);
     void addMediaGameMode(Media media);
     void addMediaGamePlatform(Media media);
-    void updateMedia();
+    void updateMedia(Media media, Media oldMedia);
+    void removeMediaPersonnel(int mediaId, Person person) throws Exception;
+    void removeMediaCompany(int mediaId, Company company) throws Exception;
+    void removeMediaGenre(int mediaId, Category category) throws Exception;
+    void removeMediaAccess(int mediaId, Website website) throws Exception;
+    void removeMediaGameMode(int mediaId, GameMode mode) throws Exception;
+    void removeMediaGamePlatform(int mediaId, Platform platform) throws Exception;
 
 }

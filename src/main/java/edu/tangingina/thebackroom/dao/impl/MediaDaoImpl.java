@@ -394,7 +394,271 @@ public class MediaDaoImpl implements MediaDao {
     }
 
     @Override
-    public void updateMedia() {
+    public void updateMedia(Media media, Media oldMedia) {
+        String mediaType = media.getMediaType();
+        String query = null;
 
+        try {
+            DatabaseManager.conn.setAutoCommit(false);
+
+            if (mediaType.equals("Book")) {
+                query = "UPDATE media SET name = ?, release_year = ?, synopsis = ?, media_type = ?, icon_path = ?, isbn = ?, page_count = ?, edition = ? WHERE media_id = ?;";
+
+                PreparedStatement stm = DatabaseManager.conn.prepareStatement(query);
+
+                stm.setString(1, media.getMediaName());
+                stm.setString(2, media.getReleaseYear());
+                stm.setString(3, media.getSynopsis());
+                stm.setString(4, media.getMediaType());
+                stm.setString(5, media.getMediaIcon());
+                stm.setString(6, media.getISBN());
+                stm.setString(7, media.getPageCount());
+                stm.setString(8, media.getEdition());
+                stm.setInt(9, media.getID());
+                stm.executeUpdate();
+
+            } else if (mediaType.equals("Movie")) {
+                query = "UPDATE media SET name = ?, release_year = ?, synopsis = ?, media_type = ?, icon_path = ?, duration = ?, language = ? WHERE media_id = ?";
+
+                PreparedStatement stm = DatabaseManager.conn.prepareStatement(query);
+
+                stm.setString(1, media.getMediaName());
+                stm.setString(2, media.getReleaseYear());
+                stm.setString(3, media.getSynopsis());
+                stm.setString(4, media.getMediaType());
+                stm.setString(5, media.getMediaIcon());
+                stm.setString(6, media.getDuration());
+                stm.setString(7, media.getLanguage());
+                stm.setInt(8, media.getID());
+                stm.executeUpdate();
+
+            } else if (mediaType.equals("TvShow")) {
+                query = "UPDATE media SET name = ?, release_year = ?, synopsis = ?, media_type = ?, icon_path = ?, season_count = ?, episode_count = ?, status = ? WHERE media_id = ?";
+
+                PreparedStatement stm = DatabaseManager.conn.prepareStatement(query);
+
+                stm.setString(1, media.getMediaName());
+                stm.setString(2, media.getReleaseYear());
+                stm.setString(3, media.getSynopsis());
+                stm.setString(4, media.getMediaType());
+                stm.setString(5, media.getMediaIcon());
+                stm.setString(6, media.getSeasonCount());
+                stm.setString(7, media.getEpisodeCount());
+                stm.setString(8, media.getStatus());
+                stm.setInt(9, media.getID());
+                stm.executeUpdate();
+
+            } else if (mediaType.equals("Game")) {
+                query = "UPDATE media SET name = ?, release_year = ?, synopsis = ?, media_type = ?, icon_path = ?, game_engine = ?, system_requirements = ? WHERE media_id = ?";
+
+                PreparedStatement stm = DatabaseManager.conn.prepareStatement(query);
+
+                stm.setString(1, media.getMediaName());
+                stm.setString(2, media.getReleaseYear());
+                stm.setString(3, media.getSynopsis());
+                stm.setString(4, media.getMediaType());
+                stm.setString(5, media.getMediaIcon());
+                stm.setString(6, media.getGameEngine());
+                stm.setString(7, media.getSystemRequirements());
+                stm.setInt(8, media.getID());
+                stm.executeUpdate();
+
+                //=========Update on the Game Mode=========//
+                ArrayList<GameMode> oldGameMode = oldMedia.getGameMode();
+                ArrayList<GameMode> newGameMode = media.getGameMode();
+
+                for (GameMode gm : oldGameMode) {
+                    if (!newGameMode.contains(gm)) removeMediaGameMode(media.getID(), gm);
+                }
+
+                //we add only for the new things which we will remove things that already exists
+                ArrayList<GameMode> tempGameMode = new ArrayList<>(newGameMode);
+                tempGameMode.removeAll(oldGameMode);
+                media.setGameMode(tempGameMode);
+                addMediaGameMode(media);
+                media.setGameMode(newGameMode);
+
+                //=========Update on the Game Platform=========//
+                ArrayList<Platform> oldPlatform = oldMedia.getGamePlatform();
+                ArrayList<Platform> newPlatform = media.getGamePlatform();
+
+                for (Platform p : oldPlatform) {
+                    if (!newPlatform.contains(p)) removeMediaGamePlatform(media.getID(), p);
+                }
+
+                //we add only for the new things which we will remove things that already exists
+                ArrayList<Platform> tempPlatform = new ArrayList<>(newPlatform);
+                tempPlatform.removeAll(oldPlatform);
+                media.setGamePlatform(tempPlatform);
+                addMediaGamePlatform(media);
+                media.setGamePlatform(newPlatform);
+            }
+
+            //=========Update on the Media Personnel=========//
+            ArrayList<Person> oldPersonnel = oldMedia.getMediaPersonnel();
+            ArrayList<Person> newPersonnel = media.getMediaPersonnel();
+
+            for (Person p : oldPersonnel) {
+                if (!newPersonnel.contains(p)) removeMediaPersonnel(media.getID(), p);
+            }
+
+            //we add only for the new things which we will remove things that already exists
+            ArrayList<Person> tempPersonnel = new ArrayList<>(newPersonnel);
+            tempPersonnel.removeAll(oldPersonnel);
+            media.setMediaPersonnel(tempPersonnel);
+            addMediaPersonnel(media);
+            media.setMediaPersonnel(newPersonnel);
+
+            //=========Update on the Media Company=========//
+            ArrayList<Company> oldCompany = oldMedia.getMediaCompany();
+            ArrayList<Company> newCompany = media.getMediaCompany();
+
+            for (Company c : oldCompany) {
+                if (!newCompany.contains(c)) removeMediaCompany(media.getID(), c);
+            }
+
+            //we add only for the new things which we will remove things that already exists
+            ArrayList<Company> tempCompany = new ArrayList<>(newCompany);
+            tempCompany.removeAll(oldCompany);
+            media.setMediaCompany(tempCompany);
+            addMediaCompany(media);
+            media.setMediaCompany(newCompany);
+
+            //=========Update on the Media Genre=========//
+            ArrayList<Category> oldCategory = oldMedia.getMediaGenres();
+            ArrayList<Category> newCategory = media.getMediaGenres();
+
+            for (Category cat : oldCategory) {
+                if (!newCategory.contains(cat)) removeMediaGenre(media.getID(), cat);
+            }
+
+            //we add only for the new things which we will remove things that already exists
+            ArrayList<Category> tempCategory = new ArrayList<>(newCategory);
+            tempCategory.removeAll(oldCategory);
+            media.setMediaGenres(tempCategory);
+            addMediaGenre(media);
+            media.setMediaGenres(newCategory);
+
+            //=========Update on the Media Online Access=========//
+            ArrayList<Website> oldWebsite = oldMedia.getOnlineAccess();
+            ArrayList<Website> newWebsite = media.getOnlineAccess();
+
+            for (Website w : oldWebsite) {
+                if (!newWebsite.contains(w)) removeMediaAccess(media.getID(), w);
+            }
+
+            //we add only for the new things which we will remove things that already exists
+            ArrayList<Website> tempWebsite = new ArrayList<>(newWebsite);
+            tempWebsite.removeAll(oldWebsite);
+            media.setOnlineAccess(tempWebsite);
+            addMediaAccess(media);
+            media.setOnlineAccess(newWebsite);
+
+            DatabaseManager.conn.commit();
+            System.out.println("Update successful and committed!");
+            DatabaseManager.conn.setAutoCommit(true);
+
+        } catch (Exception e) {
+            try {
+                //we rollback if there was an error
+                DatabaseManager.conn.rollback();
+            } catch (Exception e1) {
+
+            }
+        }
+    }
+
+    @Override
+    public void removeMediaPersonnel(int mediaId, Person person) throws Exception{
+        String query = "DELETE FROM media_personnel WHERE media_id = ? AND person_id = ? AND role_id = ?";
+
+        try {
+            PreparedStatement stm = DatabaseManager.conn.prepareStatement(query);
+            stm.setInt(1, mediaId);
+            stm.setInt(2, person.getPersonID());
+            stm.setInt(3, person.getPersonRoleId());
+            stm.executeUpdate();
+
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    public void removeMediaCompany(int mediaId, Company company) throws Exception {
+        String query = "DELETE FROM media_company WHERE media_id = ? AND company_id = ? AND role_id = ?";
+
+        try {
+            PreparedStatement stm = DatabaseManager.conn.prepareStatement(query);
+            stm.setInt(1, mediaId);
+            stm.setInt(2, company.getCompanyID());
+            stm.setInt(3, company.getCompanyRoleId());
+            stm.executeUpdate();
+
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    public void removeMediaGenre(int mediaId, Category category) throws Exception {
+        String query = "DELETE FROM media_category WHERE media_id = ? AND category_id = ?";
+
+        try {
+            PreparedStatement stm = DatabaseManager.conn.prepareStatement(query);
+            stm.setInt(1, mediaId);
+            stm.setInt(2, category.getCategoryID());
+            stm.executeUpdate();
+
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    public void removeMediaAccess(int mediaId, Website website) throws Exception {
+        String query = "DELETE FROM media_access WHERE media_id = ? AND website_id = ? AND url = ?";
+
+        try {
+            PreparedStatement stm = DatabaseManager.conn.prepareStatement(query);
+            stm.setInt(1, mediaId);
+            stm.setInt(2, website.getWebsiteID());
+            stm.setString(3, website.getWebsiteURL());
+            stm.executeUpdate();
+
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    public void removeMediaGameMode(int mediaId, GameMode mode) throws Exception {
+        String query = "DELETE FROM media_game_mode WHERE media_id = ? AND mode_id = ?";
+
+        try {
+            PreparedStatement stm = DatabaseManager.conn.prepareStatement(query);
+            stm.setInt(1, mediaId);
+            stm.setInt(2, mode.getGameModeID());
+            stm.executeUpdate();
+
+        } catch (Exception e) {
+            throw e;
+        }
+
+    }
+
+    @Override
+    public void removeMediaGamePlatform(int mediaId, Platform platform) throws Exception {
+        String query = "DELETE FROM media_game_platform WHERE media_id = ? AND platform_id = ?";
+
+        try {
+            PreparedStatement stm = DatabaseManager.conn.prepareStatement(query);
+            stm.setInt(1, mediaId);
+            stm.setInt(2, platform.getPlatformID());
+            stm.executeUpdate();
+
+        } catch (Exception e) {
+            throw e;
+        }
     }
 }
