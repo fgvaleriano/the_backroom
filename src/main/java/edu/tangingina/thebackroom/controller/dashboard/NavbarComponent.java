@@ -11,6 +11,9 @@ import javafx.scene.shape.Circle;
 import java.net.URL;
 
 public class NavbarComponent extends HBox {
+    /*
+        Handles navigation bar implementation and logic
+     */
 
     ImageView logo;
     Region spacer;

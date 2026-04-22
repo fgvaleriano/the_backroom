@@ -14,8 +14,9 @@
     -fx-scale-y: 0.95;
 }
 
-/* LOGIN PAGE STYLE
-    Contains:
+/*
+    ========== LOGIN PAGE STYLE ==========
+        Contains:
 
 */
 
@@ -47,7 +48,8 @@
     -fx-scale-y: 0.95;
 }
 
-/* ADD ARCHIVE STYLING
+/*
+========== ADD ARCHIVE STYLING ==========
     Contains styling for:
         - beige inner cards
         - vertical scroll bars
@@ -110,7 +112,7 @@
 
 
 /*
-    DASHBOARD STYLING
+========== DASHBOARD STYLING ==========
         Contains styling for the ff:
             - dashboard bkg
             - navigation bar styling
@@ -121,9 +123,9 @@
 }
 
 .nav-bar {
-    -fx-background-color: #F2E4D3;
-    -fx-effect: dropshadow(guassian, #EFDCC5, 15, 0.5, 0, 4);
-    -fx-boder-width: 0 0 1 0
+    -fx-background-color: #F7E1C6;
+    -fx-effect: dropshadow(gaussian, #E0B583, 28, 0.18, 0, 5);
+    -fx-border-width: 0 0 1 0
 }
 
 .nav-btn {
@@ -165,6 +167,23 @@
 }
 
 .search-button:pressed {
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+/* ========== CARD COVER ==========
+    Contains:
+*/
+
+.cards {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-effect: dropshadow(gaussian, #EED0AC), 16, 0.2, 0, 6);
+}
+
+.cards:hover {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
     -fx-scale-x: 0.95;
     -fx-scale-y: 0.95;
 }

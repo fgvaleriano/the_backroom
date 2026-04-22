@@ -1,5 +1,6 @@
 package edu.tangingina.thebackroom.controller.dashboard;
 
+import javafx.geometry.*;
 import javafx.geometry.Pos;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
@@ -12,8 +13,13 @@ public class DashboardShell extends BorderPane {
     private VBox contentArea;
 
     public DashboardShell() {
-        this.setTop(new NavbarComponent());             //navigation bar will always be on top
+        //this.setTop(new NavbarComponent());             //navigation bar will always be on top
 
+        NavbarComponent navBar = new NavbarComponent();
+        StackPane navWrapper = new StackPane(navBar);
+        navWrapper.setPadding(new Insets(0, 0, 10, 0));
+
+        this.setTop(navWrapper);
         contentArea = new VBox();
         contentArea.setAlignment(Pos.TOP_CENTER);
         contentArea.getStyleClass().add("main-content-bkg");

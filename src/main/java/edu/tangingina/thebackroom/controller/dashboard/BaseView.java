@@ -15,10 +15,10 @@ public abstract class BaseView {
         root = new VBox(20);
         root.setPadding(new Insets(40));
         setupStyles();
-        buildUI();
+        buildLayout();
     }
 
-    protected abstract void buildUI();
+    protected abstract void buildLayout();
 
     private void setupStyles() {
 
