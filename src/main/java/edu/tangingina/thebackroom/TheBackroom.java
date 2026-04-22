@@ -111,7 +111,13 @@ public class TheBackroom extends Application {
         loadCache();
         printMediaList();
         TempClass tc = new TempClass();
-        tc.updateMedia(primaryStage);
+        //tc.updateMedia(primaryStage);
+
+        while(true){
+            tc.search();
+            System.out.println();
+
+        }
 
         //addMedia(primaryStage);
 
@@ -120,7 +126,7 @@ public class TheBackroom extends Application {
 
 
         //showLogin(primaryStage);
-        fontLoader();
+        //fontLoader();
         //sm.showLogin();
 
         //showLogin(primaryStage);
@@ -842,6 +848,8 @@ public class TheBackroom extends Application {
 
 
             }
+            mediaList.put(media.getID(), media);
+            printMediaList();
             break;
 
 

@@ -31,6 +31,123 @@ public class TempClass {
     public HashMap<String, GameMode> gameModeList = TheBackroom.gameModeList;
     public HashMap<Integer, Media> mediaList = TheBackroom.mediaList;
 
+    public void search(){
+        Scanner scan = new Scanner(System.in);
+
+        ArrayList<String> categoryFilter = new ArrayList<>();
+        ArrayList<Media> results = new ArrayList<>();
+
+        System.out.println("Searching Media....");
+        System.out.print("Add Genre to Filter [Y/N]: ");
+        String choice = scan.nextLine().trim().toUpperCase();
+
+        switch (choice) {
+            case "Y":
+
+                if (!categoryList.isEmpty()) {
+                    System.out.println("Categories: ");
+                    for (String categoryName : categoryList.keySet()) {
+                        System.out.println(categoryName);
+                    }
+                }
+
+                System.out.println("Input Category to Filter (Separate by Comma): ");
+                String inputCategory = scan.nextLine();
+                String[] category = inputCategory.split(",");
+
+                for (String categoryName : category) {
+                    categoryFilter.add(categoryName.trim());
+                }
+                break;
+        }
+        System.out.print("Add Media Type to Filter [Y/N]: ");
+        choice = scan.nextLine().trim().toUpperCase();
+        String mediaType = null;
+
+        switch (choice) {
+            case "Y":
+                System.out.print("Media Type:\n1. Book\n2. Movie\n3. TV Shows\n4. Game\nType: ");
+                int type = scan.nextInt();
+                switch(type) {
+                    case 1:
+                        mediaType = "Book";
+                        break;
+
+                    case 2:
+                        mediaType = "Movie";
+                        break;
+
+                    case 3:
+                        mediaType = "TvShow";
+                        break;
+
+                    case 4:
+                        mediaType = "Game";
+                        break;
+                }
+                scan.nextLine();
+                break;
+        }
+
+        System.out.print("Search Name [Y/N]: ");
+        choice = scan.nextLine().trim().toUpperCase();
+        String name = null;
+
+        switch (choice) {
+            case "Y":
+                System.out.print("Name: ");
+                name = scan.nextLine();
+                break;
+        }
+
+        for(Media m : mediaList.values()){
+            boolean nameMatch = (name == null || name.isEmpty()) ||
+                    m.getMediaName().toLowerCase().contains(name.toLowerCase());
+
+
+
+            // 2. Type Match: If type is empty, it's 'true'. Otherwise, check equals.
+            boolean typeMatch = (mediaType == null || mediaType.isEmpty()) ||
+                    m.getMediaType().equalsIgnoreCase(mediaType);
+
+            // 3. Genre Match: If filter list is empty, it's 'true'. Otherwise, check containsAll.
+            boolean genreMatch = (categoryFilter == null || categoryFilter.isEmpty());
+
+            if(!genreMatch){
+                ArrayList<String> mediaGenre = m.getMediaGenres().stream().map(Category::getCategoryName).collect(java.util.stream.Collectors.toCollection(ArrayList::new));
+                genreMatch = mediaGenre.containsAll(categoryFilter);
+            }
+
+            // ONLY if all three are true (or bypassed), we add to results
+            if (nameMatch && typeMatch && genreMatch) {
+                results.add(m);
+            }
+        }
+
+        System.out.println("Search List: ");
+
+        if(results.isEmpty()) System.out.println("No results found.");
+        else{
+            System.out.println("Results:");
+            for(Media m : results){
+                System.out.println("Name: " + m.getMediaName());
+                System.out.println("Media Type: " + m.getMediaType());
+                System.out.println("Synopsis: " + m.getSynopsis());
+                System.out.println("Release Year: " + m.getReleaseYear());
+                System.out.println("Media Icon: " + m.getMediaIcon());
+                System.out.println();
+            }
+        }
+        results.clear();
+
+        System.out.println("Enter to Continue");
+        scan.nextLine();
+
+
+
+
+    }
+
     public Media pickMedia(){
         Scanner scan = new Scanner(System.in);
         System.out.println("Media List: ");
@@ -527,6 +644,8 @@ public class TempClass {
 
 
             }
+
+            mediaList.put(media.getID(), media);
             break;
 
 
