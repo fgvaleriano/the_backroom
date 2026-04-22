@@ -28,7 +28,7 @@ public class FormFieldGroup {
 
     public boolean isEmpty() {
         if (inputs instanceof TextInputControl textInput) {
-            return textInput.getText().isEmpty();
+            return textInput.getText().trim().isEmpty() || textInput.getText() == null;
         }
         return false;
     }

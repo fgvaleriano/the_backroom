@@ -16,8 +16,8 @@ public class GameDetailsForm extends BaseMediaForm{
             - system requirements
      */
 
-    private MultiValueField gameDevField, gameStudioField, genreField;
-    private FormFieldGroup titleField, modeField, engineField, linkField, widgetField;
+    private MultiValueField gameDevField, gameStudioField, genreField, modeField;
+    private FormFieldGroup titleField, engineField, linkField, widgetField, systemReqsField, synopsisField;
 
     public GameDetailsForm() {
         view.getChildren().addAll(formColumn());
@@ -25,22 +25,24 @@ public class GameDetailsForm extends BaseMediaForm{
         titleField = FormFieldFactory.createTextField("Title", 520);
         gameDevField = FormFieldFactory.createMultiValueField("Game Developer", 120);
         gameStudioField = FormFieldFactory.createMultiValueField("Game Studio", 120);
-        modeField = FormFieldFactory.createTextField("Game Mode", 120);
+        modeField = FormFieldFactory.createMultiValueField("Game Mode", 120);
         engineField = FormFieldFactory.createTextField("Game Engine", 120);
         genreField = FormFieldFactory.createMultiValueField("Genre", 120);
         linkField = FormFieldFactory.createTextField("Access Link", 520);
         widgetField = FormFieldFactory.createTextField("Cover Art", 520);
+        systemReqsField = FormFieldFactory.createTextArea("System Request", 520);
+        synopsisField = FormFieldFactory.createTextArea("Synopsis", 520);
 
         formColumn().getChildren().addAll(
                 titleField.getView(),
                 gameDevField.getView(),
                 gameStudioField.getView(),
-                FormFieldFactory.createTextArea("Synopsis", 520),
+                synopsisField.getView(),
                 modeField.getView(),
                 engineField.getView(),
                 genreField.getView(),
                 FormFieldFactory.createYearPicker("Release Year", 120),
-                FormFieldFactory.createTextArea("System Requirements", 520),
+                systemReqsField.getView(),
                 linkField.getView(),
                 widgetField.getView(),
                 addButton()
@@ -77,35 +79,34 @@ public class GameDetailsForm extends BaseMediaForm{
 
     //input validation
     private boolean validateInputs() {
-        boolean isFilled = false;
+        boolean isValid = false;
 
         titleField.clearError();
-        modeField.clearError();
         engineField.clearError();
         linkField.clearError();
         //inlcude system reqs
 
         if (titleField.isEmpty()) {
             titleField.showError();
-            isFilled = false;
-        }
-
-        if (modeField.isEmpty()) {
-            modeField.showError();
-            isFilled = false;
+            isValid = false;
         }
 
         if (engineField.isEmpty()) {
             engineField.showError();
-            isFilled = false;
+            isValid = false;
         }
 
         if (linkField.isEmpty()) {
             linkField.showError();
-            isFilled = false;
+            isValid = false;
         }
 
-        return true;
+        if (systemReqsField.isEmpty()) {
+            systemReqsField.showError();
+            isValid = false;
+        }
+
+        return isValid;
     }
 
     public MultiValueField getGameDevField() {

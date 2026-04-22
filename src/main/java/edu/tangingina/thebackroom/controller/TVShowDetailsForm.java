@@ -17,7 +17,8 @@ public class TVShowDetailsForm extends BaseMediaForm{
      */
 
     private MultiValueField directorField, genreField;
-    private FormFieldGroup titleField, studioField, seasonField, episodeField, statusField, linkField, widgetField;
+    private FormFieldGroup titleField, studioField, seasonField,
+            episodeField, statusField, linkField, widgetField, synopsisField;
 
 
     public TVShowDetailsForm() {
@@ -26,6 +27,7 @@ public class TVShowDetailsForm extends BaseMediaForm{
         titleField = FormFieldFactory.createTextField("Title", 520);
         directorField = FormFieldFactory.createMultiValueField("Director", 175);
         studioField = FormFieldFactory.createTextField("Studio", 120);
+        synopsisField = FormFieldFactory.createTextArea("Synopsis", 520);
         genreField = FormFieldFactory.createMultiValueField("Genre", 120);
         seasonField = FormFieldFactory.createTextField("Season Count", 120);
         episodeField = FormFieldFactory.createTextField("Episode Count", 120);
@@ -37,7 +39,7 @@ public class TVShowDetailsForm extends BaseMediaForm{
                 titleField.getView(),
                 directorField.getView(),
                 studioField.getView(),
-                FormFieldFactory.createTextArea("Synopsis", 520),
+                synopsisField.getView(),
                 genreField.getView(),
                 seasonField.getView(),
                 episodeField.getView(),
@@ -79,7 +81,7 @@ public class TVShowDetailsForm extends BaseMediaForm{
 
     //input validation
     private boolean validateInputs() {
-        boolean isFilled = true;
+        boolean isValid = true;
 
         titleField.clearError();
         seasonField.clearError();
@@ -89,30 +91,30 @@ public class TVShowDetailsForm extends BaseMediaForm{
 
         if (titleField.isEmpty()) {
             titleField.showError();
-            isFilled = false;
+            isValid = false;
         }
 
         if (seasonField.isEmpty()) {
             seasonField.showError();
-            isFilled = false;
+            isValid = false;
         }
 
         if (episodeField.isEmpty()) {
             episodeField.showError();
-            isFilled = false;
+            isValid = false;
         }
 
         if (statusField.isEmpty()) {
             statusField.showError();
-            isFilled = false;
+            isValid = false;
         }
 
         if (linkField.isEmpty()) {
             linkField.showError();
-            isFilled = false;
+            isValid = false;
         }
 
-        return true;
+        return isValid;
     }
 
     public MultiValueField getDirectorField() {

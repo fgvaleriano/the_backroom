@@ -21,13 +21,15 @@ public class BookDetailsForm extends BaseMediaForm {
      */
 
     private MultiValueField authorField, genreField;
-    private FormFieldGroup titleField, publisherField, ISBNfield, pageField, editionField, linkField, widgetField;
+    private FormFieldGroup titleField, publisherField,
+            ISBNfield, pageField, editionField, linkField, widgetField, synopsisField;
 
     public BookDetailsForm() {
         view.getChildren().add(formColumn());
 
         titleField = FormFieldFactory.createTextField("Title", 520);
         authorField = FormFieldFactory.createMultiValueField("Author", 175);
+        synopsisField = FormFieldFactory.createTextArea("Synopsis", 520);
         genreField = FormFieldFactory.createMultiValueField("Genre", 120);
         publisherField = FormFieldFactory.createTextField("Publisher", 175);
         pageField = FormFieldFactory.createTextField("Page Count", 120);
@@ -40,7 +42,7 @@ public class BookDetailsForm extends BaseMediaForm {
                 titleField.getView(),
                 authorField.getView(),
                 publisherField.getView(),
-                FormFieldFactory.createTextArea("Synopsis", 520),
+                synopsisField.getView(),
                 genreField.getView(),
                 FormFieldFactory.createYearPicker("Release Year", 120),
                 pageField.getView(),
@@ -82,7 +84,7 @@ public class BookDetailsForm extends BaseMediaForm {
 
     //input validation
     private boolean validateInputs() {
-        boolean isFilled = false;
+        boolean isValid = false;
 
         titleField.clearError();
         ISBNfield.clearError();
@@ -91,25 +93,25 @@ public class BookDetailsForm extends BaseMediaForm {
 
         if (titleField.isEmpty()) {
             titleField.showError();
-            isFilled = false;
+            isValid = false;
         }
 
         if (ISBNfield.isEmpty()) {
             ISBNfield.showError();
-            isFilled = false;
+            isValid = false;
         }
 
         if (pageField.isEmpty()) {
             pageField.showError();
-            isFilled = false;
+            isValid = false;
         }
 
         if (linkField.isEmpty()) {
             linkField.showError();
-            isFilled = false;
+            isValid = false;
         }
 
-        return true;
+        return isValid;
     }
 
     public MultiValueField getAuthorField() {

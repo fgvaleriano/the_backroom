@@ -65,7 +65,7 @@ public class FormFieldFactory {
         return holder;
     }
 
-    public static HBox createTextArea (String labelText, Integer size) {
+    public static FormFieldGroup createTextArea (String labelText, Integer size) {
         Label inputLabel = createLabel(labelText);
         TextArea inputArea = new TextArea();
         inputArea.setFont(FontLoader.regular(15));
@@ -77,7 +77,7 @@ public class FormFieldFactory {
         HBox holder = new HBox(20, inputLabel, inputArea);
         holder.setAlignment(Pos.TOP_LEFT);
 
-        return holder;
+        return new FormFieldGroup(holder, inputArea);
     }
 
     public static MultiValueField createMultiValueField(String labelText, Integer fieldWidth) {

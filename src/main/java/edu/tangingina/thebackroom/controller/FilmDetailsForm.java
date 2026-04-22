@@ -16,7 +16,8 @@ public class FilmDetailsForm extends BaseMediaForm{
      */
 
     private MultiValueField directorField, genreField;
-    private FormFieldGroup titleField, studioField, durationField, languageField, linkField, widgetField;
+    private FormFieldGroup titleField, studioField, durationField,
+            languageField, linkField, widgetField, synopsisField;
 
     public FilmDetailsForm() {
         view.getChildren().add(formColumn());
@@ -24,6 +25,7 @@ public class FilmDetailsForm extends BaseMediaForm{
         titleField = FormFieldFactory.createTextField("Title", 520);
         directorField = FormFieldFactory.createMultiValueField("Director", 175);
         studioField = FormFieldFactory.createTextField("Studio", 175);
+        synopsisField = FormFieldFactory.createTextArea("Synopsis", 520);
         genreField = FormFieldFactory.createMultiValueField("Genre", 120);
         durationField = FormFieldFactory.createTextField("Duration", 120);
         languageField = FormFieldFactory.createTextField("Language", 120);
@@ -34,7 +36,7 @@ public class FilmDetailsForm extends BaseMediaForm{
                 titleField.getView(),
                 directorField.getView(),
                 studioField.getView(),
-                FormFieldFactory.createTextArea("Synopsis", 520),
+                synopsisField.getView(),
                 genreField.getView(),
                 durationField.getView(),
                 languageField.getView(),
@@ -75,7 +77,7 @@ public class FilmDetailsForm extends BaseMediaForm{
 
     //input validation
     private boolean validateInputs() {
-        boolean isFilled = false;
+        boolean isValid = false;
 
         titleField.clearError();
         durationField.clearError();
@@ -83,17 +85,17 @@ public class FilmDetailsForm extends BaseMediaForm{
 
         if (titleField.isEmpty()) {
             titleField.showError();
-            isFilled = false;
+            isValid = false;
         }
 
         if (durationField.isEmpty()) {
             durationField.showError();
-            isFilled = false;
+            isValid = false;
         }
 
         if (languageField.isEmpty()) {
             languageField.showError();
-            isFilled = false;
+            isValid = false;
         }
 
         return true;
