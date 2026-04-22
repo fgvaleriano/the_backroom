@@ -3,6 +3,7 @@ package edu.tangingina.thebackroom;
 import edu.tangingina.thebackroom.controller.AddArchive_v2;
 import edu.tangingina.thebackroom.controller.HomePageController;
 import edu.tangingina.thebackroom.controller.LoginController;
+import edu.tangingina.thebackroom.controller.dashboard.DashboardShell;
 import edu.tangingina.thebackroom.dao.impl.UserDaoImpl;
 import edu.tangingina.thebackroom.model.Users;
 import edu.tangingina.thebackroom.util.*;
@@ -70,10 +71,10 @@ public class TheBackroom extends Application {
     public void start(Stage primaryStage) {
         System.out.println("Hello World!!!");
 
-        showLogin(primaryStage);
+        //showLogin(primaryStage);
         //fontLoader();
         //showSignUp(primaryStage);
-        //showHome(primaryStage);
+        showHome(primaryStage);
         //showAddArchive(primaryStage);
         //fm.importCSV(primaryStage);
         //fm.importJSON(primaryStage);
@@ -211,9 +212,16 @@ public class TheBackroom extends Application {
 
     public void showHome(Stage stage) {
         try {
-            HomePageController home = new HomePageController();
-            homePage = home.getLayout(stage);
-            scene = new Scene(homePage);
+            DashboardShell dashboard = new DashboardShell();
+            scene = new Scene(dashboard);
+            var cssResource = getClass().getResource("/edu/tangingina/thebackroom/the_backroom_style.css");
+
+            if (cssResource != null) {
+                scene.getStylesheets().add(cssResource.toExternalForm());
+            } else {
+                System.out.println("CRITICAL: CSS file not found at the specified path!");
+                // The app will now run with default (ugly) styles instead of crashing
+            }
             scene.getStylesheets().add(getClass().getResource(
                     "/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm());
 
@@ -223,6 +231,7 @@ public class TheBackroom extends Application {
             stage.setMaximized(true);
             stage.show();
             stage.setResizable(false);
+            //dashboard.setView(new MainMenuView());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -14,10 +14,6 @@
     -fx-scale-y: 0.95;
 }
 
-/* TEXT AREA STYLE
-
-*/
-
 /* LOGIN PAGE STYLE
     Contains:
 
@@ -51,103 +47,13 @@
     -fx-scale-y: 0.95;
 }
 
-.dialog-pane.custom-alert {
-    -fx-background-color: #D07A2D;
-    -fx-background-radius: 20;
-    -fx-border-radius: 20;
-    -fx-padding: 18;
-}
-
-.dialog-pane.custom-alert > .content.label {
-    -fx-text-fill: white;
-    -fx-font-size: 12px;
-}
-
-.dialog-pane.custom-alert:header .header-panel {
-    -fx-background-color: transparent;
-}
-
-.dialog-pane.custom-alert:header .header-panel .label {
-    -fx-text-fill: white;
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-}
-
-.dialog-pane.custom-alert .graphic-container {
-    -fx-padding: 0;
-}
-
-/* MAIN MENU STYLING
-    Contains:
-       - button styling for dashboard
-
-*/
-.search-button {
-    -fx-background-color: white;
-    -fx-background-radius: 12;
-    -fx-border-radius: 12;
-    -fx-text-fill: #8a8a8a;
-    -fx-font-size: 14px;
-    -fx-padding: 8 18 8 18;
-    -fx-cursor: hand;
-}
-
-.search-button:pressed {
-    -fx-scale-x: 0.95;
-    -fx-scale-y: 0.95;
-}
-
-.textfield-title {
-    -fx-font-weight: bold;
-    -fx-font-size: 14px;
-    -fx-font-family: "Reddit Bold";
-    -fx-text-fill: #305852;
-}
-
-
-.profile-button {
-    -fx-background-radius: 1000;
-    -fx-pref-width: 32px;
-    -fx-pref-height: 32px;
-    -fx-min-width: 32px;
-    -fx-min-height: 32px;
-    -fx-max-heigh: 32px;
-    -fx-min-width: 32px;
-    -fx-background-color: #B83A2D;
-    -fx-padding: 0;
-}
-
-.profile-button:pressed {
-    -fx-scale-x: 0.95;
-    -fx-scale-y: 0.95;
-}
-
-.btn-primary {
-    -fx-background-color: transparent;
-    -fx-font-family: "Reddit Sans Condensed";
-    -fx-text-fill: #305852;
-    -fx-font-size: 27px;
-    -fx-font-weight: bold;
-    -fx-padding: 0 8 0 8;
-    -fx-cursor: hand;
-    -fx-border-color: transparent;
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
-}
-
-.btn-primary:hover {
-    -fx-text-fill: #642225;
-    -fx-scale-x: 0.95;
-    -fx-scale-y: 0.95;
-}
-
 /* ADD ARCHIVE STYLING
     Contains styling for:
         - beige inner cards
         - vertical scroll bars
-
+        - input field
+        - input field label
+        - errors
 */
 
 .card-bkg {
@@ -202,13 +108,63 @@
         - check box styling
 */
 
-/*font stuff*/
-@font-face {
-    font-family: 'Reddit Sans Semi Bold';
-    source: url('/assets/RedditSansCondensed-SemiBold.ttf');
-}
-@font-face {
-    font-family: "Reddit Extra";
-    source: url('edu/tangingina/thebackroom/assets/RedditSansCondensed-ExtraBold.ttf');
+
+/*
+    DASHBOARD STYLING
+        Contains styling for the ff:
+            - dashboard bkg
+            - navigation bar styling
+            - widget styling
+*/
+.main-content-bkg {
+    -fx-background-color: #F2E4D3;
 }
 
+.nav-bar {
+    -fx-background-color: #F2E4D3;
+    -fx-effect: dropshadow(guassian, #EFDCC5, 15, 0.5, 0, 4);
+    -fx-boder-width: 0 0 1 0
+}
+
+.nav-btn {
+    -fx-text-fill: #305852;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 6 10 6 10;
+    -fx-cursor: hand;
+}
+
+.nav-btn:hover {
+    -fx-text-fill: #B83A2D;
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+    -fx-background-color: transparent;
+}
+
+.nav-btn:pressed {
+    -fx-text-fill: #B83A2D;
+    -fx-background-color: transparent;
+}
+
+.nav-btn-active {
+    -fx-text-fill: #B83A2D;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 6 10 6 10;
+    -fx-cursor: hand;
+}
+
+.search-btn {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-text-fill: #8a8a8a;
+    -fx-font-size: 14px;
+    -fx-padding: 8 18 8 18;
+    -fx-cursor: hand;
+}
+
+.search-button:pressed {
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
