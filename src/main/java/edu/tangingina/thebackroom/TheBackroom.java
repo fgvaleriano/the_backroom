@@ -108,11 +108,12 @@ public class TheBackroom extends Application {
         System.out.println("Hello World!!!");
         openDB();
         loadCache();
+        showAddArchive_v2(primaryStage);
         //printMediaList();
-        fm = new FileManager();
-        fm.importCSV(primaryStage);
-        TempClass tc = new TempClass();
-        printMediaList();
+        //fm = new FileManager();
+        //fm.importCSV(primaryStage);
+        //TempClass tc = new TempClass();
+        //printMediaList();
         //tc.updateMedia(primaryStage);
 
         /*
@@ -968,6 +969,7 @@ public class TheBackroom extends Application {
     public void showAddArchive_v2(Stage stage) {
         try {
             AddArchive_v2 add = new AddArchive_v2();
+            System.out.println("Opening add archive");
 
 
         } catch (Exception e) {
