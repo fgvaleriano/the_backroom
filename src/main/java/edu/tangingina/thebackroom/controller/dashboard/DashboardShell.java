@@ -6,6 +6,8 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
 
+import java.util.List;
+
 public class DashboardShell extends BorderPane {
     /*
         Shell for the dashboard, everything is called here
@@ -16,12 +18,18 @@ public class DashboardShell extends BorderPane {
     private ScrollPane scrollPane;
     private StackPane center;
     private Image noiseImg;
+    private List<MediaItem> mediaItems = MediaRepository.getAllMedia();
 
     public DashboardShell() {
         //this.setTop(new NavbarComponent());             //navigation bar will always be on top
 
         //navigation bar thing
-        navBar = new NavbarComponent();
+        navBar = new NavbarComponent(
+                () -> setView(new DashboardHomeView()),
+                () -> setView(new MediaCategoryView("Books", mediaItems)),
+                () -> setView(new MediaCategoryView("Games", mediaItems)),
+                () -> setView( new MediaCategoryView("Films and TV Shows", mediaItems))
+        );
         StackPane navWrapper = new StackPane(navBar);
         navWrapper.setPadding(new Insets(0, 0, 10, 0));
         this.setTop(navWrapper);
@@ -67,5 +75,17 @@ public class DashboardShell extends BorderPane {
     public void setView(BaseView view) {
         contentArea.getChildren().clear();
         contentArea.getChildren().add(view.getView());
+    }
+}
+
+//temporary data provider for image paths
+class MediaRepository {
+
+    public static List<MediaItem> getAllMedia() {
+        return List.of(
+                new MediaItem("Addie LaRue", "/assets/addie.png", "Fiction", "Books"),
+                new MediaItem("The Silent Patient", "/assets/patient.png", "Dark", "Books"),
+                new MediaItem("Genshin Impact", "/assets/genshin.png", "Open World", "Games")
+        );
     }
 }

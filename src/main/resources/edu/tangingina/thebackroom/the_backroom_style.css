@@ -76,7 +76,7 @@
 }
 
 .input-holder .scroll-bar:vertical {
-    -fx-background- color: transparent;
+    -fx-background-color: transparent;
 }
 
 .input-label {
@@ -125,7 +125,7 @@
 }
 
 .dashboard-home {
-    -fx-padding: 45 90 70 90
+    -fx-padding: 45 90 70 90;
     -fx-spacing: 55;
 }
 
@@ -161,9 +161,9 @@
     -fx-alignment: center-left;
 }
 
-.noise-overlay {
-    -fx-background
-}
+/*.noise-overlay {
+    -fx-background-color:
+}*/
 
 .nav-bar {
     -fx-background-color: #F7E1C6;
@@ -239,7 +239,7 @@
     -fx-pref-height: 180;
     -fx-background-color: transparent;
     -fx-padding: 0;
-    -fx-effect: dropshadow(gaussian, #EED0AC), 16, 0.2, 0, 6);
+    -fx-effect: dropshadow(gaussian, #EED0AC, 16, 0.2, 0, 6);
 }
 
 .cards:hover {

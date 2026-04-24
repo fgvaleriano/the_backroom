@@ -15,7 +15,7 @@ public abstract class BaseView {
         root = new VBox(20);
         root.setPadding(new Insets(40));
         setupStyles();
-        buildLayout();
+        //buildLayout();
     }
 
     protected abstract void buildLayout();

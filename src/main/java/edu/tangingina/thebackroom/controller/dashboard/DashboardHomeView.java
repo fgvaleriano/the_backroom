@@ -10,6 +10,9 @@ public class DashboardHomeView extends BaseView{
 
     ImageView titleLogo, logo;
     MediaSection books, games, films;
+    public DashboardHomeView(){
+        buildLayout();
+    }
 
     @Override
     protected void buildLayout() {
