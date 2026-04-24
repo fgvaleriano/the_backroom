@@ -37,9 +37,7 @@ public class CardLayout extends StackPane {
         if (cover != null) {
             this.getChildren().add(cover);
         } else {
-            altText = new Label(title);
-            altText.setFont(FontLoader.bold(15));
-            this.getChildren().add(altText);
+            this.getChildren().add(createAltCard());
         }
     }
 
@@ -65,6 +63,19 @@ public class CardLayout extends StackPane {
             e.printStackTrace();
             return null;
         }
+    }
+
+    //when card image is unaccessible
+    public StackPane createAltCard() {
+        StackPane altCard = new StackPane();
+        altCard.getStyleClass().add("card-alt");
+
+        altText = new Label(title);
+        altText.setFont(FontLoader.extra(25));
+        altText.getStyleClass().add("card-alt-text");
+
+        altCard.getChildren().add(altText);
+        return altCard;
     }
 
     public String getTitle() {
