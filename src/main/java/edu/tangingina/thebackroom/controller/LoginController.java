@@ -158,8 +158,10 @@ public class LoginController {
 
         guest.setOnAction(e -> {
             TheBackroom.sm.showHome();
-        });
+            System.out.println("Opeining add archive for trial");
 
+            AddArchive_v2.addArchiveView();
+        });
         return guest;
     }
 
