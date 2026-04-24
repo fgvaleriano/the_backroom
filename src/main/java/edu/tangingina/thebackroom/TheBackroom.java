@@ -82,7 +82,7 @@ public class TheBackroom extends Application {
 
     public static SceneManager sm;
 
-    public static FileManager fm = new FileManager();
+    public static FileManager fm;
     InternetManager im = new InternetManager();
 
     public static CategoryDaoImpl categoryDao = new CategoryDaoImpl();
@@ -109,15 +109,20 @@ public class TheBackroom extends Application {
         System.out.println("Hello World!!!");
         openDB();
         loadCache();
-        printMediaList();
+        //printMediaList();
+        fm = new FileManager();
+        fm.importCSV(primaryStage);
         TempClass tc = new TempClass();
+        printMediaList();
         //tc.updateMedia(primaryStage);
 
+        /*
         while(true){
             tc.search();
             System.out.println();
 
-        }
+        }*/
+
 
         //addMedia(primaryStage);
 
@@ -236,6 +241,7 @@ public class TheBackroom extends Application {
         System.out.println("=".repeat(50));
 
         for (Media m : mediaList.values()) {
+            System.out.println("ID: " + m.getID());
             System.out.println("Name: " + m.getMediaName());
             System.out.println("Media Type: " + m.getMediaType());
             System.out.println("Synopsis: " + m.getSynopsis());

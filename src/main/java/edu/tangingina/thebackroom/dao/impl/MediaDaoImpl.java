@@ -340,7 +340,7 @@ public class MediaDaoImpl implements MediaDao {
 
     @Override
     public void addMediaAccess(Media media) {
-        String query = "Insert into media_access(media_id, website_id, url ) values (?, ?, ?)";
+        String query = "Insert into media_access(media_id, website_id, url) values (?, ?, ?)";
 
         try{
             PreparedStatement stm = DatabaseManager.conn.prepareStatement(query);

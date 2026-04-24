@@ -2,9 +2,12 @@ package edu.tangingina.thebackroom.util;
 
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
+import edu.tangingina.thebackroom.model.Category;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Utility {
@@ -78,7 +81,5 @@ public class Utility {
         }
         return username;
     }
-
-
 
 }
