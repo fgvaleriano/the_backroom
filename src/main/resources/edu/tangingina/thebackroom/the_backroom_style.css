@@ -161,6 +161,10 @@
     -fx-alignment: center-left;
 }
 
+.noise-overlay {
+    -fx-background
+}
+
 .nav-bar {
     -fx-background-color: #F7E1C6;
     -fx-effect: dropshadow(gaussian, #E0B583, 28, 0.18, 0, 5);
@@ -219,7 +223,10 @@
 }
 
 .cards {
-    -fx-effect: dropshadow(gaussian, #EED0AC, 6, 0.25, 0, 3);
+    -fx-effect:
+        dropshadow(gaussian, rgba(0,0,0,0.35), 6, 0.2, 0, 3),
+        dropshadow(gaussian, rgba(0,0,0,0.22), 16, 0.2, 0, 10),
+        dropshadow(gaussian, rgba(0,0,0,0.15), 28, 0.2, 0, 20);
 }
 
 .cards:hover {

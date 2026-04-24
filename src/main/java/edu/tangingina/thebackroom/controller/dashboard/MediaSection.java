@@ -5,6 +5,8 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
+import java.util.List;
+
 public class MediaSection extends VBox {
     /*
         Section for different types of media
@@ -21,7 +23,7 @@ public class MediaSection extends VBox {
         this.getStyleClass().add("media-section");
         this.setAlignment(Pos.TOP_LEFT);
 
-        //subgroup title for different medias
+        //subgroup title for different medias0
         sectionTitle = new Label(title);
         sectionTitle.setFont(FontLoader.extra(20));
         sectionTitle.setFont(FontLoader.extra(34));
@@ -39,5 +41,11 @@ public class MediaSection extends VBox {
     public void addCard(String title, String imagePath) {
         CardLayout card = new CardLayout(title, imagePath);
         cardContainer.getChildren().add(card);
+    }
+
+    public void addCards(List<MediaItem> items) {
+        for (MediaItem item : items) {
+            addCard(item.getTitle(), item.getImagePath());
+        }
     }
 }

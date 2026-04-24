@@ -112,7 +112,7 @@ public class  AddArchive_v2 {
     //media type selector
     private static HBox getMediaType() {
         mediaTypeLabel = new Label("Media Type");
-        mediaTypeLabel.setFont(FontLoader.regular(15));
+        mediaTypeLabel.setFont(FontLoader.bold(18));
         mediaTypeLabel.getStyleClass().add("input-label");
 
         //combo box that shows what type of media user will add

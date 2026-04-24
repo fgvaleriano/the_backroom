@@ -17,7 +17,7 @@ public class FormFieldFactory {
 
     public static Label createLabel(String labelText) {
         Label label = new Label(labelText);
-        label.setFont(FontLoader.regular(15));
+        label.setFont(FontLoader.bold(18));
         label.getStyleClass().add("input-label");
 
         label.setMinWidth(labelSectionWidth);
@@ -32,7 +32,7 @@ public class FormFieldFactory {
         Label inputLabel = createLabel(labelText);
         TextField inputField = new TextField();
 
-        inputField.setFont(FontLoader.regular(15));
+        inputField.setFont(FontLoader.regular(18));
         inputField.getStyleClass().add("input-field");
         inputField.setPrefWidth(size);
         inputField.setMinWidth(Control.USE_PREF_SIZE);
@@ -47,7 +47,7 @@ public class FormFieldFactory {
     public static HBox createYearPicker(String labelText, Integer size) {
         Label inputLabel = createLabel(labelText);
         ComboBox<Integer> yearPicker = new ComboBox<>();
-        inputLabel.setFont(FontLoader.regular(15));
+        inputLabel.setFont(FontLoader.regular(18));
 
         inputLabel.getStyleClass().add("input-label");
 
@@ -68,7 +68,7 @@ public class FormFieldFactory {
     public static FormFieldGroup createTextArea (String labelText, Integer size) {
         Label inputLabel = createLabel(labelText);
         TextArea inputArea = new TextArea();
-        inputArea.setFont(FontLoader.regular(15));
+        inputArea.setFont(FontLoader.regular(18));
 
         inputArea.setPrefWidth(size);
         inputArea.setWrapText(true);

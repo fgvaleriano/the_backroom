@@ -22,7 +22,7 @@ public class DashboardHomeView extends BaseView{
         //book section
         books = new MediaSection("Books");
         books.addCard("The Invisible Life of Addie LaRue",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/addie.png");
+                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/genshin.png");
         books.addCard("The Silent Patient",
                 "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/patient.png");
         books.addCard("The Invisible Life of Addie LaRue",
@@ -54,7 +54,7 @@ public class DashboardHomeView extends BaseView{
         films.addCard("The Imitation Game",
                 "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/imitation.png");
         films.addCard("Barbie",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/barbie.pngg");
+                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/barbie.png");
 
         root.getChildren().addAll(titleLogo, books, games, films);
     }
