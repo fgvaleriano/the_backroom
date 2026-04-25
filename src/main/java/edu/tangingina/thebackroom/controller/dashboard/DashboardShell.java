@@ -1,12 +1,15 @@
 package edu.tangingina.thebackroom.controller.dashboard;
 
 import edu.tangingina.thebackroom.controller.AddArchive_v2;
+import edu.tangingina.thebackroom.controller.LoginController;
 import edu.tangingina.thebackroom.util.MediaItem;
 import javafx.geometry.*;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 
 import java.util.List;
 
@@ -31,7 +34,8 @@ public class DashboardShell extends BorderPane {
                 () -> setView(new MediaCategoryView("Books", mediaItems)),
                 () -> setView(new MediaCategoryView("Games", mediaItems)),
                 () -> setView( new MediaCategoryView("Films and TV Shows", mediaItems)),
-                this::openAddArchiveDialog
+                this::openAddArchiveDialog,
+                this::logout
         );
         StackPane navWrapper = new StackPane(navBar);
         navWrapper.setPadding(new Insets(0, 0, 10, 0));
@@ -82,6 +86,23 @@ public class DashboardShell extends BorderPane {
 
     private void openAddArchiveDialog() {
         AddArchive_v2.addArchiveView();
+    }
+
+    private void logout() {
+        Stage stage = (Stage) this.getScene().getWindow();
+        boolean maxSize = stage.isMaximized();
+
+        double currentWid = stage.getWidth();
+        double currentHi = stage.getHeight();
+
+        LoginController logout = new LoginController();
+        StackPane loginRoot = logout.getLayout(stage);
+
+        Scene loginScene = new Scene(loginRoot, currentWid, currentHi);
+        loginScene.getStylesheets().add(getClass().
+                getResource("/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm());
+        stage.setScene(loginScene);
+        stage.setMaximized(maxSize);
     }
 }
 

@@ -22,11 +22,14 @@ public class NavbarComponent extends HBox {
     private HBox btnHolder;
     private Button homeBtn, booksBtn, gamesBtn, filmsBtn;
     private MenuItem addBtn, exportBtn, importBtn,logoutBtn;
-    private final Runnable onAdd;
+    private final Runnable onAdd, onLogout;
 
     public NavbarComponent(Runnable onHome, Runnable onBooks, Runnable onGames, Runnable onFilms,
-                           Runnable onAdd) {
+                           Runnable onAdd, Runnable onLogout) {
+        //for switching stages or opening dialog boxes
         this.onAdd = onAdd;
+        this.onLogout = onLogout;
+
         this.setAlignment(Pos.CENTER_LEFT);
         this.setPadding(new Insets(15, 30, 15, 30));
         this.setSpacing(40);
@@ -130,9 +133,18 @@ public class NavbarComponent extends HBox {
             profileMenu.hide();
             Platform.runLater(() -> {if (onAdd != null) onAdd.run();});
         });
+
         importBtn = createDropdownButton("Import");
         exportBtn = createDropdownButton("Export");
+
         logoutBtn = createDropdownButton("Logout");
+        logoutBtn.setOnAction(e -> {
+           System.out.println("Logging out");
+
+           if (onLogout != null) {
+               onLogout.run();
+           }
+        });
 
         profileMenu.getItems().addAll(addBtn, importBtn, exportBtn, new SeparatorMenuItem(), logoutBtn);
 
