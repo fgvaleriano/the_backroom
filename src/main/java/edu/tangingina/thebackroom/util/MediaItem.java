@@ -1,4 +1,4 @@
-package edu.tangingina.thebackroom.controller.dashboard;
+package edu.tangingina.thebackroom.util;
 
 public class MediaItem {
 

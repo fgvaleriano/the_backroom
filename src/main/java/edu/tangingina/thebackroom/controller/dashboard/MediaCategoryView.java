@@ -1,5 +1,6 @@
 package edu.tangingina.thebackroom.controller.dashboard;
 
+import edu.tangingina.thebackroom.util.MediaItem;
 import javafx.geometry.*;
 
 import java.util.LinkedHashMap;

@@ -1,6 +1,7 @@
 package edu.tangingina.thebackroom.controller.dashboard;
 
 import edu.tangingina.thebackroom.util.FontLoader;
+import edu.tangingina.thebackroom.util.MediaItem;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;

@@ -24,8 +24,6 @@ public class DashboardHomeView extends BaseView{
         //media cards
         //book section
         books = new MediaSection("Books");
-        books.addCard("The Invisible Life of Addie LaRue",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/genshin.png");
         books.addCard("The Silent Patient",
                 "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/patient.png");
         books.addCard("The Invisible Life of Addie LaRue",
@@ -40,8 +38,6 @@ public class DashboardHomeView extends BaseView{
                 "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/addie.png");
 
         games = new MediaSection("Games");
-        games.addCard("Genshin Impact",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/genshin.png");
         games.addCard("Sims 4",
                 "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/sims.png");
         games.addCard("Genshin Impact",

@@ -1,5 +1,7 @@
 package edu.tangingina.thebackroom.controller.dashboard;
 
+import edu.tangingina.thebackroom.controller.AddArchive_v2;
+import edu.tangingina.thebackroom.util.MediaItem;
 import javafx.geometry.*;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
@@ -28,7 +30,8 @@ public class DashboardShell extends BorderPane {
                 () -> setView(new DashboardHomeView()),
                 () -> setView(new MediaCategoryView("Books", mediaItems)),
                 () -> setView(new MediaCategoryView("Games", mediaItems)),
-                () -> setView( new MediaCategoryView("Films and TV Shows", mediaItems))
+                () -> setView( new MediaCategoryView("Films and TV Shows", mediaItems)),
+                this::openAddArchiveDialog
         );
         StackPane navWrapper = new StackPane(navBar);
         navWrapper.setPadding(new Insets(0, 0, 10, 0));
@@ -76,6 +79,10 @@ public class DashboardShell extends BorderPane {
         contentArea.getChildren().clear();
         contentArea.getChildren().add(view.getView());
     }
+
+    private void openAddArchiveDialog() {
+        AddArchive_v2.addArchiveView();
+    }
 }
 
 //temporary data provider for image paths
@@ -83,9 +90,15 @@ class MediaRepository {
 
     public static List<MediaItem> getAllMedia() {
         return List.of(
-                new MediaItem("Addie LaRue", "/assets/addie.png", "Fiction", "Books"),
-                new MediaItem("The Silent Patient", "/assets/patient.png", "Dark", "Books"),
-                new MediaItem("Genshin Impact", "/assets/genshin.png", "Open World", "Games")
+                new MediaItem("Addie LaRue",
+                        "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/addie.png",
+                        "Fiction", "Books"),
+                new MediaItem("The Silent Patient",
+                        "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/patient.png",
+                        "Dark", "Books"),
+                new MediaItem("Genshin Impact",
+                        "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/genshin.png",
+                        "Open World", "Games")
         );
     }
 }

@@ -1,12 +1,14 @@
 package edu.tangingina.thebackroom.controller.dashboard;
 
 import edu.tangingina.thebackroom.util.FontLoader;
+import javafx.application.Platform;
 import javafx.geometry.*;
 import javafx.scene.control.*;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
 
 import java.net.URL;
 
@@ -19,12 +21,17 @@ public class NavbarComponent extends HBox {
     private Region spacer;
     private HBox btnHolder;
     private Button homeBtn, booksBtn, gamesBtn, filmsBtn;
+    private MenuItem addBtn, exportBtn, importBtn,logoutBtn;
+    private final Runnable onAdd;
 
-    public NavbarComponent(Runnable onHome, Runnable onBooks, Runnable onGames, Runnable onFilms) {
+    public NavbarComponent(Runnable onHome, Runnable onBooks, Runnable onGames, Runnable onFilms,
+                           Runnable onAdd) {
+        this.onAdd = onAdd;
         this.setAlignment(Pos.CENTER_LEFT);
         this.setPadding(new Insets(15, 30, 15, 30));
         this.setSpacing(40);
         this.getStyleClass().add("nav-bar");
+        this.setPickOnBounds(false);
 
         //logo
         URL url = getClass().getResource("/edu/tangingina/thebackroom/assets/tbr.png");
@@ -74,12 +81,14 @@ public class NavbarComponent extends HBox {
         searchBtn.setPrefWidth(200);
         searchBtn.getStyleClass().add("search-btn");
 
-        Circle profileCircle = new Circle(15, Color.web("#637991"));
+        /*Circle profileCircle = new Circle(15);
+        profileCircle.getStyleClass().add("profile-circle");*/
 
         spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
+        StackPane profileDropdown = createProfileDropdown();
 
-        this.getChildren().addAll(logo, btnHolder, spacer, searchBtn, profileCircle);
+        this.getChildren().addAll(logo, btnHolder, spacer, searchBtn, profileDropdown);
     }
 
     private Button createBtns (String text, boolean isActive) {
@@ -100,5 +109,51 @@ public class NavbarComponent extends HBox {
 
         activeBtn.getStyleClass().remove("nav-btn");
         activeBtn.getStyleClass().add("nav-btn-active");
+    }
+
+    //for the dropdown thing when clicking the profile circle
+    private StackPane createProfileDropdown() {
+        StackPane wrapper = new StackPane();
+
+        wrapper.setPrefWidth(120);
+        wrapper.setAlignment(Pos.CENTER);
+
+        Circle profileCircle = new Circle(20);
+        profileCircle.getStyleClass().add("profile-circle");
+
+        ContextMenu profileMenu = new ContextMenu();
+        profileMenu.getStyleClass().add("nav-dropdown");
+
+        addBtn = createDropdownButton("Add");
+        addBtn.setOnAction(e -> {
+            System.out.println("Opening add archive diaglog");
+            profileMenu.hide();
+            Platform.runLater(() -> {if (onAdd != null) onAdd.run();});
+        });
+        importBtn = createDropdownButton("Import");
+        exportBtn = createDropdownButton("Export");
+        logoutBtn = createDropdownButton("Logout");
+
+        profileMenu.getItems().addAll(addBtn, importBtn, exportBtn, new SeparatorMenuItem(), logoutBtn);
+
+        profileCircle.setOnMouseClicked(e -> {
+           profileMenu.show(profileCircle, Side.BOTTOM, 0, 5);
+        });
+
+        wrapper.getChildren().add(profileCircle);
+
+        StackPane.setAlignment(profileCircle, Pos.CENTER);
+
+        return wrapper;
+    }
+
+    private MenuItem createDropdownButton(String text) {
+        Label btnText = new Label(text);
+        btnText.setFont(FontLoader.bold(18));
+        MenuItem btn = new MenuItem();
+        btn.setGraphic(btnText);
+
+        btn.getStyleClass().add("dropdown-btn");
+        return btn;
     }
 }
