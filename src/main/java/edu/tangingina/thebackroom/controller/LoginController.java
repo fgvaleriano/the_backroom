@@ -104,14 +104,16 @@ public class LoginController {
             String password = pwTxt.getText().trim();
 
             if (username.isEmpty() || password.isEmpty()) {
-                invalidInput("Invalid Username or Password", "Please try again");
+                userTxt.getStyleClass().add("login-input-error");
+                pwTxt.getStyleClass().add("login-input-error");
+                //invalidInput("Invalid Username or Password", "Please try again");
                 return;
             }
 
+            userTxt.getStyleClass().remove("login-input-error");
+            pwTxt.getStyleClass().remove("login-input-error");
             System.out.println("Good to login");
         });
-
-
         return btn;
     }
 
@@ -164,27 +166,6 @@ public class LoginController {
         rememberMe_checkBox.setFont(FontLoader.light(12));
 
         return rememberMe_checkBox;
-    }
-    //error dialog, for invalide inputs
-    private void invalidInput(String header, String message) {
-        Alert invalid = new Alert(Alert.AlertType.NONE);
-
-        invalid.setHeaderText(header);
-        invalid.setContentText(message);
-        invalid.initStyle(StageStyle.UNDECORATED);
-
-        String css = getClass()
-                .getResource("/edu/tangingina/thebackroom/the_backroom_style.css")
-                .toExternalForm();
-
-        invalid.getDialogPane().getStylesheets().add(css);
-        invalid.getDialogPane().getStyleClass().add("custom-alert");
-
-        invalid.show();
-
-        PauseTransition delay = new PauseTransition(Duration.seconds(2));
-        delay.setOnFinished(e -> invalid.close());
-        delay.play();
     }
 
 }

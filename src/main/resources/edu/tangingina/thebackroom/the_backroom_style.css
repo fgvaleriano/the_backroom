@@ -21,14 +21,22 @@
 */
 
 .login-input {
-    -fx-background-color: white;
+    -fx-background-color: #FFFAFA;
     -fx-background-radius: 5;
     -fx-border-color: null;
-    -fx-border-width: 0 0 5 0;
     -fx-padding: 10;
-    -fx-font-family: "Reddit Sans Condensed";
     -fx-font-size: 15px;
     -fx-effect: dropshadow(three-pass-box, #EED0AC, 10, 0, 0, 4);
+}
+
+.login-input-error {
+    -fx-background-color: #FFFAFA;
+    -fx-background-radius: 5;
+    -fx-border-color: #D27E31;
+    -fx-border-radius: 5;
+    -fx-padding: 10;
+    -fx-font-size: 15px;
+    -fx-effect: dropshadow(three-pass-box, #D27E31, 10, 0, 0, 4);
 }
 
 .btn-guest {
