@@ -28,6 +28,9 @@ public class DashboardShell extends BorderPane {
     public DashboardShell() {
         //this.setTop(new NavbarComponent());             //navigation bar will always be on top
 
+        this.setPrefWidth(1900);
+        this.setPrefHeight(1080);
+
         //navigation bar thing
         navBar = new NavbarComponent(
                 () -> setView(new DashboardHomeView()),
@@ -35,6 +38,7 @@ public class DashboardShell extends BorderPane {
                 () -> setView(new MediaCategoryView("Games", mediaItems)),
                 () -> setView( new MediaCategoryView("Films and TV Shows", mediaItems)),
                 this::openAddArchiveDialog,
+                this::openImportDialog,
                 this::logout
         );
         StackPane navWrapper = new StackPane(navBar);
@@ -80,13 +84,18 @@ public class DashboardShell extends BorderPane {
 
     //for the modular switcher
     public void setView(BaseView view) {
-        contentArea.getChildren().clear();
-        contentArea.getChildren().add(view.getView());
+        javafx.application.Platform.runLater(() -> {
+            contentArea.getChildren().clear();
+            contentArea.getChildren().add(view.getView());
+        });
+
     }
 
     private void openAddArchiveDialog() {
         AddArchive_v2.addArchiveView();
     }
+
+    private void openImportDialog() { ImportDialog.importDialogView(); }
 
     private void logout() {
         Stage stage = (Stage) this.getScene().getWindow();
@@ -99,6 +108,9 @@ public class DashboardShell extends BorderPane {
         StackPane loginRoot = logout.getLayout(stage);
 
         Scene loginScene = new Scene(loginRoot, currentWid, currentHi);
+        stage.setScene(loginScene);
+        stage.show();
+        stage.setResizable(false);
         loginScene.getStylesheets().add(getClass().
                 getResource("/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm());
         stage.setScene(loginScene);

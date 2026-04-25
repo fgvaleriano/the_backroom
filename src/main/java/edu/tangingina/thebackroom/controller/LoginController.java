@@ -1,7 +1,9 @@
 package edu.tangingina.thebackroom.controller;
 
+import edu.tangingina.thebackroom.controller.dashboard.DashboardShell;
 import edu.tangingina.thebackroom.util.*;
 import javafx.geometry.*;
+import javafx.scene.Scene;
 import javafx.scene.image.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -59,7 +61,7 @@ public class LoginController {
 
         userTxt = createUsername();
         pwTxt = createPw();
-        btn_holder = button_holder();
+        btn_holder = button_holder(stage);
 
         form.getChildren().addAll(userLabel, userTxt, pwLabel, pwTxt, btn_holder);
 
@@ -74,21 +76,21 @@ public class LoginController {
         return root;
     }
 
-    private VBox button_holder(){
+    private VBox button_holder(Stage stage){
         VBox holder = new VBox(20);
         holder.setAlignment(Pos.CENTER);
 
         rememberMe_checkBox = remember();
-        login = loginBtn();
+        login = loginBtn(stage);
         signUp = signUp();
-        guest = guest();
+        guest = guest(stage);
 
         holder.getChildren().addAll(rememberMe_checkBox, login, signUp, guest);
 
         return holder;
     }
     //buttons
-    private Button loginBtn(){
+    private Button loginBtn(Stage stage){
         btn = new Button();
         btn.getStyleClass().add("image-button");
 
@@ -106,12 +108,23 @@ public class LoginController {
             if (username.isEmpty() || password.isEmpty()) {
                 userTxt.getStyleClass().add("login-input-error");
                 pwTxt.getStyleClass().add("login-input-error");
-                //invalidInput("Invalid Username or Password", "Please try again");
                 return;
             }
 
             userTxt.getStyleClass().remove("login-input-error");
             pwTxt.getStyleClass().remove("login-input-error");
+
+            //if filled and correct, continue here
+            DashboardShell dashboard = new DashboardShell();
+
+            Scene dashboardScene = new Scene(dashboard, stage.getWidth(), stage.getHeight());
+            dashboardScene.getStylesheets().add(
+                    getClass().getResource("/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm()
+            );
+
+            stage.setScene(dashboardScene);
+            stage.setMaximized(true);
+
             System.out.println("Good to login");
         });
         return btn;
@@ -127,15 +140,35 @@ public class LoginController {
         view.setPreserveRatio(true);
         view.setFitWidth(250);
 
+        btn.setOnAction(e-> {
+            System.out.println("Going to sign up page");
+        });
+
         btn.setGraphic(view);
         return btn;
     }
 
     //button for guest sign in
-    private Button guest(){
+    private Button guest(Stage stage){
         guest = new Button("Continue as Guest");
         guest.setFont(FontLoader.semibold(20));
         guest.getStyleClass().add("btn-guest");
+        //button action
+        guest.setOnAction(e -> {
+
+            //if filled and correct, continue here
+            DashboardShell dashboard = new DashboardShell();
+
+            Scene dashboardScene = new Scene(dashboard, stage.getWidth(), stage.getHeight());
+            dashboardScene.getStylesheets().add(
+                    getClass().getResource("/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm()
+            );
+
+            stage.setScene(dashboardScene);
+            stage.setMaximized(true);
+
+            System.out.println("Good to login");
+        });
         return guest;
     }
 

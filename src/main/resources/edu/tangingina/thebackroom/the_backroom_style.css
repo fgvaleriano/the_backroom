@@ -92,12 +92,20 @@
 }
 
 .header-text {
-    -fx-text-fill: #9E3D3D;
+    -fx-text-fill: #BB443C;
     -fx-padding: 0 0 20 0;
 }
 
-.combo-box, .input-field, .input-chip{
+.input-field, .input-chip{
     -fx-background-radius: 10;
+    -fx-background-color: #FFFAFA;
+    -fx-padding: 6 10 6 10;
+    -fx-effect: dropshadow(gaussian, #EED0AC, 15, 0, 0, 0);
+}
+
+.combo-box{
+    -fx-background-radius: 10;
+    -fx-font-size: 14px;
     -fx-background-color: #FFFAFA;
     -fx-padding: 6 10 6 10;
     -fx-effect: dropshadow(gaussian, #EED0AC, 15, 0, 0, 0);
@@ -295,4 +303,10 @@
 .card-alt-text {
     -fx-text-fill: #D9D4C8;
     -fx-alignment: center;
+}
+
+/*  IMPORT ARCHIVE STYL
+*/
+.light-bkg {
+    -fx-background-color: #F2E4D3;
 }
