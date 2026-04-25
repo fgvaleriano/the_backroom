@@ -62,7 +62,7 @@ public class TempClass {
         }
         System.out.print("Add Media Type to Filter [Y/N]: ");
         choice = scan.nextLine().trim().toUpperCase();
-        String mediaType = null;
+        MediaType mediaType = null;
 
         switch (choice) {
             case "Y":
@@ -70,19 +70,19 @@ public class TempClass {
                 int type = scan.nextInt();
                 switch(type) {
                     case 1:
-                        mediaType = "Book";
+                        mediaType = MediaType.Book;
                         break;
 
                     case 2:
-                        mediaType = "Movie";
+                        mediaType = MediaType.Game;
                         break;
 
                     case 3:
-                        mediaType = "TvShow";
+                        mediaType = MediaType.TvShow;
                         break;
 
                     case 4:
-                        mediaType = "Game";
+                        mediaType = MediaType.Game;
                         break;
                 }
                 scan.nextLine();
@@ -107,8 +107,8 @@ public class TempClass {
 
 
             // 2. Type Match: If type is empty, it's 'true'. Otherwise, check equals.
-            boolean typeMatch = (mediaType == null || mediaType.isEmpty()) ||
-                    m.getMediaType().equalsIgnoreCase(mediaType);
+            boolean typeMatch = (mediaType == null ) ||
+                    m.getMediaType() == mediaType;
 
             // 3. Genre Match: If filter list is empty, it's 'true'. Otherwise, check containsAll.
             boolean genreMatch = (categoryFilter == null || categoryFilter.isEmpty());
@@ -210,7 +210,7 @@ public class TempClass {
             String inputWebsite = scan.nextLine();
             String[] website = inputWebsite.split(",");
 
-            String mediaType = null;
+            MediaType mediaType = null;
             String isbn = null;
             String edition = null;
             String pageCount = null;
@@ -230,7 +230,7 @@ public class TempClass {
             String[] gamePlatform = null;
 
             if (type == 1) { //Book
-                mediaType = "Book";
+                mediaType = MediaType.Book;
                 System.out.print("ISBN: ");
                 isbn = scan.nextLine();
 
@@ -266,7 +266,7 @@ public class TempClass {
                 publisher = inputPublishers.split(",");
 
             }else if(type == 2){ //Movie
-                mediaType = "Movie";
+                mediaType = MediaType.Movie;
                 System.out.print("Duration: ");
                 duration = scan.nextLine();
 
@@ -297,7 +297,7 @@ public class TempClass {
                 String inputPublishers = scan.nextLine();
                 studio = inputPublishers.split(",");
             }else if(type == 3){ //TvShow
-                mediaType = "TvShow";
+                mediaType = MediaType.TvShow;
                 System.out.print("Season Count: ");
                 seasonCount = scan.nextLine();
 
@@ -331,7 +331,7 @@ public class TempClass {
                 String inputPublishers = scan.nextLine();
                 studio = inputPublishers.split(",");
             }else if(type == 4){ //Game
-                mediaType = "Game";
+                mediaType = MediaType.Game;
                 System.out.print("Game Engine: ");
                 gameEngine = scan.nextLine();
 
@@ -472,7 +472,7 @@ public class TempClass {
             Media media = new Media(0, name, mediaType, releaseYear, synopsis, icon, onlineAccess, genre);
             media.setID(oldMedia.getID());
 
-            if(mediaType.equals("Book")){
+            if(mediaType == MediaType.Book){
                 ArrayList<Person> bookAuthor = new ArrayList<>();
                 ArrayList<Company> bookCompany = new ArrayList<>();
 
@@ -500,8 +500,17 @@ public class TempClass {
                     bookCompany.add(new Company(id, publisherName, "Publisher", roleList.get("Publisher").getRoleID()));
                 }
                 media.setBookDetails(isbn, pageCount, edition, bookAuthor, bookCompany);
-                mediaDao.updateMedia(media, oldMedia);
-            }else if(mediaType.equals("Movie")){
+
+                try{
+                    if(!media.getMediaName().equals(oldMedia.getMediaName())){
+                        TheBackroom.mediaUniqID.remove(TheBackroom.util.getMediaKey(oldMedia.getMediaName(), oldMedia.getMediaType().name(), oldMedia.getReleaseYear()));
+                        TheBackroom.mediaUniqID.put(TheBackroom.util.getMediaKey(media.getMediaName(), media.getMediaType().name(), media.getReleaseYear()), media.getID());
+                    }
+                    mediaDao.updateMedia(media, oldMedia);
+                }catch (Exception e){
+
+                }
+            }else if(mediaType == MediaType.Movie){
                 ArrayList<Person> movieDirector = new ArrayList<>();
                 ArrayList<Company> movieStudio = new ArrayList<>();
 
@@ -530,8 +539,16 @@ public class TempClass {
                 }
 
                 media.setMovieDetails(duration, language, movieDirector, movieStudio);
-                mediaDao.updateMedia(media, oldMedia);
-            }else if(mediaType.equals("TvShow")){
+                try{
+                    if(!media.getMediaName().equals(oldMedia.getMediaName())){
+                        TheBackroom.mediaUniqID.remove(TheBackroom.util.getMediaKey(oldMedia.getMediaName(), oldMedia.getMediaType().name(), oldMedia.getReleaseYear()));
+                        TheBackroom.mediaUniqID.put(TheBackroom.util.getMediaKey(media.getMediaName(), media.getMediaType().name(), media.getReleaseYear()), media.getID());
+                    }
+                    mediaDao.updateMedia(media, oldMedia);
+                }catch (Exception e){
+
+                }
+            }else if(mediaType == MediaType.TvShow){
                 ArrayList<Person> showDirector = new ArrayList<>();
                 ArrayList<Company> showStudio = new ArrayList<>();
 
@@ -560,8 +577,16 @@ public class TempClass {
                 }
 
                 media.setTvShowDetails(seasonCount, episodeCount, status, showDirector, showStudio);
-                mediaDao.updateMedia(media, oldMedia);
-            }else if(mediaType.equals("Game")){
+                try{
+                    if(!media.getMediaName().equals(oldMedia.getMediaName())){
+                        TheBackroom.mediaUniqID.remove(TheBackroom.util.getMediaKey(oldMedia.getMediaName(), oldMedia.getMediaType().name(), oldMedia.getReleaseYear()));
+                        TheBackroom.mediaUniqID.put(TheBackroom.util.getMediaKey(media.getMediaName(), media.getMediaType().name(), media.getReleaseYear()), media.getID());
+                    }
+                    mediaDao.updateMedia(media, oldMedia);
+                }catch (Exception e){
+
+                }
+            }else if(mediaType == MediaType.Game){
                 ArrayList<Person> mediaGamePersonnel = new ArrayList<>();
                 ArrayList<Company> mediaGameCompany = new ArrayList<>();
                 ArrayList<GameMode> mediaGameMode = new ArrayList<>();
@@ -640,7 +665,15 @@ public class TempClass {
                 }
 
                 media.setGameDetails(gameEngine, systemRequirements, mediaGamePersonnel, mediaGameCompany, mediaGamePlatform, mediaGameMode);
-                mediaDao.updateMedia(media, oldMedia);
+                try{
+                    if(!media.getMediaName().equals(oldMedia.getMediaName())){
+                        TheBackroom.mediaUniqID.remove(TheBackroom.util.getMediaKey(oldMedia.getMediaName(), oldMedia.getMediaType().name(), oldMedia.getReleaseYear()));
+                        TheBackroom.mediaUniqID.put(TheBackroom.util.getMediaKey(media.getMediaName(), media.getMediaType().name(), media.getReleaseYear()), media.getID());
+                    }
+                    mediaDao.updateMedia(media, oldMedia);
+                }catch (Exception e){
+
+                }
 
 
             }

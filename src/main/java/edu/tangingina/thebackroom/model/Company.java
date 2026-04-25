@@ -32,4 +32,7 @@ public class Company {
     }
 
     public void setCompanyRoleID(int roleID){this.companyRoleId = roleID;}
+
+    public void setCompanyID(int id){this.id = id;}
+
 }

@@ -16,4 +16,6 @@ public class Platform {
     public String getPlatformName(){
         return platformName;
     }
+
+    public void setPlatformID(int id){this.id = id;}
 }

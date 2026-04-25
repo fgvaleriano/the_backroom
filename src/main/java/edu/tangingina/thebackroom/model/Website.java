@@ -23,4 +23,6 @@ public class Website {
     public String getWebsiteURL() {
         return websiteURL;
     }
+
+    public void setWebsiteID(int id){this.id = id;}
 }

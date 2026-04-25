@@ -2,11 +2,11 @@ package edu.tangingina.thebackroom.model;
 
 public class GameMode {
     private int id;
-    private String gameModelName;
+    private String gameModeName;
 
     public GameMode(int id, String name){
         this.id = id;
-        this.gameModelName = name;
+        this.gameModeName = name;
     }
 
     public Integer getGameModeID(){
@@ -14,6 +14,7 @@ public class GameMode {
     }
 
     public String getGameModeName(){
-        return gameModelName;
+        return gameModeName;
     }
+    public void setGameModeID(int id){this.id = id;}
 }

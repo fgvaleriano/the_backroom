@@ -102,16 +102,31 @@ public class TheBackroom extends Application {
     public static HashMap<String, Platform> platformList;
     public static HashMap<String, GameMode> gameModeList;
     public static HashMap<Integer, Media> mediaList;
+    public static HashMap<String, Integer> mediaUniqID;
 
     @Override
     public void start(Stage primaryStage) {
         System.out.println("Hello World!!!");
         openDB();
         loadCache();
-        showAddArchive_v2(primaryStage);
-        //printMediaList();
-        //fm = new FileManager();
-        //fm.importCSV(primaryStage);
+        fm = new FileManager();
+        //addMedia(primaryStage);
+        //showAddArchive_v2(primaryStage);
+        printMediaList();
+
+        try{
+            while(true){
+                //fm.importCSV(primaryStage);
+
+                //if import to sql we clear the cache and reload again
+                fm.importSQL(primaryStage);
+                clearCache();
+                loadCache();
+                printMediaList();
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
         //TempClass tc = new TempClass();
         //printMediaList();
         //tc.updateMedia(primaryStage);
@@ -237,7 +252,7 @@ public class TheBackroom extends Application {
         }
 
         System.out.println("\n" + "=".repeat(50));
-        System.out.println("📂 DATABASE SCAN COMPLETE: " + mediaList.size() + " ITEMS FOUND");
+        System.out.println("List of Media");
         System.out.println("=".repeat(50));
 
         for (Media m : mediaList.values()) {
@@ -255,7 +270,7 @@ public class TheBackroom extends Application {
             System.out.println();
 
             switch(m.getMediaType()){
-                case "Book":
+                case MediaType.Book:
                     System.out.println("ISBN: " + m.getISBN());
                     System.out.println("Page Count: " + m.getPageCount());
                     System.out.println("Edition: " + m.getEdition());
@@ -272,7 +287,7 @@ public class TheBackroom extends Application {
 
                     break;
 
-                case "Movie":
+                case MediaType.Movie:
                     System.out.println("Duration: " + m.getDuration());
                     System.out.println("Language: " + m.getLanguage());
                     System.out.print("Director: ");
@@ -287,7 +302,7 @@ public class TheBackroom extends Application {
                     System.out.println();
                     break;
 
-                case "TvShow":
+                case MediaType.TvShow:
                     System.out.println("Season Count: " + m.getSeasonCount());
                     System.out.println("Episode Count: " + m.getEpisodeCount());
                     System.out.println("Status: " + m.getStatus());
@@ -304,7 +319,7 @@ public class TheBackroom extends Application {
 
                     break;
 
-                case "Game":
+                case MediaType.Game:
                     ArrayList<Person> gameDev = new ArrayList<>();
                     ArrayList<Company> gameStudio = new ArrayList<>();
                     ArrayList<Company> gamePublisher = new ArrayList<>();
@@ -421,7 +436,7 @@ public class TheBackroom extends Application {
             String inputWebsite = scan.nextLine();
             String[] website = inputWebsite.split(",");
 
-            String mediaType = null;
+            MediaType mediaType = null;
             String isbn = null;
             String edition = null;
             String pageCount = null;
@@ -441,7 +456,7 @@ public class TheBackroom extends Application {
             String[] gamePlatform = null;
 
             if (type == 1) { //Book
-                mediaType = "Book";
+                mediaType = MediaType.Book;
                 System.out.print("ISBN: ");
                 isbn = scan.nextLine();
 
@@ -477,7 +492,7 @@ public class TheBackroom extends Application {
                 publisher = inputPublishers.split(",");
 
             }else if(type == 2){ //Movie
-                mediaType = "Movie";
+                mediaType = MediaType.Movie;
                 System.out.print("Duration: ");
                 duration = scan.nextLine();
 
@@ -508,7 +523,7 @@ public class TheBackroom extends Application {
                 String inputPublishers = scan.nextLine();
                 studio = inputPublishers.split(",");
             }else if(type == 3){ //TvShow
-                mediaType = "TvShow";
+                mediaType = MediaType.TvShow;
                 System.out.print("Season Count: ");
                 seasonCount = scan.nextLine();
 
@@ -542,7 +557,7 @@ public class TheBackroom extends Application {
                 String inputPublishers = scan.nextLine();
                 studio = inputPublishers.split(",");
             }else if(type == 4){ //Game
-                mediaType = "Game";
+                mediaType = MediaType.Game;
                 System.out.print("Game Engine: ");
                 gameEngine = scan.nextLine();
 
@@ -682,7 +697,7 @@ public class TheBackroom extends Application {
 
             Media media = new Media(0, name, mediaType, releaseYear, synopsis, icon, onlineAccess, genre);
 
-            if(mediaType.equals("Book")){
+            if(mediaType == MediaType.Book){
                 ArrayList<Person> bookAuthor = new ArrayList<>();
                 ArrayList<Company> bookCompany = new ArrayList<>();
 
@@ -710,8 +725,14 @@ public class TheBackroom extends Application {
                     bookCompany.add(new Company(id, publisherName, "Publisher", roleList.get("Publisher").getRoleID()));
                 }
                 media.setBookDetails(isbn, pageCount, edition, bookAuthor, bookCompany);
-                mediaDao.addMedia(media);
-            }else if(mediaType.equals("Movie")){
+                try{
+                    mediaDao.addMedia(media);
+                    mediaList.put(media.getID(), media);
+                    mediaUniqID.put(util.getMediaKey(media.getMediaName(), media.getMediaType().name(), media.getReleaseYear()), media.getID());
+                }catch (Exception e){
+
+                }
+            }else if(mediaType == MediaType.Movie){
                 ArrayList<Person> movieDirector = new ArrayList<>();
                 ArrayList<Company> movieStudio = new ArrayList<>();
 
@@ -740,8 +761,14 @@ public class TheBackroom extends Application {
                 }
 
                 media.setMovieDetails(duration, language, movieDirector, movieStudio);
-                mediaDao.addMedia(media);
-            }else if(mediaType.equals("TvShow")){
+                try{
+                    mediaDao.addMedia(media);
+                    mediaList.put(media.getID(), media);
+                    mediaUniqID.put(util.getMediaKey(media.getMediaName(), media.getMediaType().name(), media.getReleaseYear()), media.getID());
+                }catch (Exception e){
+
+                }
+            }else if(mediaType == MediaType.TvShow){
                 ArrayList<Person> showDirector = new ArrayList<>();
                 ArrayList<Company> showStudio = new ArrayList<>();
 
@@ -770,8 +797,14 @@ public class TheBackroom extends Application {
                 }
 
                 media.setTvShowDetails(seasonCount, episodeCount, status, showDirector, showStudio);
-                mediaDao.addMedia(media);
-            }else if(mediaType.equals("Game")){
+                try{
+                    mediaDao.addMedia(media);
+                    mediaList.put(media.getID(), media);
+                    mediaUniqID.put(util.getMediaKey(media.getMediaName(), media.getMediaType().name(), media.getReleaseYear()), media.getID());
+                }catch (Exception e){
+
+                }
+            }else if(mediaType == MediaType.Game){
                 ArrayList<Person> mediaGamePersonnel = new ArrayList<>();
                 ArrayList<Company> mediaGameCompany = new ArrayList<>();
                 ArrayList<GameMode> mediaGameMode = new ArrayList<>();
@@ -850,7 +883,13 @@ public class TheBackroom extends Application {
                 }
 
                 media.setGameDetails(gameEngine, systemRequirements, mediaGamePersonnel, mediaGameCompany, mediaGamePlatform, mediaGameMode);
-                mediaDao.addMedia(media);
+                try{
+                    mediaDao.addMedia(media);
+                    mediaList.put(media.getID(), media);
+                    mediaUniqID.put(util.getMediaKey(media.getMediaName(), media.getMediaType().name(), media.getReleaseYear()), media.getID());
+                }catch (Exception e){
+
+                }
 
 
             }
@@ -969,6 +1008,7 @@ public class TheBackroom extends Application {
     public void showAddArchive_v2(Stage stage) {
         try {
             AddArchive_v2 add = new AddArchive_v2();
+            AddArchive_v2.addArchiveView();
             System.out.println("Opening add archive");
 
 
@@ -985,6 +1025,8 @@ public class TheBackroom extends Application {
 
 
     public void loadCache(){
+        mediaUniqID = new HashMap<>();
+
         categoryList = categoryDao.getAllCategory();
         websiteList = websiteDao.getAllWebsite();
         personList = personDao.getAllPersons();
@@ -992,7 +1034,29 @@ public class TheBackroom extends Application {
         roleList = roleDao.getAllRole();
         platformList = platformDao.getAllPlatform();
         gameModeList = gameModeDao.getAllGameMode();
-        mediaList = mediaDao.getAllMedia();
+        try{
+            mediaList = mediaDao.getAllMedia();
+
+            if(!mediaList.isEmpty()){
+                for(Media m : mediaList.values()){
+                    mediaUniqID.put(util.getMediaKey(m.getMediaName(), m.getMediaType().name(), m.getReleaseYear()), m.getID());
+                }
+            }
+        }catch (Exception e){
+
+        }
+    }
+
+    public void clearCache(){
+        categoryList.clear();
+        websiteList.clear();
+        personList.clear();
+        companyList.clear();
+        roleList.clear();
+        platformList.clear();
+        gameModeList.clear();
+        mediaList.clear();
+        mediaUniqID.clear();
     }
 
 }

@@ -13,6 +13,7 @@ module edu.tangingina.thebackroom {
 
     opens edu.tangingina.thebackroom.controller to javafx.fxml;
     opens edu.tangingina.thebackroom to javafx.fxml;
+    opens edu.tangingina.thebackroom.model to com.google.gson;
 
     exports edu.tangingina.thebackroom;
     exports edu.tangingina.thebackroom.controller;

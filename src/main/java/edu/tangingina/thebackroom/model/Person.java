@@ -28,4 +28,8 @@ public class Person {
     public Integer getPersonRoleId() {
         return personRoleId;
     }
+
+    public void setPersonID(int id){this.id = id;}
+
+    public void setPersonRoleID(int id){this.personRoleId = id;}
 }

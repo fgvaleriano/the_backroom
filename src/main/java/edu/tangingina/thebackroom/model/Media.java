@@ -6,7 +6,7 @@ public class Media {
     //General Information
     private int ID;
     private String mediaName;
-    private String mediaType;
+    private MediaType mediaType;
     private String synopsis;
     private String releaseYear;
     private String mediaIcon;
@@ -48,7 +48,7 @@ public class Media {
 
     //Initialization of Media and Each specific Type
     //Setter of generic Media Information
-    public Media(int id, String name, String type, String year, String synopsis, String icon, ArrayList<Website> onlineAccess, ArrayList<Category> genre) {
+    public Media(int id, String name, MediaType type, String year, String synopsis, String icon, ArrayList<Website> onlineAccess, ArrayList<Category> genre) {
         //Inialization of each ArrayList
         this.onlineAccess = new ArrayList<>();
         this.mediaGenres = new ArrayList<>();
@@ -113,8 +113,8 @@ public class Media {
     public String getMediaName() { return mediaName; }
     public void setMediaName(String mediaName) { this.mediaName = mediaName; }
 
-    public String getMediaType() { return mediaType; }
-    public void setMediaType(String mediaType) { this.mediaType = mediaType; }
+    public MediaType getMediaType() { return mediaType; }
+    public void setMediaType(MediaType mediaType) { this.mediaType = mediaType; }
 
     public String getSynopsis() { return synopsis; }
     public void setSynopsis(String synopsis) { this.synopsis = synopsis; }

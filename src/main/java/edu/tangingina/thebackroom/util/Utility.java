@@ -2,7 +2,9 @@ package edu.tangingina.thebackroom.util;
 
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
+import edu.tangingina.thebackroom.TheBackroom;
 import edu.tangingina.thebackroom.model.Category;
+import edu.tangingina.thebackroom.model.Media;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -80,6 +82,23 @@ public class Utility {
             e.printStackTrace();
         }
         return username;
+    }
+
+    public boolean checkDuplicate(Media m){
+        if(TheBackroom.mediaUniqID.isEmpty()) return false; //safe check if the list is still empty
+        String key = getMediaKey(m.getMediaName(), m.getMediaType().name(),m.getReleaseYear());
+        Integer index = TheBackroom.mediaUniqID.get(key);
+
+        if(index == null) return false;
+
+
+        return true;
+    }
+
+    public String getMediaKey(String name, String type, String year){
+        return name.trim().toLowerCase() + "|" +
+                type.trim().toLowerCase() + "|" +
+                year.trim();
     }
 
 }
