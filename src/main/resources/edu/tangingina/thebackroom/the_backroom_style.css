@@ -14,24 +14,29 @@
     -fx-scale-y: 0.95;
 }
 
-/* TEXT AREA STYLE
-
-*/
-
-/* LOGIN PAGE STYLE
-    Contains:
+/*
+    ========== LOGIN PAGE STYLE ==========
+        Contains:
 
 */
 
 .login-input {
-    -fx-background-color: white;
+    -fx-background-color: #FFFAFA;
     -fx-background-radius: 5;
     -fx-border-color: null;
-    -fx-border-width: 0 0 5 0;
     -fx-padding: 10;
-    -fx-font-family: "Reddit Sans Condensed";
     -fx-font-size: 15px;
     -fx-effect: dropshadow(three-pass-box, #EED0AC, 10, 0, 0, 4);
+}
+
+.login-input-error {
+    -fx-background-color: #FFFAFA;
+    -fx-background-radius: 5;
+    -fx-border-color: #D27E31;
+    -fx-border-radius: 5;
+    -fx-padding: 10;
+    -fx-font-size: 15px;
+    -fx-effect: dropshadow(three-pass-box, #D27E31, 10, 0, 0, 4);
 }
 
 .btn-guest {
@@ -51,103 +56,14 @@
     -fx-scale-y: 0.95;
 }
 
-.dialog-pane.custom-alert {
-    -fx-background-color: #D07A2D;
-    -fx-background-radius: 20;
-    -fx-border-radius: 20;
-    -fx-padding: 18;
-}
-
-.dialog-pane.custom-alert > .content.label {
-    -fx-text-fill: white;
-    -fx-font-size: 12px;
-}
-
-.dialog-pane.custom-alert:header .header-panel {
-    -fx-background-color: transparent;
-}
-
-.dialog-pane.custom-alert:header .header-panel .label {
-    -fx-text-fill: white;
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-}
-
-.dialog-pane.custom-alert .graphic-container {
-    -fx-padding: 0;
-}
-
-/* MAIN MENU STYLING
-    Contains:
-       - button styling for dashboard
-
-*/
-.search-button {
-    -fx-background-color: white;
-    -fx-background-radius: 12;
-    -fx-border-radius: 12;
-    -fx-text-fill: #8a8a8a;
-    -fx-font-size: 14px;
-    -fx-padding: 8 18 8 18;
-    -fx-cursor: hand;
-}
-
-.search-button:pressed {
-    -fx-scale-x: 0.95;
-    -fx-scale-y: 0.95;
-}
-
-.textfield-title {
-    -fx-font-weight: bold;
-    -fx-font-size: 14px;
-    -fx-font-family: "Reddit Bold";
-    -fx-text-fill: #305852;
-}
-
-
-.profile-button {
-    -fx-background-radius: 1000;
-    -fx-pref-width: 32px;
-    -fx-pref-height: 32px;
-    -fx-min-width: 32px;
-    -fx-min-height: 32px;
-    -fx-max-heigh: 32px;
-    -fx-min-width: 32px;
-    -fx-background-color: #B83A2D;
-    -fx-padding: 0;
-}
-
-.profile-button:pressed {
-    -fx-scale-x: 0.95;
-    -fx-scale-y: 0.95;
-}
-
-.btn-primary {
-    -fx-background-color: transparent;
-    -fx-font-family: "Reddit Sans Condensed";
-    -fx-text-fill: #305852;
-    -fx-font-size: 27px;
-    -fx-font-weight: bold;
-    -fx-padding: 0 8 0 8;
-    -fx-cursor: hand;
-    -fx-border-color: transparent;
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
-}
-
-.btn-primary:hover {
-    -fx-text-fill: #642225;
-    -fx-scale-x: 0.95;
-    -fx-scale-y: 0.95;
-}
-
-/* ADD ARCHIVE STYLING
+/*
+========== ADD ARCHIVE STYLING ==========
     Contains styling for:
         - beige inner cards
         - vertical scroll bars
-
+        - input field
+        - input field label
+        - errors
 */
 
 .card-bkg {
@@ -168,7 +84,7 @@
 }
 
 .input-holder .scroll-bar:vertical {
-    -fx-background- color: transparent;
+    -fx-background-color: transparent;
 }
 
 .input-label {
@@ -176,12 +92,20 @@
 }
 
 .header-text {
-    -fx-text-fill: #9E3D3D;
+    -fx-text-fill: #BB443C;
     -fx-padding: 0 0 20 0;
 }
 
-.combo-box, .input-field, .input-chip{
+.input-field, .input-chip{
     -fx-background-radius: 10;
+    -fx-background-color: #FFFAFA;
+    -fx-padding: 6 10 6 10;
+    -fx-effect: dropshadow(gaussian, #EED0AC, 15, 0, 0, 0);
+}
+
+.combo-box{
+    -fx-background-radius: 10;
+    -fx-font-size: 14px;
     -fx-background-color: #FFFAFA;
     -fx-padding: 6 10 6 10;
     -fx-effect: dropshadow(gaussian, #EED0AC, 15, 0, 0, 0);
@@ -202,13 +126,187 @@
         - check box styling
 */
 
-/*font stuff*/
-@font-face {
-    font-family: 'Reddit Sans Semi Bold';
-    source: url('/assets/RedditSansCondensed-SemiBold.ttf');
-}
-@font-face {
-    font-family: "Reddit Extra";
-    source: url('edu/tangingina/thebackroom/assets/RedditSansCondensed-ExtraBold.ttf');
+
+/*
+========== DASHBOARD STYLING ==========
+        Contains styling for the ff:
+            - dashboard bkg
+            - navigation bar styling
+            - widget styling
+            - dashboard styling
+            - big logo styling
+*/
+.main-content-bkg {
+    -fx-background-color: #F2E4D3;
 }
 
+.dashboard-home {
+    -fx-padding: 45 90 70 90;
+    -fx-spacing: 55;
+}
+
+.dashboard-scroll, .dashboard-scroll:focused {
+    -fx-background-color: transparent;
+    -fx-background-inserts: 0;
+    -fx-padding: 0;
+}
+
+.dashboard-scroll:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.dashboard-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.logo {
+    -fx-background-color: transparent;
+}
+
+.media-section {
+    -fx-spacing: 25;
+    -fx-max-width: 1180;
+}
+
+.media-section-title {
+       -fx-text-fill: #3B3A3A;
+}
+
+.media-card-holder {
+    -fx-alignment: center-left;
+}
+
+/*.noise-overlay {
+    -fx-background-color:
+}*/
+
+/*=========== MAVIGATION BAR =========== */
+
+.nav-bar {
+    -fx-background-color: #F7E1C6;
+    -fx-effect: dropshadow(gaussian, #E0B583, 28, 0.18, 0, 5);
+    -fx-border-width: 0 0 1 0
+}
+
+.nav-btn {
+    -fx-text-fill: #305852;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 6 10 6 10;
+    -fx-cursor: hand;
+}
+
+.nav-btn:hover {
+    -fx-text-fill: #B83A2D;
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+    -fx-background-color: transparent;
+}
+
+.nav-btn:pressed {
+    -fx-text-fill: #B83A2D;
+    -fx-background-color: transparent;
+}
+
+.nav-btn-active {
+    -fx-text-fill: #B83A2D;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 6 10 6 10;
+    -fx-cursor: hand;
+}
+
+.search-btn {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-text-fill: #8a8a8a;
+    -fx-font-size: 14px;
+    -fx-padding: 8 18 8 18;
+    -fx-cursor: hand;
+}
+
+.search-button:pressed, .profile-circle:hover, .profile-circle:pressed {
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+/*===== DROP DOWN MENU ===========*/
+
+.profile-circle {
+    -fx-fill: #637991;
+    -fx-cursor: hand;
+}
+
+.nav-dropdown {
+    -fx-background-color: white;
+    -fx-background-radius: 5;
+    -fx-padding: 12 0 12 0;
+    -fx-pref-width: 100px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.28), 10, 0.2, 0, 4);
+}
+
+.dropdown-btn {
+    -fx-text-fill: black;
+}
+
+/* ========== CARD COVER ==========
+*/
+
+.card-layout {
+    -fx-pref-width: 150;
+    -fx-pref-height: 225;
+}
+
+.cards {
+    -fx-effect:
+        dropshadow(gaussian, rgba(0,0,0,0.35), 6, 0.2, 0, 3),
+        dropshadow(gaussian, rgba(0,0,0,0.22), 16, 0.2, 0, 10),
+        dropshadow(gaussian, rgba(0,0,0,0.15), 28, 0.2, 0, 20);
+}
+
+.cards:hover {
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+.cards {
+-fx-pref-width: 120;
+    -fx-pref-height: 180;
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-effect: dropshadow(gaussian, #EED0AC, 16, 0.2, 0, 6);
+}
+
+.cards:hover {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+/*alternative cards */
+.card-alt {
+    -fx-pref-width: 120;
+    -fx-pref-height: 180;
+    -fx-background-color: #8B2E2E;
+    -fx-alignment: center;
+    -fx-padding: 10;
+}
+
+.cards-alt:hover {
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+.card-alt-text {
+    -fx-text-fill: #D9D4C8;
+    -fx-alignment: center;
+}
+
+/*  IMPORT ARCHIVE STYL
+*/
+.light-bkg {
+    -fx-background-color: #F2E4D3;
+}

@@ -28,7 +28,7 @@ public class MultiValueField {
         Label label = FormFieldFactory.createLabel(labelText);
 
         inputField = new TextField();
-        inputField.setFont(FontLoader.regular(15));
+        inputField.setFont(FontLoader.regular(18));
         inputField.getStyleClass().add("input-field");
         inputField.setPrefWidth(fieldWidth);
         inputField.setMinWidth(Control.USE_PREF_SIZE);
@@ -93,7 +93,7 @@ public class MultiValueField {
 
         //chips are the floating pill boxes
         Button chip = new Button(value);
-        chip.setFont(FontLoader.light(12));
+        chip.setFont(FontLoader.regular(15));
         chip.getStyleClass().add("input-chip");
 
         chip.setOnAction(e -> {
