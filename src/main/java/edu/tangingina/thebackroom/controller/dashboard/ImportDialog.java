@@ -49,11 +49,10 @@ public class ImportDialog {
         fieldsBox.setPrefWidth(520);
         fieldsBox.setMaxWidth(520);
 
-        fileTypeRow = getFileType();
         mediaTypeRow = getMediaType();
         file = getInput();
 
-        fieldsBox.getChildren().addAll(fileTypeRow, mediaTypeRow, file);
+        fieldsBox.getChildren().addAll(mediaTypeRow, file);
 
         //import button
         Button addBtn = new Button();
@@ -86,31 +85,6 @@ public class ImportDialog {
     //close dialog box
     public static void closeWindow() {
         window.close();
-    }
-
-    //file type selector
-    private static HBox getFileType() {
-        fileTypeLabel = new Label("File Type");
-        fileTypeLabel.setFont(FontLoader.bold(18));
-        fileTypeLabel.getStyleClass().add("input-label");
-        fileTypeLabel.setPrefWidth(85);
-        fileTypeLabel.setMinWidth(85);
-        fileTypeLabel.setMaxWidth(85);
-
-        //combo box that shows what type of media user will add
-        fileTypeSelector = new ComboBox<>();
-        fileTypeSelector.getItems().addAll("CSV", "SQL", "JSON");
-        fileTypeSelector.setPromptText("");
-        fileTypeSelector.getStyleClass().add("combo-box");
-        fileTypeSelector.setPrefSize(315, 40);
-        fileTypeSelector.setMinSize(315, 40);
-        fileTypeSelector.setMaxSize(315, 40);
-
-        row = new HBox(20, fileTypeLabel, fileTypeSelector);
-        row.setAlignment(Pos.CENTER_LEFT);
-        row.setPrefWidth(400);
-
-        return row;
     }
 
     //media type selector
@@ -150,9 +124,9 @@ public class ImportDialog {
         filePathField.setPromptText("Upload File Here");
         filePathField.setEditable(false);
         filePathField.getStyleClass().add("input-field");
-        filePathField.setPrefSize(315, 40);
-        filePathField.setMinSize(315, 40);
-        filePathField.setMaxSize(315, 40);
+        filePathField.setPrefSize(315, 54);
+        filePathField.setMinSize(315, 54);
+        filePathField.setMaxSize(315, 54);
 
         Button browseBtn = new Button();
         browseBtn.getStyleClass().add("image-button");
