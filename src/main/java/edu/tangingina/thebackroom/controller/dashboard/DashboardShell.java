@@ -39,6 +39,7 @@ public class DashboardShell extends BorderPane {
                 () -> setView( new MediaCategoryView("Films and TV Shows", mediaItems)),
                 this::openAddArchiveDialog,
                 this::openImportDialog,
+                this::openExportDialog,
                 this::logout
         );
         StackPane navWrapper = new StackPane(navBar);
@@ -96,6 +97,8 @@ public class DashboardShell extends BorderPane {
     }
 
     private void openImportDialog() { ImportDialog.importDialogView(); }
+
+    private void openExportDialog() { ExportDialog.exportDialogView(); }
 
     private void logout() {
         Stage stage = (Stage) this.getScene().getWindow();

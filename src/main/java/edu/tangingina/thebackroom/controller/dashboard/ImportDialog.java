@@ -18,12 +18,13 @@ public class ImportDialog {
 
     private static Scene scene;
     private static Stage window;
-    private static ComboBox<String> mediaTypeSelector, fileTypeSelector;
-    private static Label header, mediaTypeLabel, fileTypeLabel, inputLabel;
+    private static ComboBox<String> mediaTypeSelector;
+    private static Label header, mediaTypeLabel, inputLabel;
     private static StackPane root;
-    private static HBox row, fileTypeRow, mediaTypeRow, file;
-    private static FormFieldGroup fileInput;
+    private static HBox row, mediaTypeRow, file;
     private static VBox formContent;
+    private static File selectedFile;
+    private static TextField filePathField;
 
     public static void importDialogView() {
         window = new Stage();
@@ -66,6 +67,16 @@ public class ImportDialog {
         addBtn.setGraphic(view);
         addBtn.setOnAction(e -> {
             System.out.println("Importing Archive");
+
+            if (selectedFile == null || filePathField.getText().isBlank()) {
+                if (!filePathField.getStyleClass().contains("error-field")) {
+                    filePathField.getStyleClass().add("input-field-error");
+                }
+
+                filePathField.setPromptText("Please upload a file");
+                return;
+            }
+
             closeWindow();
         });
 
@@ -120,7 +131,7 @@ public class ImportDialog {
         inputLabel.setMinWidth(85);
         inputLabel.setMaxWidth(85);
 
-        TextField filePathField = new TextField();
+        filePathField = new TextField();
         filePathField.setPromptText("Upload File Here");
         filePathField.setEditable(false);
         filePathField.getStyleClass().add("input-field");
@@ -149,10 +160,11 @@ public class ImportDialog {
                     new FileChooser.ExtensionFilter("All Files", "*.*")
             );
 
-            File selectedFile = fileChooser.showOpenDialog(window);
+            selectedFile = fileChooser.showOpenDialog(window);
 
             if (selectedFile != null) {
                 filePathField.setText(selectedFile.getAbsolutePath());
+                filePathField.getStyleClass().remove("error-field");
             }
         });
 
@@ -164,4 +176,5 @@ public class ImportDialog {
         row.setPrefWidth(400);
         return row;
     }
+
 }
