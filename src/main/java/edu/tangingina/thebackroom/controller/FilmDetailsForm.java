@@ -15,21 +15,20 @@ public class FilmDetailsForm extends BaseMediaForm{
             - language
      */
 
-    private MultiValueField directorField, genreField;
-    private FormFieldGroup titleField, studioField, durationField,
-            languageField, linkField, widgetField, synopsisField;
+    private MultiValueField directorField, genreField, studioField, linkField;
+    private FormFieldGroup titleField, durationField, languageField, widgetField, synopsisField;
 
     public FilmDetailsForm() {
         view.getChildren().add(formColumn());
 
         titleField = FormFieldFactory.createTextField("Title", 520);
         directorField = FormFieldFactory.createMultiValueField("Director", 175);
-        studioField = FormFieldFactory.createTextField("Studio", 175);
+        studioField = FormFieldFactory.createMultiValueField("Studio", 175);
         synopsisField = FormFieldFactory.createTextArea("Synopsis", 520);
         genreField = FormFieldFactory.createMultiValueField("Genre", 120);
         durationField = FormFieldFactory.createTextField("Duration", 120);
         languageField = FormFieldFactory.createTextField("Language", 120);
-        linkField = FormFieldFactory.createTextField("Access Link", 520);
+        linkField = FormFieldFactory.createMultiValueField("Access Link", 520);
         widgetField = FormFieldFactory.createTextField("Book Cover", 520);
 
         formColumn().getChildren().addAll(
@@ -62,8 +61,6 @@ public class FilmDetailsForm extends BaseMediaForm{
 
         btn.setGraphic(view);
         btn.setOnAction(e -> {
-            validateInputs();
-
             if (validateInputs()) {
                 AddArchive_v2.closeWindow();
             }
@@ -77,11 +74,16 @@ public class FilmDetailsForm extends BaseMediaForm{
 
     //input validation
     private boolean validateInputs() {
-        boolean isValid = false;
+        boolean isValid = true;
 
         titleField.clearError();
         durationField.clearError();
         languageField.clearError();
+        synopsisField.clearError();
+        genreField.clearError();
+        studioField.clearError();
+        linkField.clearError();
+        directorField.clearError();
 
         if (titleField.isEmpty()) {
             titleField.showError();
@@ -95,6 +97,26 @@ public class FilmDetailsForm extends BaseMediaForm{
 
         if (languageField.isEmpty()) {
             languageField.showError();
+            isValid = false;
+        }
+
+        if (directorField.isEmpty()) {
+            directorField.showError();
+            isValid = false;
+        }
+
+        if (synopsisField.isEmpty()) {
+            synopsisField.showError();
+            isValid = false;
+        }
+
+        if (genreField.isEmpty()) {
+            genreField.showError();
+            isValid = false;
+        }
+
+        if (linkField.isEmpty()) {
+            linkField.showError();
             isValid = false;
         }
 

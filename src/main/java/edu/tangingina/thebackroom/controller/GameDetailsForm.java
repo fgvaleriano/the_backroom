@@ -16,8 +16,8 @@ public class GameDetailsForm extends BaseMediaForm{
             - system requirements
      */
 
-    private MultiValueField gameDevField, gameStudioField, genreField, modeField;
-    private FormFieldGroup titleField, engineField, linkField, widgetField, systemReqsField, synopsisField;
+    private MultiValueField gameDevField, gameStudioField, genreField, modeField, linkField;
+    private FormFieldGroup titleField, engineField, widgetField, systemReqsField, synopsisField;
 
     public GameDetailsForm() {
         view.getChildren().addAll(formColumn());
@@ -28,7 +28,7 @@ public class GameDetailsForm extends BaseMediaForm{
         modeField = FormFieldFactory.createMultiValueField("Game Mode", 120);
         engineField = FormFieldFactory.createTextField("Game Engine", 120);
         genreField = FormFieldFactory.createMultiValueField("Genre", 120);
-        linkField = FormFieldFactory.createTextField("Access Link", 520);
+        linkField = FormFieldFactory.createMultiValueField("Access Link", 520);
         widgetField = FormFieldFactory.createTextField("Cover Art", 520);
         systemReqsField = FormFieldFactory.createTextArea("System Request", 520);
         synopsisField = FormFieldFactory.createTextArea("Synopsis", 520);
@@ -64,8 +64,6 @@ public class GameDetailsForm extends BaseMediaForm{
 
         btn.setGraphic(view);
         btn.setOnAction(e -> {
-            validateInputs();
-
             if (validateInputs()) {
                 AddArchive_v2.closeWindow();
             }
@@ -79,12 +77,16 @@ public class GameDetailsForm extends BaseMediaForm{
 
     //input validation
     private boolean validateInputs() {
-        boolean isValid = false;
+        boolean isValid = true;
 
         titleField.clearError();
         engineField.clearError();
         linkField.clearError();
-        //inlcude system reqs
+        gameDevField.clearError();
+        gameStudioField.clearError();
+        modeField.clearError();
+        systemReqsField.clearError();
+        synopsisField.clearError();
 
         if (titleField.isEmpty()) {
             titleField.showError();
@@ -101,8 +103,28 @@ public class GameDetailsForm extends BaseMediaForm{
             isValid = false;
         }
 
+        if (synopsisField.isEmpty()) {
+            synopsisField.showError();
+            isValid = false;
+        }
+
         if (systemReqsField.isEmpty()) {
             systemReqsField.showError();
+            isValid = false;
+        }
+
+        if (gameDevField.isEmpty()) {
+            gameDevField.showError();
+            isValid = false;
+        }
+
+        if (gameStudioField.isEmpty()) {
+            gameStudioField.showError();
+            isValid = false;
+        }
+
+        if (genreField.isEmpty()) {
+            genreField.showError();
             isValid = false;
         }
 

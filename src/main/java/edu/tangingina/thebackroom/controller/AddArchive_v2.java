@@ -13,17 +13,13 @@ import javafx.stage.*;
 
 public class  AddArchive_v2 {
     private static Scene scene;
-    private static Image btnImage;
     private static ComboBox<String> mediaTypeSelector;
     private static StackPane bkgCard;
     private static Stage window;
     private static VBox innerCard, formContent, dynamicForm;
     private static ScrollPane inputHolder, sp;
     private static Label header, mediaTypeLabel, inputLabel, label;
-    private static Button addBtn;
     private static HBox mediaTypeRow, row;
-    private static TextField archiveInput;
-    private static TextArea textArea;
 
     //modular forms that handles input
     private static BaseMediaForm baseMediaForm;
@@ -112,7 +108,7 @@ public class  AddArchive_v2 {
     //media type selector
     private static HBox getMediaType() {
         mediaTypeLabel = new Label("Media Type");
-        mediaTypeLabel.setFont(FontLoader.regular(15));
+        mediaTypeLabel.setFont(FontLoader.regular(18));
         mediaTypeLabel.getStyleClass().add("input-label");
 
         //combo box that shows what type of media user will add

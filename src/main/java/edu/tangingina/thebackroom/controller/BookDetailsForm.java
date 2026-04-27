@@ -20,9 +20,8 @@ public class BookDetailsForm extends BaseMediaForm {
             - Edition
      */
 
-    private MultiValueField authorField, genreField;
-    private FormFieldGroup titleField, publisherField,
-            ISBNfield, pageField, editionField, linkField, widgetField, synopsisField;
+    private MultiValueField authorField, genreField, publisherField, linkField;
+    private FormFieldGroup titleField, ISBNfield, pageField, editionField, widgetField, synopsisField;
 
     public BookDetailsForm() {
         view.getChildren().add(formColumn());
@@ -31,11 +30,11 @@ public class BookDetailsForm extends BaseMediaForm {
         authorField = FormFieldFactory.createMultiValueField("Author", 175);
         synopsisField = FormFieldFactory.createTextArea("Synopsis", 520);
         genreField = FormFieldFactory.createMultiValueField("Genre", 120);
-        publisherField = FormFieldFactory.createTextField("Publisher", 175);
+        publisherField = FormFieldFactory.createMultiValueField("Publisher", 175);
         pageField = FormFieldFactory.createTextField("Page Count", 120);
         ISBNfield = FormFieldFactory.createTextField("ISBN", 120);
         editionField = FormFieldFactory.createTextField("Edition", 120);
-        linkField = FormFieldFactory.createTextField("Access Link", 520);
+        linkField = FormFieldFactory.createMultiValueField("Access Link", 520);
         widgetField = FormFieldFactory.createTextField("Book Cover", 520);
 
         formColumn().getChildren().addAll(
@@ -68,8 +67,7 @@ public class BookDetailsForm extends BaseMediaForm {
 
         btn.setGraphic(view);
         btn.setOnAction(e -> {
-            validateInputs();
-
+            System.out.println(validateInputs());
             if (validateInputs()) {
                 AddArchive_v2.closeWindow();
             }
@@ -84,15 +82,29 @@ public class BookDetailsForm extends BaseMediaForm {
 
     //input validation
     private boolean validateInputs() {
-        boolean isValid = false;
+        boolean isValid = true;
 
         titleField.clearError();
         ISBNfield.clearError();
         pageField.clearError();
         linkField.clearError();
+        genreField.clearError();
+        publisherField.clearError();
+        authorField.clearError();
+        synopsisField.clearError();
 
         if (titleField.isEmpty()) {
             titleField.showError();
+            isValid = false;
+        }
+
+        if (authorField.isEmpty()) {
+            authorField.showError();
+            isValid = false;
+        }
+
+        if (publisherField.isEmpty()) {
+            publisherField.showError();
             isValid = false;
         }
 
@@ -101,8 +113,18 @@ public class BookDetailsForm extends BaseMediaForm {
             isValid = false;
         }
 
+        if (genreField.isEmpty()) {
+            genreField.showError();
+            isValid = false;
+        }
+
         if (pageField.isEmpty()) {
             pageField.showError();
+            isValid = false;
+        }
+
+        if (synopsisField.isEmpty()) {
+            synopsisField.showError();
             isValid = false;
         }
 
