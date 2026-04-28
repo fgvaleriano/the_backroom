@@ -16,9 +16,9 @@ public class TVShowDetailsForm extends BaseMediaForm{
             - status
      */
 
-    private MultiValueField directorField, genreField;
-    private FormFieldGroup titleField, studioField, seasonField,
-            episodeField, statusField, linkField, widgetField, synopsisField;
+    private MultiValueField directorField, genreField, linkField, studioField;
+    private FormFieldGroup titleField, seasonField,
+            episodeField, statusField, widgetField, synopsisField;
 
 
     public TVShowDetailsForm() {
@@ -26,13 +26,13 @@ public class TVShowDetailsForm extends BaseMediaForm{
 
         titleField = FormFieldFactory.createTextField("Title", 520);
         directorField = FormFieldFactory.createMultiValueField("Director", 175);
-        studioField = FormFieldFactory.createTextField("Studio", 120);
+        studioField = FormFieldFactory.createMultiValueField("Studio", 120);
         synopsisField = FormFieldFactory.createTextArea("Synopsis", 520);
         genreField = FormFieldFactory.createMultiValueField("Genre", 120);
         seasonField = FormFieldFactory.createTextField("Season Count", 120);
         episodeField = FormFieldFactory.createTextField("Episode Count", 120);
         statusField = FormFieldFactory.createTextField("Status", 120);
-        linkField = FormFieldFactory.createTextField("Access Link", 520);
+        linkField = FormFieldFactory.createMultiValueField("Access Link", 520);
         widgetField = FormFieldFactory.createTextField("Book Cover", 520);
 
         formColumn().getChildren().addAll(
@@ -66,8 +66,6 @@ public class TVShowDetailsForm extends BaseMediaForm{
 
         btn.setGraphic(view);
         btn.setOnAction(e -> {
-            validateInputs();
-
             if (validateInputs()) {
                 AddArchive_v2.closeWindow();
             }
@@ -87,6 +85,9 @@ public class TVShowDetailsForm extends BaseMediaForm{
         seasonField.clearError();
         episodeField.clearError();
         statusField.clearError();
+        genreField.clearError();
+        studioField.clearError();
+        synopsisField.clearError();
         linkField.clearError();
 
         if (titleField.isEmpty()) {
@@ -106,6 +107,21 @@ public class TVShowDetailsForm extends BaseMediaForm{
 
         if (statusField.isEmpty()) {
             statusField.showError();
+            isValid = false;
+        }
+
+        if (synopsisField.isEmpty()) {
+            synopsisField.showError();
+            isValid = false;
+        }
+
+        if (genreField.isEmpty()) {
+            genreField.showError();
+            isValid = false;
+        }
+
+        if (studioField.isEmpty()) {
+            studioField.showError();
             isValid = false;
         }
 

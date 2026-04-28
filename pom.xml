@@ -153,7 +153,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>edu.tangingina.thebackroom/edu.tangingina.thebackroom.HelloApplication
+                            <mainClass>edu.tangingina.thebackroom/edu.tangingina.thebackroom.Launcher
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

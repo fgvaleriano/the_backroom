@@ -1,19 +1,22 @@
 package edu.tangingina.thebackroom.controller;
 
 import edu.tangingina.thebackroom.util.FontLoader;
+import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.util.*;
 
 import java.util.ArrayList;
 
+import static javafx.util.Duration.millis;
+
 public class MultiValueField {
     /*
-        Handles accessing input fields
-        ie. genre, author, game dev
+        Handles accessing input fields with multiple possible inputs
 
      */
 
@@ -46,6 +49,7 @@ public class MultiValueField {
 
         inputRow = new HBox(12, label, inputField, plusBtn);
         inputRow.setAlignment(Pos.CENTER_LEFT);
+
 
         Region spacer = new Region();
         spacer.setMinWidth(FormFieldFactory.getLabelSectionWidth());
@@ -84,16 +88,17 @@ public class MultiValueField {
         String value = inputField.getText().trim();
 
         if (value.isEmpty() || values.contains(value)) {
-            inputField.getStyleClass().add("input-field-error");
+            showError();
             return;
         }
 
-        inputField.getStyleClass().remove("input-field-error");
+        clearError();
+
         values.add(value);
 
         //chips are the floating pill boxes
         Button chip = new Button(value);
-        chip.setFont(FontLoader.regular(15));
+        chip.setFont(FontLoader.light(15));
         chip.getStyleClass().add("input-chip");
 
         chip.setOnAction(e -> {
@@ -103,6 +108,25 @@ public class MultiValueField {
 
         valuesPane.getChildren().add(chip);
         inputField.clear();
+    }
+
+    public boolean isEmpty() {
+        return values.isEmpty() && inputField.getText().trim().isEmpty();
+    }
+
+    public void showError() {
+        if (!inputField.getStyleClass().add("input-field-error")) {
+            inputField.getStyleClass().add("input-field-error");
+        }
+
+        if (!valuesPane.getStyleClass().contains("input-field-error")) {
+            valuesPane.getStyleClass().add("input-field-error");
+        }
+    }
+
+    public void clearError() {
+        inputField.getStyleClass().remove("input-field-error");
+        valuesPane.getStyleClass().remove("input-field-error");
     }
 
     public VBox getView() {
