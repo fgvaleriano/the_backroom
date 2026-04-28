@@ -14,7 +14,7 @@ import java.util.Stack;
 public class ConfigManager {
 
     public boolean checkConfig(){
-        return new File("config.properties").exists();
+        return new File("src/main/resources/edu/tangingina/thebackroom/config.properties").exists();
     }
 
     public void initialize(){
@@ -85,6 +85,12 @@ public class ConfigManager {
             pb.redirectErrorStream(true);
 
             Process process = pb.start();
+
+            Scanner outputScanner = new Scanner(process.getInputStream());
+            while (outputScanner.hasNextLine()) {
+                System.out.println(outputScanner.nextLine());
+            }
+
             int exitCode = process.waitFor();
 
             if (exitCode == 0) {
@@ -94,6 +100,7 @@ public class ConfigManager {
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
             System.err.println("Critical error during SQL execution: " + e.getMessage());
         }
     }
@@ -110,6 +117,7 @@ public class ConfigManager {
 
         try {
             FileOutputStream out = new FileOutputStream(configFile);
+            props.store(out, "The Backroom App Configuration");
         } catch (IOException e) {
             System.err.println("Could not write to config.properties.");
         }

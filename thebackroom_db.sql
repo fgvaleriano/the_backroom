@@ -19,21 +19,6 @@
 CREATE DATABASE IF NOT EXISTS `thebackroom_db`;
 USE `thebackroom_db`;
 
--- Setup Permissions for Moderator
-GRANT SELECT, INSERT, UPDATE ON `thebackroom_db`.* TO 'app_moderator'@'localhost';
-GRANT DELETE ON `thebackroom_db`.`media_access` TO 'app_moderator'@'localhost';
-GRANT DELETE ON `thebackroom_db`.`media_category` TO 'app_moderator'@'localhost';
-GRANT DELETE ON `thebackroom_db`.`media_company` TO 'app_moderator'@'localhost';
-GRANT DELETE ON `thebackroom_db`.`media_game_mode` TO 'app_moderator'@'localhost';
-GRANT DELETE ON `thebackroom_db`.`media_game_platform` TO 'app_moderator'@'localhost';
-GRANT DELETE ON `thebackroom_db`.`media_personnel` TO 'app_moderator'@'localhost';
-
--- Setup Permissions for Normal User
-GRANT SELECT ON `thebackroom_db`.* TO 'app_user'@'localhost';
-GRANT INSERT ON `thebackroom_db`.`users` TO 'app_user'@'localhost';
-
-FLUSH PRIVILEGES;
-
 --
 -- Table structure for table `category`
 --
@@ -462,38 +447,41 @@ UNLOCK TABLES;
 -- Final view structure for view `login_view`
 --
 
-/*!50001 DROP VIEW IF EXISTS `login_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = cp850 */;
-/*!50001 SET character_set_results     = cp850 */;
-/*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`avnadmin`@`%` SQL SECURITY DEFINER */
-/*!50001 VIEW `login_view` AS select `users`.`username` AS `username`,`users`.`password` AS `password`,`users`.`role` AS `role` from `users` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
+CREATE OR REPLACE VIEW `login_view` AS
+SELECT
+    `users`.`username` AS `username`,
+    `users`.`password` AS `password`,
+    `users`.`role` AS `role`
+FROM `users`;
 
 --
 -- Final view structure for view `media_category_overview`
 --
 
-/*!50001 DROP VIEW IF EXISTS `media_category_overview`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = cp850 */;
-/*!50001 SET character_set_results     = cp850 */;
-/*!50001 SET collation_connection      = cp850_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`avnadmin`@`%` SQL SECURITY DEFINER */
-/*!50001 VIEW `media_category_overview` AS select `m`.`media_type` AS `media_type`,`c`.`name` AS `category_name` from ((`media` `m` join `media_category` on((`m`.`media_id` = `media_category`.`media_id`))) join `category` `c` on((`media_category`.`category_id` = `c`.`category_id`))) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+CREATE OR REPLACE VIEW `media_category_overview` AS
+SELECT
+    `m`.`media_type` AS `media_type`,
+    `c`.`name` AS `category_name`
+FROM `media` `m`
+JOIN `media_category`
+    ON `m`.`media_id` = `media_category`.`media_id`
+JOIN `category` `c`
+    ON `media_category`.`category_id` = `c`.`category_id`;
+
+-- Setup Permissions for Moderator
+GRANT SELECT, INSERT, UPDATE ON `thebackroom_db`.* TO 'app_moderator'@'localhost';
+GRANT DELETE ON `thebackroom_db`.`media_access` TO 'app_moderator'@'localhost';
+GRANT DELETE ON `thebackroom_db`.`media_category` TO 'app_moderator'@'localhost';
+GRANT DELETE ON `thebackroom_db`.`media_company` TO 'app_moderator'@'localhost';
+GRANT DELETE ON `thebackroom_db`.`media_game_mode` TO 'app_moderator'@'localhost';
+GRANT DELETE ON `thebackroom_db`.`media_game_platform` TO 'app_moderator'@'localhost';
+GRANT DELETE ON `thebackroom_db`.`media_personnel` TO 'app_moderator'@'localhost';
+
+-- Setup Permissions for Normal User
+GRANT SELECT ON `thebackroom_db`.* TO 'app_user'@'localhost';
+GRANT INSERT ON `thebackroom_db`.`users` TO 'app_user'@'localhost';
+
+FLUSH PRIVILEGES;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
