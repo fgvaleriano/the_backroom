@@ -1,13 +1,9 @@
 package edu.tangingina.thebackroom.controller;
 
-import edu.tangingina.thebackroom.controller.dashboard.BaseView;
 import edu.tangingina.thebackroom.util.*;
-import javafx.fxml.*;
 import javafx.geometry.*;
 import javafx.scene.*;
-import javafx.event.*;
 import javafx.scene.control.*;
-import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.stage.*;
 

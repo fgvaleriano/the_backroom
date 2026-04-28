@@ -1,4 +1,4 @@
-package edu.tangingina.thebackroom.controller.dashboard;
+package edu.tangingina.thebackroom.util;
 
 import javafx.geometry.*;
 import javafx.scene.Node;

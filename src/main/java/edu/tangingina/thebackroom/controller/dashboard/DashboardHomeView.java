@@ -1,9 +1,10 @@
 package edu.tangingina.thebackroom.controller.dashboard;
 
+import edu.tangingina.thebackroom.util.BaseView;
 import javafx.geometry.*;
 import javafx.scene.image.*;
 
-public class DashboardHomeView extends BaseView{
+public class DashboardHomeView extends BaseView {
     /*
         Responsible for showing dashboard content of the home page
      */

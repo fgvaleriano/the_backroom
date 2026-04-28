@@ -1,5 +1,6 @@
 package edu.tangingina.thebackroom.controller.dashboard;
 
+import edu.tangingina.thebackroom.util.BaseView;
 import edu.tangingina.thebackroom.util.MediaItem;
 import javafx.geometry.*;
 
@@ -8,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class MediaCategoryView extends BaseView{
+public class MediaCategoryView extends BaseView {
     /*
         Resuable for different types of media
      */

@@ -2,6 +2,7 @@ package edu.tangingina.thebackroom.controller.dashboard;
 
 import edu.tangingina.thebackroom.controller.AddArchive_v2;
 import edu.tangingina.thebackroom.controller.LoginController;
+import edu.tangingina.thebackroom.util.BaseView;
 import edu.tangingina.thebackroom.util.MediaItem;
 import javafx.geometry.*;
 import javafx.geometry.Pos;
