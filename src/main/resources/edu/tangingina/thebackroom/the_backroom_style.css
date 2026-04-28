@@ -197,6 +197,25 @@
     -fx-border-radius: 10;
 }
 
+.image-preview-box {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(255, 255, 255, 0.25);
+    -fx-border-radius: 12;
+    -fx-border-width: 1.5;
+    -fx-padding: 8;
+}
+
+.form-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #741B1B;
+    -fx-cursor: hand;
+}
+
+.form-button:hover {
+    -fx-background-color: #444444;
+}
+
 /* SIGN UP PAGE STYLING
     Contains:
         - check box styling

@@ -16,9 +16,11 @@ public class TVShowDetailsForm extends BaseMediaForm{
             - status
      */
 
-    private MultiValueField directorField, genreField, linkField, studioField;
+    private MultiValueField directorField, genreField, studioField;
     private FormFieldGroup titleField, seasonField,
-            episodeField, statusField, widgetField, synopsisField;
+            episodeField, statusField, synopsisField;
+    private ImageFileField widgetField;
+    private AccessLinkField linkField;
 
 
     public TVShowDetailsForm() {
@@ -32,8 +34,8 @@ public class TVShowDetailsForm extends BaseMediaForm{
         seasonField = FormFieldFactory.createTextField("Season Count", 120);
         episodeField = FormFieldFactory.createTextField("Episode Count", 120);
         statusField = FormFieldFactory.createTextField("Status", 120);
-        linkField = FormFieldFactory.createMultiValueField("Access Link", 520);
-        widgetField = FormFieldFactory.createTextField("Book Cover", 520);
+        linkField = FormFieldFactory.createAccessLinkField("Access Link");
+        widgetField = FormFieldFactory.createImageFileField("Book Cover", 200);
 
         formColumn().getChildren().addAll(
                 titleField.getView(),

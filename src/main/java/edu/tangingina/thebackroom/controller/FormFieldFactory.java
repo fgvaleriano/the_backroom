@@ -84,6 +84,14 @@ public class FormFieldFactory {
         return new MultiValueField(labelText, fieldWidth);
     }
 
+    public static AccessLinkField createAccessLinkField(String labelText) {
+        return new AccessLinkField(labelText);
+    }
+
+    public static ImageFileField createImageFileField(String labelText, int fieldWidth) {
+        return new ImageFileField(labelText, fieldWidth);
+    }
+
     public static Double getLabelSectionWidth() {
         return labelSectionWidth;
     }

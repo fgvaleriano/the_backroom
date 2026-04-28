@@ -16,8 +16,10 @@ public class GameDetailsForm extends BaseMediaForm{
             - system requirements
      */
 
-    private MultiValueField gameDevField, gameStudioField, genreField, modeField, linkField;
-    private FormFieldGroup titleField, engineField, widgetField, systemReqsField, synopsisField;
+    private MultiValueField gameDevField, gameStudioField, genreField, modeField;
+    private FormFieldGroup titleField, engineField, systemReqsField, synopsisField;
+    private ImageFileField widgetField;
+    private AccessLinkField linkField;
 
     public GameDetailsForm() {
         view.getChildren().addAll(formColumn());
@@ -28,8 +30,8 @@ public class GameDetailsForm extends BaseMediaForm{
         modeField = FormFieldFactory.createMultiValueField("Game Mode", 120);
         engineField = FormFieldFactory.createTextField("Game Engine", 120);
         genreField = FormFieldFactory.createMultiValueField("Genre", 120);
-        linkField = FormFieldFactory.createMultiValueField("Access Link", 520);
-        widgetField = FormFieldFactory.createTextField("Cover Art", 520);
+        linkField = FormFieldFactory.createAccessLinkField("Access Link");
+        widgetField = FormFieldFactory.createImageFileField("Cover Art", 200);
         systemReqsField = FormFieldFactory.createTextArea("System Request", 520);
         synopsisField = FormFieldFactory.createTextArea("Synopsis", 520);
 
