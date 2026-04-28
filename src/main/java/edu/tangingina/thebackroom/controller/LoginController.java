@@ -66,9 +66,9 @@ public class LoginController {
 
         userTxt = inputUsername();
         pwTxt = inputPW();
-        btn_holder = button_holder();
-        userTxt = createUsername();
-        pwTxt = createPw();
+        btn_holder = button_holder(stage);
+        userTxt = inputUsername();
+        pwTxt = inputPW();
         btn_holder = button_holder(stage);
 
         form.getChildren().addAll(userLabel, userTxt, pwLabel, pwTxt, btn_holder);
@@ -113,10 +113,29 @@ public class LoginController {
             String username = userTxt.getText().trim();
             String password = pwTxt.getText().trim();
 
+            if (username.isEmpty()) {
+                //to avoid adding the same style we check it first muna
+                if (!userTxt.getStyleClass().contains("login-input-error")) {
+                    userTxt.getStyleClass().add("login-input-error");
+                }
+            } else {
+                userTxt.getStyleClass().remove("login-input-error");
+            }
+
+            if (password.isEmpty()) {
+                //to avoid adding the same style we check it first muna
+                if (!pwTxt.getStyleClass().contains("login-input-error")) {
+                    pwTxt.getStyleClass().add("login-input-error");
+                }
+            } else {
+                pwTxt.getStyleClass().remove("login-input-error");
+            }
+
             if(!username.isEmpty() && !password.isEmpty()){
                 try{
                     userDao.login(username, password);
-                    TheBackroom.sm.showHome();System.out.println("Good to login");
+                    TheBackroom.sm.showHome();
+                    System.out.println("Good to login");
                     if(saveCredentials){
                         TheBackroom.util.saveCredentials(username);
                     }
@@ -124,28 +143,6 @@ public class LoginController {
                     System.out.println(ex.getMessage());
                 }
             }
-            /*
-            if (username.isEmpty() || password.isEmpty()) {
-                userTxt.getStyleClass().add("login-input-error");
-                pwTxt.getStyleClass().add("login-input-error");
-                return;
-            }*/
-
-            userTxt.getStyleClass().remove("login-input-error");
-            pwTxt.getStyleClass().remove("login-input-error");
-
-            //if filled and correct, continue here
-            DashboardShell dashboard = new DashboardShell();
-
-            Scene dashboardScene = new Scene(dashboard, stage.getWidth(), stage.getHeight());
-            dashboardScene.getStylesheets().add(
-                    getClass().getResource("/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm()
-            );
-
-            stage.setScene(dashboardScene);
-            stage.setMaximized(true);
-
-            System.out.println("Good to login");
 
         });
         return btn;
@@ -177,6 +174,9 @@ public class LoginController {
         guest.getStyleClass().add("btn-guest");
         //button action
         guest.setOnAction(e -> {
+            TheBackroom.sm.showHome();
+            TheBackroom.currUser = null;
+            /*
             System.out.println("Opeining add archive for trial");
 
             //if filled and correct, continue here
@@ -190,7 +190,7 @@ public class LoginController {
             stage.setScene(dashboardScene);
             stage.setMaximized(true);
 
-            System.out.println("Good to login");
+            System.out.println("Good to login");*/
         });
         return guest;
     }

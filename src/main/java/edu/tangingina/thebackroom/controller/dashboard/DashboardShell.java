@@ -1,5 +1,6 @@
 package edu.tangingina.thebackroom.controller.dashboard;
 
+import edu.tangingina.thebackroom.TheBackroom;
 import edu.tangingina.thebackroom.controller.AddArchive_v2;
 import edu.tangingina.thebackroom.controller.LoginController;
 import edu.tangingina.thebackroom.util.MediaItem;
@@ -23,24 +24,33 @@ public class DashboardShell extends BorderPane {
     private ScrollPane scrollPane;
     private StackPane center;
     private Image noiseImg;
-    private List<MediaItem> mediaItems = MediaRepository.getAllMedia();
 
     public DashboardShell() {
         //this.setTop(new NavbarComponent());             //navigation bar will always be on top
 
-        this.setPrefWidth(1900);
-        this.setPrefHeight(1080);
+        //this.setPrefWidth(1900);
+        //this.setPrefHeight(1080);
 
         //navigation bar thing
         navBar = new NavbarComponent(
                 () -> setView(new DashboardHomeView()),
-                () -> setView(new MediaCategoryView("Books", mediaItems)),
-                () -> setView(new MediaCategoryView("Games", mediaItems)),
-                () -> setView( new MediaCategoryView("Films and TV Shows", mediaItems)),
-                this::openAddArchiveDialog,
-                this::openImportDialog,
-                this::logout
-        );
+                () -> setView(new MediaCategoryView("Books")),
+                () -> setView(new MediaCategoryView("Games")),
+                () -> setView( new MediaCategoryView("Movie", "TvShow")));
+
+
+        if(TheBackroom.currUser == null){
+            navBar.setLogIn(this::login);
+        }else if(TheBackroom.currUser.getRole().equals("MODERATOR")){
+            navBar.setAdd(this::openAddArchiveDialog);
+            navBar.setImport(this::openImportDialog);
+            navBar.setLogOut(this::logout);
+        }else{
+            navBar.setLogOut(this::logout);
+        }
+        //we need to verify first the current user for the userDropdown, before creating the profile dropdown
+        navBar.setProfileDropdown();
+
         StackPane navWrapper = new StackPane(navBar);
         navWrapper.setPadding(new Insets(0, 0, 10, 0));
         this.setTop(navWrapper);
@@ -98,6 +108,18 @@ public class DashboardShell extends BorderPane {
     private void openImportDialog() { ImportDialog.importDialogView(); }
 
     private void logout() {
+        TheBackroom.sm.showLogin();
+
+        if(TheBackroom.currUser.getRole().equals("MODERATOR")){
+            //If the prev user was a moderator, then if logged out we change the mysql account
+            TheBackroom.dm.resetConnection();
+        }
+
+        TheBackroom.currUser = null;
+
+        //=====================>>>>Do the showing of medias na on the front page and for each yes <<<<=====================
+
+        /*
         Stage stage = (Stage) this.getScene().getWindow();
         boolean maxSize = stage.isMaximized();
 
@@ -115,23 +137,11 @@ public class DashboardShell extends BorderPane {
                 getResource("/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm());
         stage.setScene(loginScene);
         stage.setMaximized(maxSize);
+        */
+    }
+
+    private void login(){
+        TheBackroom.sm.showLogin();
     }
 }
 
-//temporary data provider for image paths
-class MediaRepository {
-
-    public static List<MediaItem> getAllMedia() {
-        return List.of(
-                new MediaItem("Addie LaRue",
-                        "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/addie.png",
-                        "Fiction", "Books"),
-                new MediaItem("The Silent Patient",
-                        "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/patient.png",
-                        "Dark", "Books"),
-                new MediaItem("Genshin Impact",
-                        "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/genshin.png",
-                        "Open World", "Games")
-        );
-    }
-}

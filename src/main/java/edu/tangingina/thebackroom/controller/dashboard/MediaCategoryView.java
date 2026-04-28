@@ -1,8 +1,11 @@
 package edu.tangingina.thebackroom.controller.dashboard;
 
+import edu.tangingina.thebackroom.TheBackroom;
+import edu.tangingina.thebackroom.model.Media;
 import edu.tangingina.thebackroom.util.MediaItem;
 import javafx.geometry.*;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,12 +16,15 @@ public class MediaCategoryView extends BaseView{
         Resuable for different types of media
      */
 
-    private final String mediaType;
-    private final List<MediaItem> items;
+    private final List<String> types;
 
-    public MediaCategoryView(String mediaType, List<MediaItem> items) {
-        this.mediaType = mediaType;
-        this.items = MediaRepository.getAllMedia();
+    public MediaCategoryView(String mediaType) {
+        this.types = List.of(mediaType);
+        buildLayout();
+    }
+
+    public MediaCategoryView(String type1, String type2) {
+        this.types = List.of(type1, type2);
         buildLayout();
     }
 
@@ -29,18 +35,61 @@ public class MediaCategoryView extends BaseView{
         root.setSpacing(25);
         root.setPadding(new Insets(45, 125, 60, 125));
 
-        Map<String, List<MediaItem>> groupedByGenre = items.stream()
-                .filter(item -> item.getMediaType().equalsIgnoreCase(mediaType))
-                .collect(Collectors.groupingBy(
-                        MediaItem::getGenre,
-                        LinkedHashMap::new,
-                        Collectors.toList()
-        ));
+        List<Integer> targetMedia;
+        String firstType = types.get(0);
 
-        for (Map.Entry<String, List<MediaItem>> entry : groupedByGenre.entrySet()) {
-            MediaSection section = new MediaSection(entry.getKey());
-            section.addCards(entry.getValue()); // <-- this line fixes it
-            root.getChildren().add(section);
+        Map<String, List<Media>> groupedByGenre = null;
+        ArrayList<String> topGenre = null;
+        String name;
+
+        if (this.types.size() > 1) {
+            //From these list it only contains id, name, mediaType, icon
+            targetMedia = TheBackroom.videoMedia; // TV + Movie
+            topGenre = TheBackroom.top6VidGenre;
+            name = "All Films and Tv Shows";
+        } else if (firstType.equalsIgnoreCase("Books")) {
+            targetMedia = TheBackroom.bookMedia;
+            topGenre = TheBackroom.top6BookGenre;
+            name = "All Books";
+        } else {
+            targetMedia = TheBackroom.gameMedia;
+            topGenre = TheBackroom.top6GameGenre;
+            name = "All Games";
+        }
+
+        if(topGenre != null){
+            groupedByGenre = topGenre.stream()
+                    .collect(Collectors.toMap(
+                            genreName -> genreName,
+                            genreName -> targetMedia.stream()
+                                    .map(tempMedia -> TheBackroom.mediaList.get(tempMedia))
+                                    .filter(m -> m != null)
+                                    .filter(m -> m.getMediaGenres() != null && m.getMediaGenres().stream()
+                                            .anyMatch(cat -> cat.getCategoryName().equalsIgnoreCase(genreName)))
+                                    .collect(Collectors.toList()),
+                            (oldValue, newValue) -> oldValue,
+                            LinkedHashMap::new
+                    ));
+
+
+
+            groupedByGenre.put(name, targetMedia.stream()
+                    .map(temp -> TheBackroom.mediaList.get(temp))
+                    .collect(Collectors.toList())
+            );
+        }
+
+        if(groupedByGenre != null){
+            for (Map.Entry<String, List<Media>> entry : groupedByGenre.entrySet()) {
+                MediaSection section = new MediaSection(entry.getKey());
+
+                // Add each real Media object to the UI
+                for (Media m : entry.getValue()) {
+                    section.addCard(m.getMediaName(), m.getMediaIcon());
+                }
+
+                root.getChildren().add(section);
+            }
         }
     }
 }

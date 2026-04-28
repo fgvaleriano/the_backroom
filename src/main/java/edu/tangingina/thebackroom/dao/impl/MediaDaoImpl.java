@@ -58,6 +58,88 @@ public class MediaDaoImpl implements MediaDao {
     }
 
     @Override
+    public ArrayList<Integer> getMediaByCategory(String category) throws Exception {
+        String query = "Select media_id from media where media_type = ?";
+        ArrayList<Integer> mediaCategory = new ArrayList<>();
+
+        try{
+            PreparedStatement stm = DatabaseManager.conn.prepareStatement(query);
+            stm.setString(1, category);
+            ResultSet rs = stm.executeQuery();
+
+            while(rs.next()){
+                mediaCategory.add(rs.getInt("media_id"));
+            }
+        }catch (Exception e){
+            throw e;
+        }
+
+        return mediaCategory;
+    }
+
+    @Override
+    public ArrayList<Integer> getMediaByCategory(String category, String category2) throws Exception {
+        String query = "Select media_id from media where media_type = ? or media_type = ?";
+        ArrayList<Integer> mediaCategory = new ArrayList<>();
+
+        try{
+            PreparedStatement stm = DatabaseManager.conn.prepareStatement(query);
+            stm.setString(1, category);
+            stm.setString(2, category2);
+            ResultSet rs = stm.executeQuery();
+
+            while(rs.next()){
+                mediaCategory.add(rs.getInt("media_id"));
+            }
+        }catch (Exception e){
+            throw e;
+        }
+
+        return mediaCategory;
+    }
+
+    @Override
+    public ArrayList<String> getTopMediaCategory(String category) throws Exception {
+        String query = "SELECT category_name FROM media_category_overview WHERE media_type = ? GROUP BY category_name ORDER BY count(category_name) DESC LIMIT 6;";
+        ArrayList<String> topGenre = new ArrayList<>();
+
+        try{
+            PreparedStatement stm = DatabaseManager.conn.prepareStatement(query);
+            stm.setString(1, category);
+            ResultSet rs = stm.executeQuery();
+
+            while(rs.next()){
+                topGenre.add(rs.getString("category_name"));
+            }
+
+        } catch (Exception e) {
+            throw e;
+        }
+        return topGenre;
+    }
+
+    @Override
+    public ArrayList<String> getTopMediaCategory(String category1, String category2) throws Exception {
+        String query = "SELECT category_name FROM media_category_overview WHERE media_type = ? or media_type = ? GROUP BY category_name ORDER BY count(category_name) DESC LIMIT 6;";
+        ArrayList<String> topGenre = new ArrayList<>();
+
+        try{
+            PreparedStatement stm = DatabaseManager.conn.prepareStatement(query);
+            stm.setString(1, category1);
+            stm.setString(2, category2);
+            ResultSet rs = stm.executeQuery();
+
+            while(rs.next()){
+                topGenre.add(rs.getString("category_name"));
+            }
+
+        } catch (Exception e) {
+            throw e;
+        }
+        return topGenre;
+    }
+
+    @Override
     public ArrayList<Category> getMediaGenre(int id) throws Exception {
         ArrayList<Category> categoryList = new ArrayList<>();
         String query = "Select c.category_id, c.name from media_category natural join category c where media_id = ?";

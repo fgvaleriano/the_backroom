@@ -23,7 +23,7 @@ public class DatabaseManager {
     public static Connection conn;
     public static String username;
     public static String password;
-    public static String url = "jdbc:mysql://the-backroom-gabaslander-a0df.f.aivencloud.com:16090/defaultdb?ssl-mode=REQUIRED";
+    public static String url;
     Properties prop;
 
     public DatabaseManager(){
@@ -32,10 +32,16 @@ public class DatabaseManager {
 
         try{
             prop.load(getClass().getResourceAsStream("/edu/tangingina/thebackroom/config.properties"));
-            username = prop.getProperty("default_user_username");
-            password = prop.getProperty("default_user_password");
-            username = prop.getProperty("mod_username");
-            password = prop.getProperty("mod_password");
+
+            if(TheBackroom.onlineDatabase){
+                url = "jdbc:mysql://the-backroom-gabaslander-a0df.f.aivencloud.com:16090/defaultdb?ssl-mode=REQUIRED";
+                username = prop.getProperty("default_user_username");
+                password = prop.getProperty("default_user_password");
+            }else{
+                url = "jdbc:mysql://localhost/thebackroom_db";
+                username = prop.getProperty("local_default_user_username");
+                password = prop.getProperty("local_default_user_password");
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -45,7 +51,6 @@ public class DatabaseManager {
     public void getConnection() throws Exception{
         try{
             conn = DriverManager.getConnection(url, username, password);
-            //System.out.println("Hi, the bluetooth device has been connected as scucesfully...");
         } catch (Exception e) {
             throw new Exception("Failed connection. Please connect to the internet.");
         }
@@ -53,24 +58,27 @@ public class DatabaseManager {
 
     public void updateConnection(){
         if(TheBackroom.currUser.getRole().equals("MODERATOR")){
-            username = prop.getProperty("mod_username");
-            password = prop.getProperty("mod_password");
+            if(TheBackroom.onlineDatabase){
+                username = prop.getProperty("mod_username");
+                password = prop.getProperty("mod_password");
+            }else{
+                username = prop.getProperty("local_mod_username");
+                password = prop.getProperty("local_mod_password");
+            }
             System.out.println("User is currently moderator logging in as moderator mysql account");
         }
     }
 
     public void resetConnection(){
         if(TheBackroom.currUser.getRole().equals("MODERATOR")){
-            username = prop.getProperty("default_user_username");
-            password = prop.getProperty("default_user_password");
-            System.out.println("Changing the mysql account connection to app_user");
+            if(TheBackroom.onlineDatabase){
+                username = prop.getProperty("default_user_username");
+                password = prop.getProperty("default_user_password");
+            }else{
+                username = prop.getProperty("local_default_user_username");
+                password = prop.getProperty("local_default_user_password");
+            }
         }
     }
-
-
-    //Put this in the cmd, to do our usual stuff sa cmd:
-    //mysql --user ***REMOVED*** --password=***REMOVED*** --host the-backroom-gabaslander-a0df.f.aivencloud.com --port 16090 defaultdb
-    //use defaultdb
-
 
 }

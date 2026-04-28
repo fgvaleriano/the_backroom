@@ -2,12 +2,17 @@ package edu.tangingina.thebackroom.dao;
 
 import edu.tangingina.thebackroom.model.*;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public interface MediaDao {
     void findMedia();
     HashMap<Integer, Media> getAllMedia() throws Exception;
+    ArrayList<Integer> getMediaByCategory(String category) throws Exception;
+    ArrayList<Integer> getMediaByCategory(String category1, String category2) throws Exception;
+    ArrayList<String> getTopMediaCategory(String category) throws Exception;
+    ArrayList<String> getTopMediaCategory(String category1, String category2) throws Exception;
     ArrayList<Category> getMediaGenre(int id) throws Exception;
     ArrayList<Website> getMediaAccess(int id) throws Exception;
     ArrayList<Company> getMediaCompany(int id) throws Exception;

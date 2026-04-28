@@ -64,20 +64,43 @@ public class FileManager {
                 int errorCount = 0;
                 int totalCount = 0;
 
-                try{
 
-                    while((currLine = br.readLine()) != null){
-                        String [] line = currLine.split(",");
+                while((currLine = br.readLine()) != null){
+                    if (currLine.trim().isEmpty()) continue;
+                    try{
+                        String [] line = currLine.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
                         totalCount++;
 
                         //format(name, mediaType, synopsis, release year, icon path, genre, website) - for generic
                         String name = line[0];
+                        if (name.startsWith("\"") && name.endsWith("\"")) {
+                            name = name.substring(1, name.length() - 1);
+                        }
                         MediaType mediaType = MediaType.getType(line[1]);
                         String synopsis = line[2];
+
+                        //we remove the quotation at the first and last lines due to the format of csv
+                        if (synopsis.startsWith("\"") && synopsis.endsWith("\"")) {
+                            synopsis = synopsis.substring(1, synopsis.length() - 1);
+                        }
+                        //replace all double qotation to single quotation
+                        synopsis = synopsis.replace("\"\"", "\"");
+
                         String releaseYear = line[3];
                         String icon = line[4];
+
+                        if (icon.startsWith("\"") && icon.endsWith("\"")) {
+                            icon = icon.substring(1, icon.length() - 1);
+                        }
+
                         String[] category = line[5].split(";");
-                        String[] website = line[6].split(";");
+
+                        String websiteColumn = line[6].trim();
+                        if (websiteColumn.startsWith("\"") && websiteColumn.endsWith("\"")) {
+                            websiteColumn = websiteColumn.substring(1, websiteColumn.length() - 1);
+                        }
+                        String[] website = websiteColumn.split(";");
+
 
                         if(name == null || name.isEmpty() ||mediaType == null) {
                             errorCount++;
@@ -100,6 +123,7 @@ public class FileManager {
 
                                 if (!websiteList.containsKey(parts[0].trim())) {
                                     id = websiteDao.addWesbite(new Website(0, parts[0].trim(), null));
+                                    websiteList.put(parts[0].trim(), new Website(id, parts[0].trim(), null));
                                 }else{
                                     id = websiteList.get(parts[0].trim()).getWebsiteID();
                                 }
@@ -115,6 +139,7 @@ public class FileManager {
                                 if (!categoryList.containsKey(categoryName)) {
                                     //the index here is temporary since the id value is put in the table itself
                                     id = categoryDao.addCategory(new Category(0, categoryName));
+                                    categoryList.put(categoryName, new Category(id, categoryName));
                                 }else{
                                     id = categoryList.get(categoryName).getCategoryID();
                                 }
@@ -142,6 +167,7 @@ public class FileManager {
                                     if (!personList.containsKey(authorName)) {
                                         //the index here is temporary since the id value is put in the table itself
                                         id = personDao.addPerson(new Person(0, authorName, null, 0));
+                                        personList.put(authorName, new Person(id, authorName, null, 0));
                                     }else{
                                         id = personList.get(authorName).getPersonID();
                                     }
@@ -157,6 +183,7 @@ public class FileManager {
                                     if (!companyList.containsKey(publisherName)) {
                                         //the index here is temporary since the id value is put in the table itself
                                         id = companyDao.addCompany(new Company(0, publisherName, null, 0));
+                                        companyList.put(publisherName, new Company(id, publisherName, null, 0));
                                     }else{
                                         id = companyList.get(publisherName).getCompanyID();
                                     }
@@ -182,6 +209,7 @@ public class FileManager {
                                     if (!personList.containsKey(directorName)) {
                                         //the index here is temporary since the id value is put in the table itself
                                         id = personDao.addPerson(new Person(0, directorName, null, 0));
+                                        personList.put(directorName, new Person(id, directorName, null, 0));
                                     }else{
                                         id = personList.get(directorName).getPersonID();
                                     }
@@ -197,6 +225,7 @@ public class FileManager {
                                     if (!companyList.containsKey(studioName)) {
                                         //the index here is temporary since the id value is put in the table itself
                                         id = companyDao.addCompany(new Company(0, studioName, null, 0));
+                                        companyList.put(studioName, new Company(id, studioName, null, 0));
                                     }else{
                                         id = companyList.get(studioName).getCompanyID();
                                     }
@@ -224,6 +253,7 @@ public class FileManager {
                                     if (!personList.containsKey(directorName)) {
                                         //the index here is temporary since the id value is put in the table itself
                                         id = personDao.addPerson(new Person(0, directorName, null, 0));
+                                        personList.put(directorName, new Person(id, directorName, null, 0));
                                     }else{
                                         id = personList.get(directorName).getPersonID();
                                     }
@@ -239,6 +269,7 @@ public class FileManager {
                                     if (!companyList.containsKey(studioName)) {
                                         //the index here is temporary since the id value is put in the table itself
                                         id = companyDao.addCompany(new Company(0, studioName, null, 0));
+                                        companyList.put(studioName, new Company(id, studioName, null, 0));
                                     }else{
                                         id = companyList.get(studioName).getCompanyID();
                                     }
@@ -270,6 +301,7 @@ public class FileManager {
                                     if (!personList.containsKey(gameDevName)) {
                                         //the index here is temporary since the id value is put in the table itself
                                         id = personDao.addPerson(new Person(0, gameDevName, null, 0));
+                                        personList.put(gameDevName, new Person(id, gameDevName, null, 0));
                                     }else{
                                         id = personList.get(gameDevName).getPersonID();
                                     }
@@ -287,6 +319,7 @@ public class FileManager {
                                     if (!companyList.containsKey(studioName)) {
                                         //the index here is temporary since the id value is put in the table itself
                                         id = companyDao.addCompany(new Company(0, studioName, null, 0));
+                                        companyList.put(studioName, new Company(id, studioName, null, 0));
                                     }else{
                                         id = companyList.get(studioName).getCompanyID();
                                     }
@@ -301,6 +334,7 @@ public class FileManager {
                                     if (!companyList.containsKey(publisherName)) {
                                         //the index here is temporary since the id value is put in the table itself
                                         id = companyDao.addCompany(new Company(0, publisherName, null, 0));
+                                        companyList.put(publisherName, new Company(id, publisherName, null, 0));
                                     }else{
                                         id = companyList.get(publisherName).getCompanyID();
                                     }
@@ -316,6 +350,7 @@ public class FileManager {
                                     if (!gameModeList.containsKey(modeName)) {
                                         //the index here is temporary since the id value is put in the table itself
                                         id = gameModeDao.addGameMode(new GameMode(0, modeName));
+                                        gameModeList.put(modeName, new GameMode(id, modeName));
                                     }else{
                                         id = gameModeList.get(modeName).getGameModeID();
                                     }
@@ -332,6 +367,7 @@ public class FileManager {
                                     if (!platformList.containsKey(platformName)) {
                                         //the index here is temporary since the id value is put in the table itself
                                         id = platformDao.addPlatform(new Platform(0, platformName));
+                                        platformList.put(platformName, new Platform(id, platformName));
                                     }else{
                                         id = platformList.get(platformName).getPlatformID();
                                     }
@@ -350,40 +386,37 @@ public class FileManager {
                         mediaDao.addMedia(media);
                         mediaList.put(media.getID(), media);
                         successCount++;
+                    } catch (Exception e) {
+                        errorCount++;
+                        e.printStackTrace();
                     }
-
-                    if(!duplicateMedia.isEmpty()){
-                        Scanner scan = new Scanner(System.in);
-                        System.out.print(duplicateMedia.size() + " found. Update Existing Files [Y/N]: ");
-                        String choice = scan.nextLine().trim().toUpperCase();
-
-                        switch (choice) {
-                            case "Y":
-                                try{
-                                    for(Media m : duplicateMedia){
-                                        int mediaId = TheBackroom.mediaUniqID.get(TheBackroom.util.getMediaKey(m.getMediaName(), m.getMediaType().name(), m.getReleaseYear()));
-                                        m.setID(mediaId);
-                                        mediaDao.updateMedia(m, TheBackroom.mediaList.get(mediaId));
-                                        TheBackroom.mediaList.put(m.getID(), m);
-                                        successCount++;
-                                    }
-
-                                    duplicateMedia.clear();
-                                }catch (Exception e){
-                                    errorCount++;
-                                }
-                                break;
-
-                            default:
-                                System.out.println("Invalid input. Please enter Y or N.");
-                                break;
-                        }
-                    }
-                }catch(Exception e){
-                    errorCount++;
-                    e.printStackTrace();
                 }
 
+                if(!duplicateMedia.isEmpty()){
+                    Scanner scan = new Scanner(System.in);
+                    System.out.print(duplicateMedia.size() + " found. Update Existing Files [Y/N]: ");
+                    String choice = scan.nextLine().trim().toUpperCase();
+
+                    switch (choice) {
+                        case "Y":
+                            try{
+                                for(Media m : duplicateMedia){
+                                    int mediaId = TheBackroom.mediaUniqID.get(TheBackroom.util.getMediaKey(m.getMediaName(), m.getMediaType().name(), m.getReleaseYear()));
+                                    m.setID(mediaId);
+                                    mediaDao.updateMedia(m, TheBackroom.mediaList.get(mediaId));
+                                    TheBackroom.mediaList.put(m.getID(), m);
+                                    successCount++;
+                                }
+
+                                duplicateMedia.clear();
+                            }catch (Exception e){
+                                errorCount++;
+                            }
+                            break;
+                            default: System.out.println("Invalid input. Please enter Y or N.");
+                            break;
+                        }
+                    }
                 System.out.println("\n========== IMPORT SUMMARY ==========");
                 System.out.println("Total Processed : " + totalCount);
                 System.out.println("Successfully Added : " + successCount);
@@ -393,6 +426,7 @@ public class FileManager {
 
 
             } catch (Exception e) {
+                e.printStackTrace();
                 throw e;
             }
         }
@@ -668,7 +702,7 @@ public class FileManager {
 
         }
 
-        return "edu/tangingina/thebackroom/mediaIcon/" + newFileName;
+        return "uploads/mediaIcon/" + newFileName;
     }
 
     public String saveIMGRelative(String path){
@@ -701,7 +735,7 @@ public class FileManager {
 
         }
 
-        return "edu/tangingina/thebackroom/mediaIcon/" + newFileName;
+        return "uploads/mediaIcon/" + newFileName;
     }
 
 

@@ -7,6 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
 
+import java.io.File;
 import java.net.URL;
 
 public class CardLayout extends StackPane {
@@ -41,17 +42,30 @@ public class CardLayout extends StackPane {
         }
     }
 
-    private ImageView createCover (String imagePath) {
+    private ImageView createCover(String imagePath) {
         try {
-            var path = getClass().getResource(imagePath);
+            String path;
 
-            if (path == null) {
-                System.out.println("Missing card cover: " + imagePath);
-                return null;
+            var resource = getClass().getResource(imagePath);
+
+            if (resource != null) {
+                path = resource.toExternalForm();
+            } else {
+                //this part since we have two kuan na pag put han img cover, you resources and mine is outside so we
+                //have this  kuan la anay holder
+                File file = new File(imagePath);
+
+                if (file.exists()) {
+                    path = file.toURI().toString();
+                } else {
+                    System.out.println("Missing card cover: " + imagePath);
+                    System.out.println("Looked at: " + file.getAbsolutePath());
+                    return null;
+                }
             }
 
-            img = new  Image(path.toExternalForm());
-            imgView = new  ImageView(img);
+            img = new Image(path, true);
+            imgView = new ImageView(img);
             imgView.setFitWidth(150);
             imgView.setFitHeight(225);
             imgView.setPreserveRatio(false);
@@ -60,7 +74,7 @@ public class CardLayout extends StackPane {
             return imgView;
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Error processing image path: " + imagePath);
             return null;
         }
     }

@@ -67,11 +67,6 @@ public class TheBackroom extends Application {
     public static boolean inSession = false;
     public static Users currUser;
 
-    //(ノಠ益ಠ)ノ CURRUSER ISSUE:
-    //what if someone iinputted or created here a username in the databse
-    //but they are allowed na to do things sa database, even without  kuan checking they are indeed sa dataabse, and limited only
-    //to their role
-
     public static Connection conn;
     public static String user;
     Scanner scan = new Scanner(System.in);
@@ -107,11 +102,35 @@ public class TheBackroom extends Application {
     public static HashMap<Integer, Media> mediaList;
     public static HashMap<String, Integer> mediaUniqID;
 
+    public static ArrayList<Integer> bookMedia;
+    public static ArrayList<Integer> videoMedia;
+    public static ArrayList<Integer> gameMedia;
+
+    public static ArrayList<String> top6BookGenre;
+    public static ArrayList<String> top6VidGenre;
+    public static ArrayList<String> top6GameGenre;
+
+    public static boolean onlineDatabase = true;
+
     @Override
     public void start(Stage primaryStage) {
-        System.out.println("Hello World!!!");
         openDB();
         loadCache();
+        sm = new SceneManager(primaryStage);
+/*
+        fm = new FileManager();
+        try{
+            while(true){
+                //fm.importCSV(primaryStage);
+
+                //if import to sql we clear the cache and reload again
+                fm.importCSV(primaryStage);
+                printMediaList();
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        /*
         fm = new FileManager();
         //addMedia(primaryStage);
         //showAddArchive_v2(primaryStage);
@@ -145,99 +164,16 @@ public class TheBackroom extends Application {
         //addMedia(primaryStage);
 
         //fm.importImg(primaryStage);
-        //sm = new SceneManager(primaryStage);
 
         //showLogin(primaryStage);
         //fontLoader();
         //showSignUp(primaryStage);
-        showHome(primaryStage);
+        //showHome(primaryStage);
         //showAddArchive(primaryStage);
         //fm.importCSV(primaryStage);
         //fm.importJSON(primaryStage);
         //fm.importImg(primaryStage);
         //im.openWebsite("https://www.youtube.com/watch?v=Yw7DQhx08ak&pp=ygUEYWhvZg%3D%3D");
-
-
-        //Flow -> Open the app, and when they enter, put this error if not wifi....or down an database...
-        /*
-        int choice = 0;
-        UserDaoImpl userDao = new UserDaoImpl(); //this would be put in the login stuff, so yeah
-        String username, pass;
-        while(true){
-            if(!inSession && !openDB()) continue; //inSession this means if currently logIN..
-
-            if(currUser == null) {
-                System.out.println("Currently Log-In as GUEST");
-            }else{
-                System.out.println("Currently Log-In as " + currUser.getUsername() + "\n");
-            }
-
-            System.out.print("1. Login\n2. SignUp\n3.Log-Out\n4.Exit\nChoice: ");
-            choice = scan.nextInt();
-            scan.nextLine();
-
-            switch (choice){
-                case 1:
-                    //this part should be put after connecting, but lets put it here la anay muba..
-                    username = util.checkAppEnv();
-                    if(username != null){
-                        try{
-                            userDao.getUser(username); //this verifies if there is truly a user with that username on the app.env
-                        }catch(Exception e){
-
-                        }
-                    }else{
-                        System.out.print("Username: "); username = scan.nextLine();
-                        System.out.print("Password: ") ; pass = scan.nextLine();
-                        try{
-
-                            userDao.login(username, pass);
-                            System.out.println("Remember me?\n[Y/N]");
-                            String rem;
-                            rem = scan.nextLine();
-
-                            if(rem.toLowerCase().equals("y")) util.saveCredentials(username);
-                        }catch (Exception e){
-                            System.out.println(e.getMessage());
-                        }
-                    }
-                    break;
-
-                case 2:
-                    System.out.print("Username: "); username = scan.nextLine();
-                    System.out.print("Password: ") ; pass = scan.nextLine();
-                    try{
-                        userDao.signUp(username, util.getHashPass(pass));
-                        System.out.println("Remember me?\n[Y/N]");
-                        String rem;
-                        rem = scan.nextLine();
-
-                        if(rem.toLowerCase().equals("y")) util.saveCredentials(username);
-
-                    }catch (Exception e){
-                        System.out.println(e.getMessage());
-                    }
-                    break;
-
-                case 3:
-                    if(currUser != null){
-                        System.out.println("Logging out..");
-                        dm.resetConnection();
-                        System.out.println("UnRemember:\n[Y/N] ");
-                        currUser = null;
-                        String rem;
-                        rem = scan.nextLine();
-                        if(rem.toLowerCase().equals("y")) util.removeCredentials();
-                    }
-                    break;
-
-                case 4:
-                    System.out.println("Exiting the app");
-                    return;
-
-
-            }
-        }*/
 
     }
 
@@ -1042,6 +978,13 @@ public class TheBackroom extends Application {
         gameModeList = gameModeDao.getAllGameMode();
         try{
             mediaList = mediaDao.getAllMedia();
+            bookMedia = mediaDao.getMediaByCategory("Book");
+            videoMedia = mediaDao.getMediaByCategory("Movie", "TvShow");
+            gameMedia = mediaDao.getMediaByCategory("Game");
+
+            top6BookGenre = mediaDao.getTopMediaCategory("Book");
+            top6GameGenre = mediaDao.getTopMediaCategory("Game");
+            top6VidGenre = mediaDao.getTopMediaCategory("Movie", "TvShow");
 
             if(!mediaList.isEmpty()){
                 for(Media m : mediaList.values()){
@@ -1049,7 +992,7 @@ public class TheBackroom extends Application {
                 }
             }
         }catch (Exception e){
-
+            e.printStackTrace();
         }
     }
 

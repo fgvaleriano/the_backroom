@@ -1,5 +1,7 @@
 package edu.tangingina.thebackroom.controller.dashboard;
 
+import edu.tangingina.thebackroom.TheBackroom;
+import edu.tangingina.thebackroom.model.Media;
 import javafx.geometry.*;
 import javafx.scene.image.*;
 
@@ -24,36 +26,22 @@ public class DashboardHomeView extends BaseView{
         //media cards
         //book section
         books = new MediaSection("Books");
-        books.addCard("The Silent Patient",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/patient.png");
-        books.addCard("The Invisible Life of Addie LaRue",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/addie.png");
-        books.addCard("The Silent Patient",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/patient.png");
-        books.addCard("The Invisible Life of Addie LaRue",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/addie.png");
-        books.addCard("The Silent Patient",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/patient.png");
-        books.addCard("The Invisible Life of Addie LaRue",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/addie.png");
+        Media m;
+        for(Integer id : TheBackroom.bookMedia){
+            m = TheBackroom.mediaList.get(id);
+            books.addCard(m.getID().toString(), m.getMediaIcon());
+        }
 
         games = new MediaSection("Games");
-        games.addCard("Sims 4",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/sims.png");
-        games.addCard("Genshin Impact",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/genshin.png");
-        games.addCard("Sims 4",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/sims.png");
-        games.addCard("Genshin Impact",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/genshin.png");
-        games.addCard("Sims 4",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/sims.png");
-
+        for(Integer id : TheBackroom.gameMedia){
+            m = TheBackroom.mediaList.get(id);
+            games.addCard(m.getID().toString(), m.getMediaIcon());
+        }
         films = new MediaSection("Films and TV Shows");
-        films.addCard("The Imitation Game",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/imitation.png");
-        films.addCard("Barbie",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/barbie.png");
+        for(Integer id : TheBackroom.videoMedia){
+            m = TheBackroom.mediaList.get(id);
+            films.addCard(m.getID().toString(), m.getMediaIcon());
+        }
 
         root.getChildren().addAll(titleLogo, books, games, films);
     }

@@ -1,5 +1,6 @@
 package edu.tangingina.thebackroom.controller.dashboard;
 
+import edu.tangingina.thebackroom.TheBackroom;
 import edu.tangingina.thebackroom.util.FontLoader;
 import javafx.application.Platform;
 import javafx.geometry.*;
@@ -21,15 +22,11 @@ public class NavbarComponent extends HBox {
     private Region spacer;
     private HBox btnHolder;
     private Button homeBtn, booksBtn, gamesBtn, filmsBtn;
-    private MenuItem addBtn, exportBtn, importBtn,logoutBtn;
-    private final Runnable onAdd, onLogout, onImport;
+    private MenuItem addBtn, exportBtn, importBtn,logoutBtn, loginBtn;
+    private Runnable onImport, onLogout, onLogin, onAdd, onExport;
 
-    public NavbarComponent(Runnable onHome, Runnable onBooks, Runnable onGames, Runnable onFilms,
-                           Runnable onAdd, Runnable onImport, Runnable onLogout) {
-        //for switching stages or opening dialog boxes
-        this.onAdd = onAdd;
-        this.onImport = onImport;
-        this.onLogout = onLogout;
+
+    public NavbarComponent(Runnable onHome, Runnable onBooks, Runnable onGames, Runnable onFilms) {
 
         this.setAlignment(Pos.CENTER_LEFT);
         this.setPadding(new Insets(15, 30, 15, 30));
@@ -79,6 +76,9 @@ public class NavbarComponent extends HBox {
 
         setActive(homeBtn);             //default active buttons
 
+    }
+
+    public void setProfileDropdown(){
         //search bar and profile
         Button searchBtn = new Button("Search...");
         searchBtn.setFont(FontLoader.regular(15));
@@ -91,8 +91,8 @@ public class NavbarComponent extends HBox {
         spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         StackPane profileDropdown = createProfileDropdown();
-
         this.getChildren().addAll(logo, btnHolder, spacer, searchBtn, profileDropdown);
+
     }
 
     private Button createBtns (String text, boolean isActive) {
@@ -128,34 +128,65 @@ public class NavbarComponent extends HBox {
         ContextMenu profileMenu = new ContextMenu();
         profileMenu.getStyleClass().add("nav-dropdown");
 
-        addBtn = createDropdownButton("Add");
-        addBtn.setOnAction(e -> {
-            System.out.println("Opening add archive diaglog");
-            profileMenu.hide();
-            Platform.runLater(() -> {if (onAdd != null) onAdd.run();});
+        //This just prevent sauto hilighint for th efirst item when menu is selected
+        profileMenu.setOnShown(e -> {
+            Platform.runLater(() -> profileMenu.getScene().getRoot().requestFocus());
         });
 
-        importBtn = createDropdownButton("Import");
-        importBtn.setOnAction(e -> {
-           System.out.println("Importing archive");
-           profileMenu.hide();
-           Platform.runLater(
-                   () -> {if (onImport != null) onImport.run(); }
-           );
-        });
+        //We only make this buttons appear based on the priviledge of the current user
+        if(onAdd != null){
+            addBtn = createDropdownButton("Add");
+            addBtn.setOnAction(e -> {
+                System.out.println("Opening add archive diaglog");
+                profileMenu.hide();
+                Platform.runLater(() -> {if (onAdd != null) onAdd.run();});
+            });
+        }
+
+        if(onImport != null){
+            importBtn = createDropdownButton("Import");
+            importBtn.setOnAction(e -> {
+                System.out.println("Importing archive");
+                profileMenu.hide();
+                Platform.runLater(
+                        () -> {if (onImport != null) onImport.run(); }
+                );
+            });
+        }
 
         exportBtn = createDropdownButton("Export");
 
-        logoutBtn = createDropdownButton("Logout");
-        logoutBtn.setOnAction(e -> {
-           System.out.println("Logging out");
 
-           if (onLogout != null) {
-               onLogout.run();
-           }
-        });
+        if(onLogout != null){
+            logoutBtn = createDropdownButton("Logout");
+            logoutBtn.setOnAction(e -> {
+                System.out.println("Logging out");
 
-        profileMenu.getItems().addAll(addBtn, importBtn, exportBtn, new SeparatorMenuItem(), logoutBtn);
+                if (onLogout != null) {
+                    onLogout.run();
+                }
+            });
+        }
+
+        if(onLogin != null){
+            loginBtn = createDropdownButton("Login");
+            loginBtn.setOnAction(e -> {
+                System.out.println("Try to log-in");
+
+                if (onLogin != null) {
+                    onLogin.run();
+                }
+            });
+        }
+
+        if(TheBackroom.currUser == null){
+            //this means the user is currenty playing as guest
+            profileMenu.getItems().addAll(new SeparatorMenuItem(), loginBtn);
+        }else if(TheBackroom.currUser.getRole().equals("MODERATOR")){
+            profileMenu.getItems().addAll(addBtn, importBtn, exportBtn, new SeparatorMenuItem(), logoutBtn);
+        }else{
+            profileMenu.getItems().addAll(new SeparatorMenuItem(), logoutBtn);
+        }
 
         profileCircle.setOnMouseClicked(e -> {
            profileMenu.show(profileCircle, Side.BOTTOM, 0, 5);
@@ -176,5 +207,21 @@ public class NavbarComponent extends HBox {
 
         btn.getStyleClass().add("dropdown-btn");
         return btn;
+    }
+
+    public void setImport(Runnable onImport){
+        this.onImport = onImport;
+    }
+
+    public void setLogOut(Runnable onLogout){
+        this.onLogout = onLogout;
+    }
+
+    public void setLogIn(Runnable onLogin){
+        this.onLogin = onLogin;
+    }
+
+    public void setAdd(Runnable onAdd){
+        this.onAdd = onAdd;
     }
 }

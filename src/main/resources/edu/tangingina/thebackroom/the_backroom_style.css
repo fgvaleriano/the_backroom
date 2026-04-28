@@ -251,6 +251,20 @@
     -fx-text-fill: black;
 }
 
+.dropdown-btn:focused {
+    -fx-background-color: transparent;
+}
+
+.dropdown-btn:hover {
+    -fx-background-color: #F7E1C6;
+    -fx-cursor: hand;
+}
+
+.dropdown-btn .label {
+    -fx-text-fill: #305852;
+}
+
+
 /* ========== CARD COVER ==========
 */
 

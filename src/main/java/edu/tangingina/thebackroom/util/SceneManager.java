@@ -3,6 +3,7 @@ package edu.tangingina.thebackroom.util;
 import edu.tangingina.thebackroom.TheBackroom;
 import edu.tangingina.thebackroom.controller.HomePageController;
 import edu.tangingina.thebackroom.controller.LoginController;
+import edu.tangingina.thebackroom.controller.dashboard.DashboardShell;
 import edu.tangingina.thebackroom.dao.impl.UserDaoImpl;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -24,6 +25,10 @@ public class SceneManager {
         //before everything, we need to check if there is an app env, so that if there is automatic home
         if(checkAppEnv()){
             showHome();
+            stage.setScene(scene);
+            stage.setMaximized(true);
+            stage.show();
+            stage.setResizable(true);
         }else{
             initializeLogin();
         }
@@ -59,7 +64,6 @@ public class SceneManager {
 
             Parent root = signUp.load();
             scene.setRoot(root);
-            stage.setScene(scene);
             //stage.setFullScreen(true);
 
         }catch (Exception e)  {
@@ -80,8 +84,8 @@ public class SceneManager {
             scene.getStylesheets().add(getClass().getResource(
                     "/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm());
 
-            stage.setScene(scene);
             //stage.setFullScreen(true);
+
             stage.setTitle("The Backroom - Login");
             root.requestFocus();
 
@@ -92,31 +96,18 @@ public class SceneManager {
 
     public void showHome() {
         try {
-            HomePageController home = new HomePageController();
-            StackPane homePage = home.getLayout(stage);
-
-            //this is for handling on if there is rememeber me, since the intialization with scene is during initialize login, but here
-            //if rememebr me, then we intialize sa showHOme
-
-            String url = getClass().getResource(
-                    "/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm();
-
+            DashboardShell dashboard = new DashboardShell();
             if(scene == null){
-                scene = new Scene(homePage);
-                scene.getStylesheets().add(url);
-
-                stage.setScene(scene);
-                stage.setMaximized(true);
-                stage.show();
-                stage.setResizable(true);
-                scene.setRoot(homePage);
+                scene = new Scene(dashboard);
             }else{
-                scene.getStylesheets().add(url);
-                scene.setRoot(homePage);
+                scene.setRoot(dashboard);
             }
-            stage.setTitle("The Backroom");
-            homePage.requestFocus();
+            scene.getStylesheets().add(
+                    getClass().getResource("/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm()
+            );
 
+            stage.setTitle("The Backroom");
+            //dashboard.setView(new MainMenuView());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
