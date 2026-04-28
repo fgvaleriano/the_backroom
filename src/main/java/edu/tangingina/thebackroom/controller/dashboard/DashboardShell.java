@@ -2,6 +2,9 @@ package edu.tangingina.thebackroom.controller.dashboard;
 
 import edu.tangingina.thebackroom.controller.AddArchive_v2;
 import edu.tangingina.thebackroom.controller.LoginController;
+import edu.tangingina.thebackroom.controller.dashboard.Media_Details.BaseMedia;
+import edu.tangingina.thebackroom.controller.dashboard.Media_Details.BookPage;
+import edu.tangingina.thebackroom.controller.dashboard.Media_Details.MediaDetailsPage;
 import edu.tangingina.thebackroom.util.BaseView;
 import edu.tangingina.thebackroom.util.MediaItem;
 import javafx.geometry.*;
@@ -119,6 +122,26 @@ public class DashboardShell extends BorderPane {
                 getResource("/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm());
         stage.setScene(loginScene);
         stage.setMaximized(maxSize);
+    }
+
+    private void showBooksPage() {
+        BookPage bookPage = new BookPage(this::showMediaDetailPage);
+        setMainContent(bookPage);
+    }
+
+    private void showMediaDetailPage(BaseMedia media) {
+        MediaDetailsPage detailsPage = new MediaDetailsPage(media, this::showBooksPage,
+                () -> showMediaDetailPage(media));
+        setMainContent(detailsPage);
+    }
+
+    private void setMainContent(javafx.scene.Node page) {
+        contentArea.getChildren().setAll(page);
+    }
+
+    //temp update method
+    private void showUpdateMediaPage(BaseMedia media) {
+        System.out.println("Update clicked for: " + media.getTitle());
     }
 }
 

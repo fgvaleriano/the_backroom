@@ -12,6 +12,7 @@ import java.net.URL;
 public class CardLayout extends StackPane {
     /*
         Handles cards (media cover) layout and clickable containers
+        - includes media cover in details page
      */
 
     private final String title;
@@ -20,9 +21,20 @@ public class CardLayout extends StackPane {
     private Image img;
     private Label altText;
 
+    private final double fitWid;
+    private final double fitHei;
+    private final boolean clickable;
+
     public CardLayout(String title, String imagePath) {
+        this(title, imagePath, 150, 225, true);
+    }
+
+    public CardLayout(String title, String imagePath, double fitWid, double fitHei, boolean clickable) {
         this.title = title;
         this.imagePath = imagePath;
+        this.fitWid = fitWid;
+        this.fitHei = fitHei;
+        this.clickable = clickable;
 
         buildLayout();
     }
@@ -30,7 +42,10 @@ public class CardLayout extends StackPane {
     private void buildLayout() {
         this.getStyleClass().add("card-layout");
         this.setAlignment(Pos.CENTER);
-        this.setCursor(Cursor.HAND);
+
+        if (clickable) {
+            this.setCursor(Cursor.HAND);
+        }
 
         cover = createCover(imagePath);
 
@@ -70,9 +85,15 @@ public class CardLayout extends StackPane {
         StackPane altCard = new StackPane();
         altCard.getStyleClass().add("card-alt");
 
+        altCard.setPrefSize(fitWid, fitHei);
+        altCard.setMinSize(fitWid, fitHei);
+        altCard.setMaxSize(fitWid, fitHei);
+
         altText = new Label(title);
         altText.setFont(FontLoader.extra(25));
         altText.getStyleClass().add("card-alt-text");
+        altText.setWrapText(true);
+        altText.setAlignment(Pos.CENTER);
 
         altCard.getChildren().add(altText);
         return altCard;
