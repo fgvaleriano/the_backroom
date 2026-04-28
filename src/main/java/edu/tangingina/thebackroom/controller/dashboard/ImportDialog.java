@@ -50,10 +50,10 @@ public class ImportDialog {
         fieldsBox.setPrefWidth(520);
         fieldsBox.setMaxWidth(520);
 
-        mediaTypeRow = getMediaType();
+        //mediaTypeRow = getMediaType();
         file = getInput();
 
-        fieldsBox.getChildren().addAll(mediaTypeRow, file);
+        fieldsBox.getChildren().addAll(file);
 
         //import button
         Button addBtn = new Button();
@@ -96,31 +96,6 @@ public class ImportDialog {
     //close dialog box
     public static void closeWindow() {
         window.close();
-    }
-
-    //media type selector
-    private static HBox getMediaType() {
-        mediaTypeLabel = new Label("Media Type");
-        mediaTypeLabel.setFont(FontLoader.bold(18));
-        mediaTypeLabel.getStyleClass().add("input-label");
-        mediaTypeLabel.setPrefWidth(85);
-        mediaTypeLabel.setMinWidth(85);
-        mediaTypeLabel.setMaxWidth(85);
-
-        //combo box that shows what type of media user will add
-        mediaTypeSelector = new ComboBox<>();
-        mediaTypeSelector.getItems().addAll("Book", "Game", "Film", "TV Show");
-        mediaTypeSelector.setPromptText("");
-        mediaTypeSelector.getStyleClass().add("combo-box");
-        mediaTypeSelector.setPrefSize(315, 40);
-        mediaTypeSelector.setMinSize(315, 40);
-        mediaTypeSelector.setMaxSize(315, 40);
-
-        row = new HBox(20, mediaTypeLabel, mediaTypeSelector);
-        row.setAlignment(Pos.CENTER_LEFT);
-        row.setPrefWidth(400);
-
-        return row;
     }
 
     private static HBox getInput() {
