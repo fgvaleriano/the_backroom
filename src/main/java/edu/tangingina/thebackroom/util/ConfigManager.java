@@ -38,18 +38,29 @@ public class ConfigManager {
             Connection conn = DriverManager.getConnection(url, user, pass);
 
             System.out.println("--- SETTING UP APP ACCOUNTS ---");
-            System.out.print("Enter password for Moderator (Manager): ");
+            System.out.print("Create password for Moderator (Manager): ");
             String modPass = scan.nextLine();
 
-            System.out.print("Enter password for Normal User: ");
+            System.out.print("Create password for Normal User: ");
             String userPass = scan.nextLine();
 
             try{
-                String query1 = "CREATE USER 'app_moderator'@'localhost' IDENTIFIED BY ?";
-                String query2 = "CREATE USER 'app_user'@'localhost' IDENTIFIED BY ?";
+
+                String query1 = "DROP USER IF EXISTS 'app_moderator'@'localhost'";
+                String query2 = "DROP USER IF EXISTS 'app_user'@'localhost'";
 
                 PreparedStatement stm;
 
+                //Drop the users first if they exist
+                stm = conn.prepareStatement(query1);
+                stm.executeUpdate();
+
+                stm = conn.prepareStatement(query2);
+                stm.executeUpdate();
+
+
+                query1 = "CREATE USER 'app_moderator'@'localhost' IDENTIFIED BY ?";
+                query2 = "CREATE USER 'app_user'@'localhost' IDENTIFIED BY ?";
                 stm = conn.prepareStatement(query1);
                 stm.setString(1, modPass);
                 stm.executeUpdate();

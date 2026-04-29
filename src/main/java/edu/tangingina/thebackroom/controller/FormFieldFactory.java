@@ -13,7 +13,7 @@ public class FormFieldFactory {
         keep on coding the same thing for input fields
      */
 
-    private static final double labelSectionWidth = 100;
+    private static final double labelSectionWidth = 135;
 
     public static Label createLabel(String labelText) {
         Label label = new Label(labelText);
@@ -25,6 +25,8 @@ public class FormFieldFactory {
         label.setMaxWidth(labelSectionWidth);
 
         label.setAlignment(Pos.CENTER_LEFT);
+        label.setWrapText(true);
+        label.setPrefHeight(60);
         return label;
     }
 
@@ -44,7 +46,7 @@ public class FormFieldFactory {
         return new FormFieldGroup(holder, inputField);
     }
 
-    public static HBox createYearPicker(String labelText, Integer size) {
+    public static FormFieldGroup createYearPicker(String labelText, Integer size) {
         Label inputLabel = createLabel(labelText);
         ComboBox<Integer> yearPicker = new ComboBox<>();
         inputLabel.setFont(FontLoader.regular(18));
@@ -60,11 +62,29 @@ public class FormFieldFactory {
         yearPicker.setMaxWidth(Control.USE_PREF_SIZE);
 
         HBox holder = new HBox(20, inputLabel, yearPicker);
-        holder.setAlignment(Pos.CENTER_LEFT);
-
-        return holder;
+        holder.setAlignment(Pos.TOP_LEFT);
+        yearPicker.setTranslateY(5);
+        return new FormFieldGroup(holder, yearPicker);
     }
 
+
+    public static FormFieldGroup createStatusPicker(String labelText, Integer size){
+        Label inputLabel = createLabel(labelText);
+        ComboBox<String> status = new ComboBox<>();
+        inputLabel.setFont(FontLoader.regular(18));
+
+        inputLabel.getStyleClass().add("input-label");
+        status.getItems().addAll("Book", "Game", "Film", "TV Show");
+
+        status.setPrefWidth(size);
+        status.setMinWidth(Control.USE_PREF_SIZE);
+        status.setMaxWidth(Control.USE_PREF_SIZE);
+
+        HBox holder = new HBox(20, inputLabel, status);
+        holder.setAlignment(Pos.TOP_LEFT);
+        status.setTranslateY(5);
+        return new FormFieldGroup(holder, status);
+    }
     public static FormFieldGroup createTextArea (String labelText, Integer size) {
         Label inputLabel = createLabel(labelText);
         TextArea inputArea = new TextArea();

@@ -11,6 +11,7 @@ import javafx.scene.layout.*;
 import javafx.util.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static javafx.util.Duration.millis;
 
@@ -23,7 +24,7 @@ public class MultiValueField {
     private VBox view;
     private TextField inputField;
     private FlowPane chipsPane, valuesPane;
-    private java.util.List<String> values;
+    private List<String> values;
     private Button plusBtn;
     private HBox inputRow, valuesRow;
 
@@ -87,7 +88,7 @@ public class MultiValueField {
     private void addCurrentValue() {
         String value = inputField.getText().trim();
 
-        if (value.isEmpty() || values.contains(value)) {
+        if (value.isEmpty()) {
             showError();
             return;
         }
@@ -118,10 +119,6 @@ public class MultiValueField {
         if (!inputField.getStyleClass().add("input-field-error")) {
             inputField.getStyleClass().add("input-field-error");
         }
-
-        if (!valuesPane.getStyleClass().contains("input-field-error")) {
-            valuesPane.getStyleClass().add("input-field-error");
-        }
     }
 
     public void clearError() {
@@ -133,7 +130,7 @@ public class MultiValueField {
         return view;
     }
 
-    public java.util.List<String> getValues() {
+    public List<String> getValues() {
         return values;
     }
 }

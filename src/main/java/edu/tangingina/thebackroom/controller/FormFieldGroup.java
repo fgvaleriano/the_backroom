@@ -1,5 +1,6 @@
 package edu.tangingina.thebackroom.controller;
 
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.layout.HBox;
@@ -26,10 +27,32 @@ public class FormFieldGroup {
         return inputs;
     }
 
+    public String getUserInput(){
+        if (inputs instanceof TextInputControl textInput) {
+            String value = textInput.getText();
+            if(value != null){
+                return value.trim();
+            }
+        }
+
+        if (inputs instanceof ComboBox<?> combo) {
+            Object value = combo.getValue();
+            if(value != null){
+                return value.toString().trim();
+            }
+        }
+        return "";
+    }
+
     public boolean isEmpty() {
         if (inputs instanceof TextInputControl textInput) {
             return textInput.getText().trim().isEmpty() || textInput.getText() == null;
         }
+
+        if (inputs instanceof ComboBox<?> combo) {
+            return combo.getValue() == null;
+        }
+
         return false;
     }
 

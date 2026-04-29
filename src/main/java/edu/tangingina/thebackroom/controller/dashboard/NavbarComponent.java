@@ -24,6 +24,7 @@ public class NavbarComponent extends HBox {
     private Button homeBtn, booksBtn, gamesBtn, filmsBtn;
     private MenuItem addBtn, exportBtn, importBtn,logoutBtn, loginBtn;
     private Runnable onImport, onLogout, onLogin, onAdd, onExport;
+    public static String currentView = "Home";
 
 
     public NavbarComponent(Runnable onHome, Runnable onBooks, Runnable onGames, Runnable onFilms) {
@@ -51,22 +52,22 @@ public class NavbarComponent extends HBox {
         filmsBtn = createBtns("Films and TV Shows", false);
 
         homeBtn.setOnAction(e -> {
-            System.out.println("Home clicked");
+            currentView = "Home";
             setActive(homeBtn);
             onHome.run();
         });
         booksBtn.setOnAction(e -> {
-            System.out.println("Books clicked");
+            currentView = "Book";
             setActive(booksBtn);
             onBooks.run();
         });
         gamesBtn.setOnAction(e -> {
-            System.out.println("Games clicked");
+            currentView = "Game";
             setActive(gamesBtn);
             onGames.run();
         });
         filmsBtn.setOnAction(e -> {
-            System.out.println("filmsBtns clicked");
+            currentView = "Film/TvShow";
             setActive(filmsBtn);
             onFilms.run();
         });

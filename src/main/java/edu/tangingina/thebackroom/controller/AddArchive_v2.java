@@ -1,6 +1,8 @@
 package edu.tangingina.thebackroom.controller;
 
+import edu.tangingina.thebackroom.TheBackroom;
 import edu.tangingina.thebackroom.controller.dashboard.BaseView;
+import edu.tangingina.thebackroom.controller.dashboard.DashboardShell;
 import edu.tangingina.thebackroom.util.*;
 import javafx.fxml.*;
 import javafx.geometry.*;
@@ -74,6 +76,13 @@ public class  AddArchive_v2 {
     //closing dialog box
     public static void closeWindow() {
         window.close();
+        Scene sc = TheBackroom.sm.getMainScene();
+
+        Node found = sc.lookup(".dashboard-shell");
+        if(found instanceof DashboardShell shell){
+            shell.refreshCurrentView();
+
+        }
     }
 
     //dark background

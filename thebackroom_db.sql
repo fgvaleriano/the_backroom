@@ -16,7 +16,8 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 -- Create the Database
-CREATE DATABASE IF NOT EXISTS `thebackroom_db`;
+DROP DATABASE IF EXISTS `thebackroom_db`;
+CREATE DATABASE `thebackroom_db`;
 USE `thebackroom_db`;
 
 --

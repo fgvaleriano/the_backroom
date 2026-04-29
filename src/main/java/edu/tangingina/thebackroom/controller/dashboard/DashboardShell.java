@@ -32,6 +32,8 @@ public class DashboardShell extends BorderPane {
         //this.setPrefHeight(1080);
 
         //navigation bar thing
+        this.getStyleClass().add("dashboard-shell"); //a tag for this class for later refreshing....
+
         navBar = new NavbarComponent(
                 () -> setView(new DashboardHomeView()),
                 () -> setView(new MediaCategoryView("Books")),
@@ -99,6 +101,17 @@ public class DashboardShell extends BorderPane {
             contentArea.getChildren().add(view.getView());
         });
 
+    }
+
+    public void refreshCurrentView(){
+        String current = NavbarComponent.currentView;
+
+        switch (current) {
+            case "Home" -> setView(new DashboardHomeView());
+            case "Book" -> setView(new MediaCategoryView("Books"));
+            case "Game" -> setView(new MediaCategoryView("Games"));
+            case "Film/TvShow" -> setView(new MediaCategoryView("Movie", "TvShow"));
+        }
     }
 
     private void openAddArchiveDialog() {

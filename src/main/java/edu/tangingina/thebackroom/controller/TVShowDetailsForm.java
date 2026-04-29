@@ -1,12 +1,25 @@
 package edu.tangingina.thebackroom.controller;
 
+import edu.tangingina.thebackroom.TheBackroom;
+import edu.tangingina.thebackroom.dao.impl.MediaDaoImpl;
+import edu.tangingina.thebackroom.model.*;
+import edu.tangingina.thebackroom.util.FileManager;
+import edu.tangingina.thebackroom.util.Utility;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static edu.tangingina.thebackroom.TheBackroom.mediaList;
+import static edu.tangingina.thebackroom.TheBackroom.mediaUniqID;
 
 public class TVShowDetailsForm extends BaseMediaForm{
     /*
@@ -18,7 +31,7 @@ public class TVShowDetailsForm extends BaseMediaForm{
 
     private MultiValueField directorField, genreField, studioField;
     private FormFieldGroup titleField, seasonField,
-            episodeField, statusField, synopsisField;
+            episodeField, statusField, synopsisField, yearField;
     private ImageFileField widgetField;
     private AccessLinkField linkField;
 
@@ -33,9 +46,11 @@ public class TVShowDetailsForm extends BaseMediaForm{
         genreField = FormFieldFactory.createMultiValueField("Genre", 120);
         seasonField = FormFieldFactory.createTextField("Season Count", 120);
         episodeField = FormFieldFactory.createTextField("Episode Count", 120);
-        statusField = FormFieldFactory.createTextField("Status", 120);
+        statusField = FormFieldFactory.createStatusPicker("Status", 120);
         linkField = FormFieldFactory.createAccessLinkField("Access Link");
         widgetField = FormFieldFactory.createImageFileField("Book Cover", 200);
+        yearField = FormFieldFactory.createYearPicker("Release Year", 120);
+
 
         formColumn().getChildren().addAll(
                 titleField.getView(),
@@ -45,7 +60,7 @@ public class TVShowDetailsForm extends BaseMediaForm{
                 genreField.getView(),
                 seasonField.getView(),
                 episodeField.getView(),
-                FormFieldFactory.createYearPicker("Release Year", 120),
+                yearField.getView(),
                 statusField.getView(),
                 linkField.getView(),
                 widgetField.getView(),
@@ -69,6 +84,55 @@ public class TVShowDetailsForm extends BaseMediaForm{
         btn.setGraphic(view);
         btn.setOnAction(e -> {
             if (validateInputs()) {
+                MediaDaoImpl mediaDao = TheBackroom.mediaDao;
+                Utility util = TheBackroom.util;
+                FileManager fm = TheBackroom.fm;
+
+                String title = titleField.getUserInput();
+                MediaType mediaType = MediaType.TvShow;
+                String synopsis = synopsisField.getUserInput();
+
+                ComboBox<Integer> yearPicker = (ComboBox<Integer>) yearField.getInputs();
+
+                String year = "2024";
+                if(yearPicker != null){
+                    year = String.valueOf(yearPicker.getValue());
+                }
+                String imgIcon = fm.saveIMGRelative(widgetField.getSelectedFile());
+                List<String> genre = genreField.getValues();
+                List<AccessLinkField.AccessLink> onlineAccess = linkField.getValues();
+
+                String seasonCount  = seasonField.getUserInput();
+                String episodeCount = episodeField.getUserInput();
+                String status = statusField.getUserInput();
+                List<String> director = directorField.getValues();
+                List<String> studio = studioField.getValues();
+
+                ArrayList<Category> mediaGenre = util.ensureCategoryExist(genre);
+                ArrayList<Website> mediaWebsite = util.ensureWebsiteExists(onlineAccess);
+                ArrayList<Person> showDirector = util.ensurePersonExist(director, "Director");
+                ArrayList<Company> showStudio = util.ensureCompanyExists(studio, "Production Studio");
+
+                Media media = new Media(0, title, mediaType, year, synopsis, imgIcon, mediaWebsite, mediaGenre);
+                media.setTvShowDetails(seasonCount, episodeCount, status, showDirector, showStudio);
+
+                try{
+                    mediaDao.addMedia(media);
+                    mediaList.put(media.getID(), media);
+                    mediaUniqID.put(util.getMediaKey(media.getMediaName(), media.getMediaType().name(), media.getReleaseYear()), media.getID());
+                    TheBackroom.videoMedia.add(media.getID());
+                    //Show Output Situation
+                    AddArchive_v2.closeWindow();
+
+                }catch (Exception e1){
+                    e1.getMessage();
+                }
+
+
+
+
+
+
                 AddArchive_v2.closeWindow();
             }
         });

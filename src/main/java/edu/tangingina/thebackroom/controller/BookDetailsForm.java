@@ -1,8 +1,16 @@
 package edu.tangingina.thebackroom.controller;
 
+import edu.tangingina.thebackroom.TheBackroom;
+import edu.tangingina.thebackroom.controller.dashboard.DashboardShell;
+import edu.tangingina.thebackroom.controller.dashboard.NavbarComponent;
+import edu.tangingina.thebackroom.dao.impl.MediaDaoImpl;
+import edu.tangingina.thebackroom.model.*;
+import edu.tangingina.thebackroom.util.FileManager;
+import edu.tangingina.thebackroom.util.Utility;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -10,6 +18,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import javax.swing.text.Element;
+import java.util.ArrayList;
+import java.util.List;
+
+import static edu.tangingina.thebackroom.TheBackroom.mediaList;
+import static edu.tangingina.thebackroom.TheBackroom.mediaUniqID;
 
 public class BookDetailsForm extends BaseMediaForm {
     /*
@@ -21,7 +34,7 @@ public class BookDetailsForm extends BaseMediaForm {
      */
 
     private MultiValueField authorField, genreField, publisherField;
-    private FormFieldGroup titleField, ISBNfield, pageField, editionField, synopsisField;
+    private FormFieldGroup titleField, ISBNfield, pageField, editionField, synopsisField, yearField;
     private ImageFileField widgetField;
     private AccessLinkField linkField;
 
@@ -38,6 +51,7 @@ public class BookDetailsForm extends BaseMediaForm {
         editionField = FormFieldFactory.createTextField("Edition", 120);
         linkField = FormFieldFactory.createAccessLinkField("Access Link");
         widgetField = FormFieldFactory.createImageFileField("Book Cover", 200);
+        yearField = FormFieldFactory.createYearPicker("Release Year", 120);
 
         formColumn().getChildren().addAll(
                 titleField.getView(),
@@ -45,7 +59,7 @@ public class BookDetailsForm extends BaseMediaForm {
                 publisherField.getView(),
                 synopsisField.getView(),
                 genreField.getView(),
-                FormFieldFactory.createYearPicker("Release Year", 120),
+                yearField.getView(),
                 pageField.getView(),
                 ISBNfield.getView(),
                 editionField.getView(),
@@ -71,7 +85,51 @@ public class BookDetailsForm extends BaseMediaForm {
         btn.setOnAction(e -> {
             System.out.println(validateInputs());
             if (validateInputs()) {
-                AddArchive_v2.closeWindow();
+                MediaDaoImpl mediaDao = TheBackroom.mediaDao;
+                Utility util = TheBackroom.util;
+                FileManager fm = TheBackroom.fm;
+
+                String title = titleField.getUserInput();
+                MediaType mediaType = MediaType.Book;
+                String synopsis = synopsisField.getUserInput();
+
+                ComboBox<Integer> yearPicker = (ComboBox<Integer>) yearField.getInputs();
+
+                String year = "2024";
+                if(yearPicker != null){
+                    year = String.valueOf(yearPicker.getValue());
+                }
+
+                String imgIcon = fm.saveIMGRelative(widgetField.getSelectedFile());
+                List<String> genre = genreField.getValues();
+                List<AccessLinkField.AccessLink> onlineAccess = linkField.getValues();
+                String isbn = ISBNfield.getUserInput();
+                String edition = editionField.getUserInput();
+                String pageCount = pageField.getUserInput();
+                List<String> author = authorField.getValues();
+                List<String> publisher = publisherField.getValues();
+
+                ArrayList<Category> mediaGenre = util.ensureCategoryExist(genre);
+                ArrayList<Website> mediaWebsite = util.ensureWebsiteExists(onlineAccess);
+                ArrayList<Person> bookAuthor = util.ensurePersonExist(author, "Author");
+                ArrayList<Company> bookPublisher = util.ensureCompanyExists(publisher, "Publisher");
+
+
+                Media media = new Media(0, title, mediaType, year, synopsis, imgIcon, mediaWebsite, mediaGenre);
+                media.setBookDetails(isbn, pageCount, edition, bookAuthor, bookPublisher);
+
+                try{
+                    mediaDao.addMedia(media);
+                    mediaList.put(media.getID(), media);
+                    mediaUniqID.put(util.getMediaKey(media.getMediaName(), media.getMediaType().name(), media.getReleaseYear()), media.getID());
+                    TheBackroom.bookMedia.add(media.getID());
+                    //Show Output Situation
+                    AddArchive_v2.closeWindow();
+
+                }catch (Exception e1){
+                    e1.getMessage();
+                }
+
             }
         });
 

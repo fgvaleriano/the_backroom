@@ -129,4 +129,8 @@ public class SceneManager {
         return false;
     }
 
+    public Scene getMainScene(){
+        return scene;
+    }
+
 }
