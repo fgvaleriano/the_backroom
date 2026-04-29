@@ -31,8 +31,17 @@ public class SampleMediaData {
         );
     }
 
-    public static BookMedia getSampleBook() {
-        return getAddieLaRue();
+    public static List<TVShowMedia> getSampleTVShows() {
+        return List.of(
+                getRuPaul(),
+                getFriends()
+        );
+    }
+
+    public static List<GameMedia> getSampleGames() {
+        return List.of(
+                getValorant()
+        );
     }
 
     public static BookMedia getAddieLaRue() {
@@ -159,6 +168,73 @@ public class SampleMediaData {
                 "9781250301697",
                 "English",
                 List.of("Alex Michaelides")
+
+        );
+    }
+
+    public static TVShowMedia getFriends() {
+        return new TVShowMedia(
+                5,
+                "The Silent Patient",
+                """
+                Alicia Berenson's life appears perfect until she is accused of murdering her husband and then refuses to speak another word. A criminal psychotherapist becomes determined to uncover the truth behind her silence, leading him into a psychological mystery filled with obsession, trauma, and hidden motives.
+                """,
+                2019,
+                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/patient.png",
+                List.of("Thriller", "Mystery", "Psychological Fiction", "Crime"),
+                List.of(
+                        "https://www.goodreads.com/book/show/40097951-the-silent-patient",
+                        "https://www.amazon.com/Silent-Patient-Alex-Michaelides/dp/1250301696"
+                ),
+                9,
+                "Finished",
+                345,
+                List.of("Idk")
+
+        );
+    }
+
+    public static TVShowMedia getRuPaul() {
+        return new TVShowMedia(
+                6,
+                "The Silent Patient",
+                """
+                Alicia Berenson's life appears perfect until she is accused of murdering her husband and then refuses to speak another word. A criminal psychotherapist becomes determined to uncover the truth behind her silence, leading him into a psychological mystery filled with obsession, trauma, and hidden motives.
+                """,
+                2019,
+                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/patient.png",
+                List.of("Thriller", "Mystery", "Psychological Fiction", "Crime"),
+                List.of(
+                        "https://www.goodreads.com/book/show/40097951-the-silent-patient",
+                        "https://www.amazon.com/Silent-Patient-Alex-Michaelides/dp/1250301696"
+                ),
+                9,
+                "On going",
+                1253,
+                List.of("Ru Paul")
+
+        );
+    }
+
+    public static GameMedia getValorant() {
+        return new GameMedia(
+                6,
+                "The Silent Patient",
+                """
+                Alicia Berenson's life appears perfect until she is accused of murdering her husband and then refuses to speak another word. A criminal psychotherapist becomes determined to uncover the truth behind her silence, leading him into a psychological mystery filled with obsession, trauma, and hidden motives.
+                """,
+                2019,
+                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/patient.png",
+                List.of("Thriller", "Mystery", "Psychological Fiction", "Crime"),
+                List.of(
+                        "https://www.goodreads.com/book/show/40097951-the-silent-patient",
+                        "https://www.amazon.com/Silent-Patient-Alex-Michaelides/dp/1250301696"
+                ),
+                "Unity",
+                "IDk",
+                "raaahhhh",
+                List.of("Alotttt"),
+                List.of("Lander")
 
         );
     }

@@ -6,11 +6,10 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 
-import java.util.*;
+import java.util.List;
 import java.util.function.Consumer;
 
-public class FilmPage extends VBox {
-
+public class TVShowPage extends VBox {
     /*
         Accepts click action that opens the details page fo a film
      */
@@ -18,7 +17,7 @@ public class FilmPage extends VBox {
     private final Consumer<BaseMedia> onMediaClicked;
     private List<FilmMedia> films;
 
-    public FilmPage(Consumer<BaseMedia> onMediaClicked) {
+    public TVShowPage(Consumer<BaseMedia> onMediaClicked) {
         this.onMediaClicked = onMediaClicked;
         buildPage();
     }
@@ -40,21 +39,19 @@ public class FilmPage extends VBox {
 
         films = SampleMediaData.getSampleFilms();
 
-        for (FilmMedia media : SampleMediaData.getSampleFilms()) {
-            if (media.getType() == MediaType.MOVIE ||
-                    media.getType() == MediaType.TV_SHOW) {
+        for (FilmMedia film : SampleMediaData.getSampleFilms()) {
+            CardLayout card = new CardLayout(
+                    film.getTitle(),
+                    film.getImagePath()
+            );
 
-                CardLayout card = new CardLayout(
-                        media.getTitle(),
-                        media.getImagePath()
-                );
+            card.setOnMouseClicked(e -> {
+                onMediaClicked.accept(film);
+            });
 
-                card.setOnMouseClicked(e -> onMediaClicked.accept(media));
-
-                bookGrid.getChildren().add(card);
-            }
-
-            this.getChildren().addAll(title, bookGrid);
+            bookGrid.getChildren().add(card);
         }
+
+        this.getChildren().addAll(title, bookGrid);
     }
 }

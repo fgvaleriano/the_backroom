@@ -1,6 +1,7 @@
 package edu.tangingina.thebackroom.controller.dashboard;
 
 import edu.tangingina.thebackroom.controller.dashboard.Media_Details.BaseMedia;
+import edu.tangingina.thebackroom.controller.dashboard.Media_Details.MediaType;
 import edu.tangingina.thebackroom.controller.dashboard.Media_Details.SampleMediaData;
 import edu.tangingina.thebackroom.util.BaseView;
 import javafx.geometry.*;
@@ -39,38 +40,25 @@ public class DashboardHomeView extends BaseView {
         //mediaItems = SampleMediaData.getSampleBooks();
 
         books = new MediaSection("Books");
-        for (BaseMedia media : mediaItems) {
-            films.addCard(
-                    media,
-                    () -> onMediaClick.accept(media)
-            );
-        }
+        addMediatoSection(books, MediaType.BOOK);
 
         games = new MediaSection("Games");
-        for (BaseMedia media : mediaItems) {
-            films.addCard(
-                    media,
-                    () -> onMediaClick.accept(media)
-            );
-        }
+        addMediatoSection(games, MediaType.GAME);
 
         films = new MediaSection("Films and TV Shows");
-        for (BaseMedia media : mediaItems) {
-            films.addCard(
-                    media,
-                    () -> onMediaClick.accept(media)
-            );
-        }
+        addMediatoSection(films, MediaType.MOVIE);
+        addMediatoSection(films, MediaType.TV_SHOW);
 
         root.getChildren().addAll(titleLogo, books, games, films);
 
     }
 
-    private void addMediatoSection(MediaSection section, String type) {
+    private void addMediatoSection(MediaSection section, MediaType type) {
         for (BaseMedia media : mediaItems) {
-            if (media.getType() != null && media.getTypeName().equals(type)) {
+            if (media.getType() == type) {
                 section.addCard(
-                        media, () -> onMediaClick.accept(media)
+                        media,
+                        () -> onMediaClick.accept(media)
                 );
             }
         }

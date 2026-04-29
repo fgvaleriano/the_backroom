@@ -98,19 +98,3 @@ public abstract class BaseMedia {
     }
 }
 
-enum MediaType {
-    BOOK("Book"),
-    MOVIE("Movie"),
-    TV_SHOW("TV Show"),
-    GAME("Game");
-
-    private final String displayName;
-
-    MediaType(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-}

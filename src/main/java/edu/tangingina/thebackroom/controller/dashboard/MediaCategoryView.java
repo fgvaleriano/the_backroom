@@ -1,6 +1,7 @@
 package edu.tangingina.thebackroom.controller.dashboard;
 
 import edu.tangingina.thebackroom.controller.dashboard.Media_Details.BaseMedia;
+import edu.tangingina.thebackroom.controller.dashboard.Media_Details.MediaType;
 import edu.tangingina.thebackroom.util.BaseView;
 import javafx.geometry.*;
 import javafx.scene.control.Label;
@@ -36,8 +37,9 @@ public class MediaCategoryView extends BaseView {
         root.setPadding(new Insets(45, 125, 60, 125));
 
         Map<String, List<BaseMedia>> groupedByGenre = items.stream()
-                .filter(item -> item.getTypeName().equalsIgnoreCase(mediaType))
-                .collect(Collectors.groupingBy(
+                .filter(item ->
+                        item.getType() == MediaType.MOVIE || item.getType() == MediaType.TV_SHOW
+                ).collect(Collectors.groupingBy(
                         BaseMedia::getGenre,
                         LinkedHashMap::new,
                         Collectors.toList()
