@@ -1,8 +1,14 @@
 package edu.tangingina.thebackroom.controller.dashboard;
 
+import edu.tangingina.thebackroom.controller.dashboard.Media_Details.BaseMedia;
+import edu.tangingina.thebackroom.controller.dashboard.Media_Details.SampleMediaData;
 import edu.tangingina.thebackroom.util.BaseView;
 import javafx.geometry.*;
 import javafx.scene.image.*;
+
+import javax.print.attribute.standard.Media;
+import java.util.List;
+import java.util.function.Consumer;
 
 public class DashboardHomeView extends BaseView {
     /*
@@ -11,7 +17,15 @@ public class DashboardHomeView extends BaseView {
 
     ImageView titleLogo, logo;
     MediaSection books, games, films;
-    public DashboardHomeView(){
+    private List<BaseMedia> mediaItems = SampleMediaData.getAllMedia();
+
+    //private final List<BaseMedia> mediaItems;
+    private final Consumer<BaseMedia> onMediaClick;
+
+    public DashboardHomeView(List<BaseMedia> mediaItems, Consumer<BaseMedia> onMediaClick){
+        this.mediaItems = mediaItems;
+        this.onMediaClick = onMediaClick;
+
         buildLayout();
     }
 
@@ -22,41 +36,32 @@ public class DashboardHomeView extends BaseView {
 
         titleLogo = createTitleLogo();
 
-        //media cards
-        //book section
         books = new MediaSection("Books");
-        books.addCard("The Silent Patient",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/patient.png");
-        books.addCard("The Invisible Life of Addie LaRue",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/addie.png");
-        books.addCard("The Silent Patient",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/patient.png");
-        books.addCard("The Invisible Life of Addie LaRue",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/addie.png");
-        books.addCard("The Silent Patient",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/patient.png");
-        books.addCard("The Invisible Life of Addie LaRue",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/addie.png");
+        for (BaseMedia media : mediaItems) {
+            books.addCard(
+                    media,
+                    () -> onMediaClick.accept(media)
+            );
+        }
 
         games = new MediaSection("Games");
-        games.addCard("Sims 4",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/sims.png");
-        games.addCard("Genshin Impact",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/genshin.png");
-        games.addCard("Sims 4",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/sims.png");
-        games.addCard("Genshin Impact",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/genshin.png");
-        games.addCard("Sims 4",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/sims.png");
+        //addMediatoSection(games, "games");
 
         films = new MediaSection("Films and TV Shows");
-        films.addCard("The Imitation Game",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/imitation.png");
-        films.addCard("Barbie",
-                "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/barbie.png");
+        //addMediatoSection(films, "Films and TV Shows");
 
         root.getChildren().addAll(titleLogo, books, games, films);
+
+    }
+
+    private void addMediatoSection(MediaSection section, String type) {
+        for (BaseMedia media : mediaItems) {
+            if (media.getType() != null && media.getType().equals(type)) {
+                section.addCard(
+                        media, () -> onMediaClick.accept(media)
+                );
+            }
+        }
     }
 
     //creates the logo found at the top of the dashboard

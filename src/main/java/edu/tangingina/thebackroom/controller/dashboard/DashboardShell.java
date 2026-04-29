@@ -5,8 +5,8 @@ import edu.tangingina.thebackroom.controller.LoginController;
 import edu.tangingina.thebackroom.controller.dashboard.Media_Details.BaseMedia;
 import edu.tangingina.thebackroom.controller.dashboard.Media_Details.BookPage;
 import edu.tangingina.thebackroom.controller.dashboard.Media_Details.MediaDetailsPage;
+import edu.tangingina.thebackroom.controller.dashboard.Media_Details.SampleMediaData;
 import edu.tangingina.thebackroom.util.BaseView;
-import edu.tangingina.thebackroom.util.MediaItem;
 import javafx.geometry.*;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -27,7 +27,9 @@ public class DashboardShell extends BorderPane {
     private ScrollPane scrollPane;
     private StackPane center;
     private Image noiseImg;
-    private List<MediaItem> mediaItems = MediaRepository.getAllMedia();
+
+    //CHANGE THIS FOR FINAL IMPLEMENTATION, THIS IS ONLY FOR TESTING
+    private List<BaseMedia> mediaItems = SampleMediaData.getAllMedia();
 
     public DashboardShell() {
         //this.setTop(new NavbarComponent());             //navigation bar will always be on top
@@ -37,11 +39,10 @@ public class DashboardShell extends BorderPane {
 
         //navigation bar thing
         navBar = new NavbarComponent(
-                //this::showHomePage,
-                () -> setView(new DashboardHomeView()),
-                () -> setView(new MediaCategoryView("Books", mediaItems)),
-                () -> setView(new MediaCategoryView("Games", mediaItems)),
-                () -> setView( new MediaCategoryView("Films and TV Shows", mediaItems)),
+                this::showHomePage,
+                () -> showCategoryPage("Books"),
+                () -> showCategoryPage("Games"),
+                () -> showCategoryPage("Films and TV Shows"),
                 this::openAddArchiveDialog,
                 this::openImportDialog,
                 this::openExportDialog,
@@ -85,16 +86,18 @@ public class DashboardShell extends BorderPane {
 
         this.setCenter(center);
 
-        setView(new DashboardHomeView());
+        showHomePage();
     }
 
     //for the modular switcher
     public void setView(BaseView view) {
-        javafx.application.Platform.runLater(() -> {
-            contentArea.getChildren().clear();
-            contentArea.getChildren().add(view.getView());
-        });
+        setMainContent(view.getView());
 
+    }
+
+    private void showHomePage() {
+        setView(new DashboardHomeView(mediaItems,
+                media -> showMediaDetailPage(media, this::showHomePage)));
     }
 
     private void openAddArchiveDialog() {
@@ -125,19 +128,28 @@ public class DashboardShell extends BorderPane {
         stage.setMaximized(maxSize);
     }
 
-    private void showBooksPage() {
+    /*private void showBooksPage() {
         BookPage bookPage = new BookPage(this::showMediaDetailPage);
         setMainContent(bookPage);
+    }*/
+
+    private void showCategoryPage(String category) {
+        setView(new MediaCategoryView(
+                category, mediaItems, media -> showMediaDetailPage(media, () -> showCategoryPage(category))
+        ));
     }
 
-    private void showMediaDetailPage(BaseMedia media) {
-        MediaDetailsPage detailsPage = new MediaDetailsPage(media, this::showBooksPage,
-                () -> showUpdateMediaPage(media));
+    private void showMediaDetailPage(BaseMedia media, Runnable onBack) {
+        MediaDetailsPage detailsPage = new MediaDetailsPage(
+                media, onBack, () -> showUpdateMediaPage(media)
+        );
+
         setMainContent(detailsPage);
     }
 
     private void setMainContent(javafx.scene.Node page) {
         contentArea.getChildren().setAll(page);
+        scrollPane.setVvalue(0);
     }
 
     //temp update method
@@ -146,20 +158,3 @@ public class DashboardShell extends BorderPane {
     }
 }
 
-//temporary data provider for image paths
-class MediaRepository {
-
-    public static List<MediaItem> getAllMedia() {
-        return List.of(
-                new MediaItem("Addie LaRue",
-                        "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/addie.png",
-                        "Fiction", "Books"),
-                new MediaItem("The Silent Patient",
-                        "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/patient.png",
-                        "Dark", "Books"),
-                new MediaItem("Genshin Impact",
-                        "/edu/tangingina/thebackroom/assets/for testing (delete before submission)/genshin.png",
-                        "Open World", "Games")
-        );
-    }
-}

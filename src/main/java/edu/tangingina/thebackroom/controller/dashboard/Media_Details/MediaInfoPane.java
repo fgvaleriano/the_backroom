@@ -26,7 +26,7 @@ public class MediaInfoPane extends VBox {
         title.setWrapText(true);
 
         creatorLabel = new Label(media.getMainCreator());
-        creatorLabel.setFont(FontLoader.plex(28));
+        creatorLabel.setFont(FontLoader.plex(25));
         creatorLabel.getStyleClass().add("media-creator");
 
         headerBox = new VBox(8, title, creatorLabel);
@@ -36,6 +36,7 @@ public class MediaInfoPane extends VBox {
         divider.getStyleClass().add("media-divider");
 
         synopsisLabel = new Label(media.getSynopsis());
+        synopsisLabel.setFont(FontLoader.plex(17));
         synopsisLabel.getStyleClass().add("media-synopsis");
         synopsisLabel.setWrapText(true);
 

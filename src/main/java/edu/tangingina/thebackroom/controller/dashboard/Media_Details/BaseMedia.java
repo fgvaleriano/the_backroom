@@ -9,20 +9,18 @@ public abstract class BaseMedia {
      */
 
     private final int id;
-    private final String title;
-    private final String type;
-    private final String synopsis;
+    private final String title, type, synopsis, imagePath;
     private final int releaseYear;
-    private final String imagePath;
-    private final List<String> accessLinks;
+    private final List<String> accessLinks, genres;
 
     protected BaseMedia (int id, String type, String title, String synopsis,
-                                int releaseYear, String imagePath, List<String> accessLinks) {
+                                int releaseYear, String imagePath, List<String> genres, List<String> accessLinks) {
         this.id = id;
         this.type = type;
         this.title = title;
         this.synopsis = synopsis;
         this.releaseYear = releaseYear;
+        this.genres = genres;
         this.imagePath = imagePath;
         this.accessLinks = accessLinks;
     }
@@ -41,6 +39,14 @@ public abstract class BaseMedia {
 
     public String getSynopsis() {
         return synopsis;
+    }
+
+    public String getGenre() {
+        if (genres == null || genres.isEmpty()) {
+            return "Uncategorized";
+        }
+
+        return genres.get(0);
     }
 
     public int getReleaseYear() {

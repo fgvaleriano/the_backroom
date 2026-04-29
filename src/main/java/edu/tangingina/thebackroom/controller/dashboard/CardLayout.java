@@ -23,18 +23,28 @@ public class CardLayout extends StackPane {
 
     private final double fitWid;
     private final double fitHei;
-    private final boolean clickable;
+    //private final boolean clickable;
 
     public CardLayout(String title, String imagePath) {
-        this(title, imagePath, 150, 225, true);
+        this(title, imagePath, 130, 205, true, null);
     }
 
-    public CardLayout(String title, String imagePath, double fitWid, double fitHei, boolean clickable) {
+    public CardLayout(String title, String imagePath, double width, double height, boolean showTitle) {
+        this(title, imagePath, width, height, showTitle, null);
+    }
+
+    public CardLayout(String title, String imagePath, double fitWid, double fitHei, boolean showTitle, Runnable onClick) {
         this.title = title;
         this.imagePath = imagePath;
         this.fitWid = fitWid;
         this.fitHei = fitHei;
-        this.clickable = clickable;
+
+        if (onClick != null) {
+            this.setCursor(Cursor.HAND);
+            this.setOnMouseClicked(e -> {
+                onClick.run();
+            });
+        }
 
         buildLayout();
     }
@@ -42,10 +52,6 @@ public class CardLayout extends StackPane {
     private void buildLayout() {
         this.getStyleClass().add("card-layout");
         this.setAlignment(Pos.CENTER);
-
-        if (clickable) {
-            this.setCursor(Cursor.HAND);
-        }
 
         cover = createCover(imagePath);
 

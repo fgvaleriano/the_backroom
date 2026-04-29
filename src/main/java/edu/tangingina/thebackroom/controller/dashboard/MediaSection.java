@@ -1,5 +1,6 @@
 package edu.tangingina.thebackroom.controller.dashboard;
 
+import edu.tangingina.thebackroom.controller.dashboard.Media_Details.BaseMedia;
 import edu.tangingina.thebackroom.util.FontLoader;
 import edu.tangingina.thebackroom.util.MediaItem;
 import javafx.geometry.Pos;
@@ -39,14 +40,28 @@ public class MediaSection extends VBox {
         this.getChildren().addAll(sectionTitle, cardContainer);
     }
 
-    public void addCard(String title, String imagePath) {
-        CardLayout card = new CardLayout(title, imagePath);
+    public void addCard(BaseMedia media, Runnable onClick) {
+        CardLayout card = new CardLayout(
+                media.getTitle(),
+                media.getImagePath(),
+                130,
+                205,
+                true,
+                onClick
+        );
+
         cardContainer.getChildren().add(card);
     }
 
-    public void addCards(List<MediaItem> items) {
-        for (MediaItem item : items) {
-            addCard(item.getTitle(), item.getImagePath());
-        }
+    public void addCard(String title, String imagePath) {
+        CardLayout card = new CardLayout(
+                title,
+                imagePath,
+                130,
+                205,
+                true
+        );
+
+        cardContainer.getChildren().add(card);
     }
 }

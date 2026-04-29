@@ -64,7 +64,7 @@ public class MediaDetailsPage extends VBox {
         actionBar.setAlignment(Pos.CENTER_LEFT);
 
         Button back = new Button("<Back");
-        back.setFont(FontLoader.bold(15));
+        back.setFont(FontLoader.bold(25));
         back.getStyleClass().add("btn-guest");
         back.setOnAction(e -> {
            System.out.println("Go back");
@@ -76,7 +76,7 @@ public class MediaDetailsPage extends VBox {
 
         Button update = new Button("Update");
         update.getStyleClass().add("btn-guest");
-        update.setFont(FontLoader.bold(15));
+        update.setFont(FontLoader.bold(25));
         update.setOnAction(e -> {
             System.out.println("Update media: " + media);
 
@@ -104,7 +104,7 @@ public class MediaDetailsPage extends VBox {
                 "/edu/tangingina/thebackroom/assets/access_btn.png"));
         ImageView view = new ImageView(img);
         view.setPreserveRatio(true);
-        view.setFitWidth(60);
+        view.setFitWidth(200);
         btn.setGraphic(view);
 
         btn.setOnAction(e -> {

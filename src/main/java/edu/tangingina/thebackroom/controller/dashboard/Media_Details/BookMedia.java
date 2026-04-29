@@ -16,12 +16,17 @@ public class BookMedia extends BaseMedia{
     public BookMedia(int id, String title, String author, String synopsis, int releaseYear, String imagePath,
                      List<String> accessLinks, List<String> genres, int pageCount, String edition, String isbn) {
 
-        super(id, title, author, synopsis, releaseYear, imagePath, accessLinks);
+        super(id, title, author, synopsis, releaseYear, imagePath, genres, accessLinks);
         this.author = author;
         this.genres = genres;
         this.pageCount = pageCount;
         this.edition = edition;
         this.isbn = isbn;
+    }
+
+    @Override
+    public String getType() {
+        return "Books";
     }
 
     public String getAuthor() {return author;}

@@ -43,16 +43,14 @@ public class BookPage extends VBox {
         for (BaseMedia book : books) {
             CardLayout card = new CardLayout(
                     book.getTitle(),
-                    book.getImagePath()
+                    book.getImagePath(),
+                    130, 205, true, () -> onMediaClicked.accept(book)
             );
-
-            card.setOnMouseClicked(event -> {
-                onMediaClicked.accept(book);
-            });
 
             bookGrid.getChildren().add(card);
         }
 
         this.getChildren().addAll(title, bookGrid);
     }
+
 }
