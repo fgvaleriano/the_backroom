@@ -13,6 +13,7 @@ import javafx.scene.layout.*;
 public class MediaDetailsPage extends VBox {
     /*
         Reusable detail page for any media
+            - also holds the left aligned column that holds the access button and image cover
      */
 
     private final BaseMedia media;

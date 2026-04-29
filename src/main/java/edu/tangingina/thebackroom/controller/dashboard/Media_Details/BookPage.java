@@ -14,6 +14,7 @@ public class BookPage extends VBox {
      */
 
     private final Consumer<BaseMedia> onMediaClicked;
+    private List<BookMedia> books = SampleMediaData.getSampleBooks();
 
     public BookPage(Consumer<BaseMedia> onMediaClicked) {
         this.onMediaClicked = onMediaClicked;
@@ -36,16 +37,17 @@ public class BookPage extends VBox {
         bookGrid.setHgap(35);
         bookGrid.setVgap(35);
 
-        List<BaseMedia> books = List.of(
-                SampleMediaData.getSampleBook()
-        );
+        List<BookMedia> books = SampleMediaData.getSampleBooks();
 
-        for (BaseMedia book : books) {
+        for (BookMedia book : SampleMediaData.getSampleBooks()) {
             CardLayout card = new CardLayout(
                     book.getTitle(),
-                    book.getImagePath(),
-                    130, 205, true, () -> onMediaClicked.accept(book)
+                    book.getImagePath()
             );
+
+            card.setOnMouseClicked(e -> {
+                onMediaClicked.accept(book);
+            });
 
             bookGrid.getChildren().add(card);
         }
