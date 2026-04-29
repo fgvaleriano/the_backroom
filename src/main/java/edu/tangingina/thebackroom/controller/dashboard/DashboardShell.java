@@ -37,6 +37,7 @@ public class DashboardShell extends BorderPane {
 
         //navigation bar thing
         navBar = new NavbarComponent(
+                //this::showHomePage,
                 () -> setView(new DashboardHomeView()),
                 () -> setView(new MediaCategoryView("Books", mediaItems)),
                 () -> setView(new MediaCategoryView("Games", mediaItems)),
@@ -131,7 +132,7 @@ public class DashboardShell extends BorderPane {
 
     private void showMediaDetailPage(BaseMedia media) {
         MediaDetailsPage detailsPage = new MediaDetailsPage(media, this::showBooksPage,
-                () -> showMediaDetailPage(media));
+                () -> showUpdateMediaPage(media));
         setMainContent(detailsPage);
     }
 

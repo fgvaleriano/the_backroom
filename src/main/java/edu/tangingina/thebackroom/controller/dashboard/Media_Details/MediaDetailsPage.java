@@ -79,6 +79,10 @@ public class MediaDetailsPage extends VBox {
         update.setFont(FontLoader.bold(15));
         update.setOnAction(e -> {
             System.out.println("Update media: " + media);
+
+            if (onUpdate != null) {
+                onUpdate.run();
+            }
         });
 
         Region spacce = new Region();
