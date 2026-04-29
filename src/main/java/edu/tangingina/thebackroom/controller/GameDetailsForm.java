@@ -28,7 +28,7 @@ public class GameDetailsForm extends BaseMediaForm{
             - system requirements
      */
 
-    private MultiValueField gameDevField, gameStudioField, genreField, modeField,gamePublisherField;
+    private MultiValueField gameDevField, gameStudioField, genreField, modeField,platformField, gamePublisherField;
     private FormFieldGroup titleField, engineField, systemReqsField, synopsisField, yearField;
     private ImageFileField widgetField;
     private AccessLinkField linkField;
@@ -41,6 +41,7 @@ public class GameDetailsForm extends BaseMediaForm{
         gameStudioField = FormFieldFactory.createMultiValueField("Game Studio", 120);
         gamePublisherField = FormFieldFactory.createMultiValueField("Game Publisher", 120);
         modeField = FormFieldFactory.createMultiValueField("Game Mode", 120);
+        platformField = FormFieldFactory.createMultiValueField("Game Platform", 120);
         engineField = FormFieldFactory.createTextField("Game Engine", 120);
         genreField = FormFieldFactory.createMultiValueField("Genre", 120);
         linkField = FormFieldFactory.createAccessLinkField("Access Link");
@@ -56,6 +57,7 @@ public class GameDetailsForm extends BaseMediaForm{
                 gamePublisherField.getView(),
                 synopsisField.getView(),
                 modeField.getView(),
+                platformField.getView(),
                 engineField.getView(),
                 genreField.getView(),
                 yearField.getView(),
@@ -87,7 +89,7 @@ public class GameDetailsForm extends BaseMediaForm{
                 FileManager fm = TheBackroom.fm;
 
                 String title = titleField.getUserInput();
-                MediaType mediaType = MediaType.Movie;
+                MediaType mediaType = MediaType.Game;
                 String synopsis = synopsisField.getUserInput();
 
                 ComboBox<Integer> yearPicker = (ComboBox<Integer>) yearField.getInputs();
@@ -103,7 +105,7 @@ public class GameDetailsForm extends BaseMediaForm{
                 String gameEngine = engineField.getUserInput();
                 String systemRequirements = systemReqsField.getUserInput();
                 List<String> mode = modeField.getValues();
-                List<String> platform = modeField.getValues();
+                List<String> platform = platformField.getValues();
                 List<String> gameDev = gameDevField.getValues();
                 List<String> gameStudio = gameStudioField.getValues();
                 List<String> gamePublisher = gamePublisherField.getValues();
@@ -136,7 +138,6 @@ public class GameDetailsForm extends BaseMediaForm{
                     e1.getMessage();
                 }
 
-                AddArchive_v2.closeWindow();
             }
         });
         HBox container = new HBox(btn);

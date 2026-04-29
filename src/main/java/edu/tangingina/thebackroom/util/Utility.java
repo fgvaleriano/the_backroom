@@ -206,7 +206,7 @@ public class Utility {
 
         for(String modeName : gameMode){
 
-            if (!gameModeList.containsKey(gameModeDao)) {
+            if (!gameModeList.containsKey(modeName)) {
                 //the index here is temporary since the id value is put in the table itself
 
                 GameMode gm = new GameMode(0, modeName.trim());
