@@ -74,8 +74,8 @@ public class TheBackroom extends Application {
     Scene scene;
     StackPane root, homePage, addPage;
 
-    public static DatabaseManager dm = new DatabaseManager();
-    public static Utility util = new Utility();
+    public static DatabaseManager dm;
+    public static Utility util;
 
     public static SceneManager sm;
 
@@ -110,10 +110,11 @@ public class TheBackroom extends Application {
     public static ArrayList<String> top6VidGenre;
     public static ArrayList<String> top6GameGenre;
 
-    public static boolean onlineDatabase = true;
+    public static boolean git = true;
 
     @Override
     public void start(Stage primaryStage) {
+        initialize();
         openDB();
         loadCache();
         sm = new SceneManager(primaryStage);
@@ -963,6 +964,12 @@ public class TheBackroom extends Application {
         FontLoader load = new  FontLoader();
         load.debug();
         return;
+    }
+
+    public void initialize(){
+         dm = new DatabaseManager();
+         util = new Utility();
+        fm = new FileManager();
     }
 
 
