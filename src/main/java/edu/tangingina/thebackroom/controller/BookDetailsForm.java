@@ -20,8 +20,10 @@ public class BookDetailsForm extends BaseMediaForm {
             - Edition
      */
 
-    private MultiValueField authorField, genreField, publisherField, linkField;
-    private FormFieldGroup titleField, ISBNfield, pageField, editionField, widgetField, synopsisField;
+    private MultiValueField authorField, genreField, publisherField;
+    private FormFieldGroup titleField, ISBNfield, pageField, editionField, synopsisField;
+    private ImageFileField widgetField;
+    private AccessLinkField linkField;
 
     public BookDetailsForm() {
         view.getChildren().add(formColumn());
@@ -34,8 +36,8 @@ public class BookDetailsForm extends BaseMediaForm {
         pageField = FormFieldFactory.createTextField("Page Count", 120);
         ISBNfield = FormFieldFactory.createTextField("ISBN", 120);
         editionField = FormFieldFactory.createTextField("Edition", 120);
-        linkField = FormFieldFactory.createMultiValueField("Access Link", 520);
-        widgetField = FormFieldFactory.createTextField("Book Cover", 520);
+        linkField = FormFieldFactory.createAccessLinkField("Access Link");
+        widgetField = FormFieldFactory.createImageFileField("Book Cover", 200);
 
         formColumn().getChildren().addAll(
                 titleField.getView(),

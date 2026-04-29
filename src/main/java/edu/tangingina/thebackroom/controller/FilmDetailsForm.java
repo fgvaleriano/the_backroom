@@ -15,8 +15,10 @@ public class FilmDetailsForm extends BaseMediaForm{
             - language
      */
 
-    private MultiValueField directorField, genreField, studioField, linkField;
-    private FormFieldGroup titleField, durationField, languageField, widgetField, synopsisField;
+    private MultiValueField directorField, genreField, studioField;
+    private FormFieldGroup titleField, durationField, languageField, synopsisField;
+    private ImageFileField widgetField;
+    private AccessLinkField linkField;
 
     public FilmDetailsForm() {
         view.getChildren().add(formColumn());
@@ -28,8 +30,8 @@ public class FilmDetailsForm extends BaseMediaForm{
         genreField = FormFieldFactory.createMultiValueField("Genre", 120);
         durationField = FormFieldFactory.createTextField("Duration", 120);
         languageField = FormFieldFactory.createTextField("Language", 120);
-        linkField = FormFieldFactory.createMultiValueField("Access Link", 520);
-        widgetField = FormFieldFactory.createTextField("Book Cover", 520);
+        linkField = FormFieldFactory.createAccessLinkField("Access Link");
+        widgetField = FormFieldFactory.createImageFileField("Book Cover", 200);
 
         formColumn().getChildren().addAll(
                 titleField.getView(),
