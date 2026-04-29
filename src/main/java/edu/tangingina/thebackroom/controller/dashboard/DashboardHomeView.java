@@ -17,9 +17,9 @@ public class DashboardHomeView extends BaseView {
 
     ImageView titleLogo, logo;
     MediaSection books, games, films;
-    private List<BaseMedia> mediaItems = SampleMediaData.getAllMedia();
+    //private List<BaseMedia> mediaItems;
 
-    //private final List<BaseMedia> mediaItems;
+    private final List<BaseMedia> mediaItems;
     private final Consumer<BaseMedia> onMediaClick;
 
     public DashboardHomeView(List<BaseMedia> mediaItems, Consumer<BaseMedia> onMediaClick){
@@ -36,19 +36,31 @@ public class DashboardHomeView extends BaseView {
 
         titleLogo = createTitleLogo();
 
+        //mediaItems = SampleMediaData.getSampleBooks();
+
         books = new MediaSection("Books");
         for (BaseMedia media : mediaItems) {
-            books.addCard(
+            films.addCard(
                     media,
                     () -> onMediaClick.accept(media)
             );
         }
 
         games = new MediaSection("Games");
-        //addMediatoSection(games, "games");
+        for (BaseMedia media : mediaItems) {
+            films.addCard(
+                    media,
+                    () -> onMediaClick.accept(media)
+            );
+        }
 
         films = new MediaSection("Films and TV Shows");
-        //addMediatoSection(films, "Films and TV Shows");
+        for (BaseMedia media : mediaItems) {
+            films.addCard(
+                    media,
+                    () -> onMediaClick.accept(media)
+            );
+        }
 
         root.getChildren().addAll(titleLogo, books, games, films);
 
@@ -56,7 +68,7 @@ public class DashboardHomeView extends BaseView {
 
     private void addMediatoSection(MediaSection section, String type) {
         for (BaseMedia media : mediaItems) {
-            if (media.getType() != null && media.getType().equals(type)) {
+            if (media.getType() != null && media.getTypeName().equals(type)) {
                 section.addCard(
                         media, () -> onMediaClick.accept(media)
                 );

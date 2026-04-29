@@ -3,6 +3,7 @@ package edu.tangingina.thebackroom.controller.dashboard;
 import edu.tangingina.thebackroom.controller.dashboard.Media_Details.BaseMedia;
 import edu.tangingina.thebackroom.util.BaseView;
 import javafx.geometry.*;
+import javafx.scene.control.Label;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -35,12 +36,19 @@ public class MediaCategoryView extends BaseView {
         root.setPadding(new Insets(45, 125, 60, 125));
 
         Map<String, List<BaseMedia>> groupedByGenre = items.stream()
-                .filter(item -> item.getType().equalsIgnoreCase(mediaType))
+                .filter(item -> item.getTypeName().equalsIgnoreCase(mediaType))
                 .collect(Collectors.groupingBy(
                         BaseMedia::getGenre,
                         LinkedHashMap::new,
                         Collectors.toList()
-        ));
+                ));
+
+        if (groupedByGenre.isEmpty()) {
+            Label emptyLabel = new Label("No items found.");
+            //emptyLabel.getStyleClass().add("empty-media-label");
+            root.getChildren().add(emptyLabel);
+            return;
+        }
 
         for (Map.Entry<String, List<BaseMedia>> entry : groupedByGenre.entrySet()) {
             String genre = entry.getKey();
