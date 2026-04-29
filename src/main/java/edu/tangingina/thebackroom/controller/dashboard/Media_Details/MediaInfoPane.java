@@ -10,45 +10,48 @@ import javafx.scene.text.TextFlow;
 public class MediaInfoPane extends VBox {
     /*
         Handles the right side of the details page that holds info
-        abt the media
+        abt the media. info includes:
+            - title, author, isbn, genre, synopsis, publish year, pages
      */
 
     private Label title, divider, creatorLabel, synopsisLabel, plainDeets;
     private VBox headerBox, detailsBox;
 
     public MediaInfoPane(BaseMedia media){
-        getStyleClass().add("media-info-pane");
+        //getStyleClass().add("media-info-pane");
         setSpacing(22);
 
         title = new Label(media.getTitle());
-        title.setFont(FontLoader.extra(32));
-        title.getStyleClass().add("media-title");
+        title.setFont(FontLoader.extra(40));
+        //title.getStyleClass().add("media-title");
         title.setWrapText(true);
 
         creatorLabel = new Label(media.getMainCreator());
         creatorLabel.setFont(FontLoader.plex(25));
-        creatorLabel.getStyleClass().add("media-creator");
+        //creatorLabel.getStyleClass().add("media-creator");
 
         headerBox = new VBox(8, title, creatorLabel);
-        headerBox.getStyleClass().add("media-header");
+        //headerBox.getStyleClass().add("media-header");
 
         divider = new Label();
         divider.getStyleClass().add("media-divider");
 
         synopsisLabel = new Label(media.getSynopsis());
         synopsisLabel.setFont(FontLoader.plex(17));
-        synopsisLabel.getStyleClass().add("media-synopsis");
+        //synopsisLabel.getStyleClass().add("media-synopsis");
         synopsisLabel.setWrapText(true);
 
         detailsBox = new VBox(18);
-        detailsBox.getStyleClass().add("media-details-box");
+        //detailsBox.getStyleClass().add("media-details-box");
 
         for (DetailField field : media.getDetailFields()) {
             if (field.hasLabel()) {
                 detailsBox.getChildren().add(createLabelDetail(field.getLabel(), field.getValue()));
             } else {
+                //plainDeets is for the pages, publish year and stuff
                 plainDeets = new Label(field.getValue());
-                plainDeets.getStyleClass().add("media-plain-info");
+                plainDeets.setFont(FontLoader.plex(17));
+                //plainDeets.getStyleClass().add("media-plain-info");
                 plainDeets.setWrapText(true);
                 detailsBox.getChildren().add(plainDeets);
             }
@@ -60,17 +63,18 @@ public class MediaInfoPane extends VBox {
 
     private TextFlow createLabelDetail(String label, String value){
         Text labelText = new Text(label + ": ");
-        labelText.setFont(FontLoader.plex(28));
-        labelText.getStyleClass().add("media-label");
+        labelText.setFont(FontLoader.plex(20));
+        //labelText.getStyleClass().add("media-label");
 
+        //genres, isbn
         Text valueText = new Text(value);
-        valueText.setFont(FontLoader.plex(28));
-        valueText.getStyleClass().add("media-value");
+        valueText.setFont(FontLoader.plex(17));
+        //valueText.getStyleClass().add("media-value");
 
         TextFlow textFlow = new TextFlow(labelText, valueText);
-        textFlow.getStyleClass().add("details");
+        //textFlow.getStyleClass().add("details");
         textFlow.setPrefWidth(650);
-        textFlow.setPrefHeight(650);
+        textFlow.setPrefHeight(25);
 
         return textFlow;
     }

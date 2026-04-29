@@ -7,6 +7,7 @@ public class BookMedia extends BaseMedia{
         book-specific detail page
      */
 
+    private final String title;
     private final String author;
     private final List<String> genres;
     private final int pageCount;
@@ -17,6 +18,7 @@ public class BookMedia extends BaseMedia{
                      List<String> accessLinks, List<String> genres, int pageCount, String edition, String isbn) {
 
         super(id, title, author, synopsis, releaseYear, imagePath, genres, accessLinks);
+        this.title = title;
         this.author = author;
         this.genres = genres;
         this.pageCount = pageCount;
@@ -29,6 +31,7 @@ public class BookMedia extends BaseMedia{
         return "Books";
     }
 
+    public String getTitle() {return title;}
     public String getAuthor() {return author;}
 
     public List<String> getGenres() {return genres;}

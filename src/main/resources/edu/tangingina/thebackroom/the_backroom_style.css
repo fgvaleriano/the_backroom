@@ -315,3 +315,35 @@
 /*  DETAILS PAGE STYLE
 
 */
+.detail-page {
+    -fx-padding: 65 0 90 0;
+    -fx-background-color: transparent;
+}
+
+.detail-card {
+    -fx-background-color: rgba(130, 165, 160, 0.15);
+    -fx-background-radius: 14;
+    -fx-padding: 50 60 60 55;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 18, 0.2, 0, 4);
+}
+
+.content-layout {
+    -fx-padding: 5 0 0 0;
+}
+
+.action-bar {
+    -fx-padding: 0 0 8 0;
+}
+
+.media-details-box {
+    -fx-padding: 22 0 0 0;
+}
+
+.media-divider {
+    -fx-min-height: 2;
+    -fx-pref-height: 2;
+    -fx-max-height: 2;
+    -fx-background-color: rgba(30, 30, 30, 0.45);
+    -fx-pref-width: 650;
+    -fx-padding: 0 5 0 5;
+}

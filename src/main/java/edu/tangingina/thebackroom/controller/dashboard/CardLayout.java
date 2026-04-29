@@ -73,8 +73,8 @@ public class CardLayout extends StackPane {
 
             img = new  Image(path.toExternalForm());
             imgView = new  ImageView(img);
-            imgView.setFitWidth(150);
-            imgView.setFitHeight(225);
+            imgView.setFitWidth(fitWid);
+            imgView.setFitHeight(fitHei);
             imgView.setPreserveRatio(false);
             imgView.getStyleClass().add("cards");
 

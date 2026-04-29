@@ -95,6 +95,7 @@ public class MediaDetailsPage extends VBox {
     private VBox createLeftSide(BaseMedia media) {
         leftSide = new VBox(28);
         leftSide.getStyleClass().add("left-side");
+        leftSide.setAlignment(Pos.CENTER);
 
         CardLayout cover = new CardLayout(media.getTitle(), media.getImagePath(), 250, 390, false);
 
