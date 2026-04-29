@@ -14,6 +14,27 @@
     -fx-scale-y: 0.95;
 }
 
+.remember-me-box{
+    -fx-text-font-family: "Inter 24pt SemiBold";
+    src:url("/edu/tangingina/thebackroom/assets/Lander's Used Fonts/Inter_24pt-SemiBold.ttf");
+    -fx-text-fill: black;
+    -fx-font-size: 15;
+    -fx-max-width: infinity;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.remember-me-box > .box {
+    -fx-background-color: white;
+    -fx-background-radius: 7px;
+    -fx-border-color:  rgba(139, 46, 46, 1);
+    -fx-border-radius: 7px;
+}
+
+/*This is for when the box is selected*/
+.remember-me-box:selected > .box > .mark {
+    -fx-background-color:  rgba(139, 46, 46, 1);
+}
+
 /*
     ========== LOGIN PAGE STYLE ==========
         Contains:
@@ -85,6 +106,46 @@
 
 .input-holder .scroll-bar:vertical {
     -fx-background-color: transparent;
+    -fx-pref-width: 14; /* Match our chunky thickness */
+    -fx-opacity: 0.1;   /* Ghostly by default */
+}
+
+/* 2. Show only when moving the mouse over the form */
+.input-holder:hover .scroll-bar:vertical {
+    -fx-opacity: 0.6;
+}
+
+.input-holder .scroll-bar:vertical:hover {
+    -fx-opacity: 1.0;
+}
+
+/* 3. The Chunky Pill Thumb */
+.input-holder .scroll-bar:vertical .thumb {
+    -fx-background-color: #D2B48C; /* Tan/Beige pill */
+    -fx-background-radius: 15;
+    -fx-background-insets: 2;
+
+    /* Fixed Height logic so it looks exactly like your reference photo */
+    -fx-min-height: 100;
+    -fx-max-height: 100;
+}
+
+/* 4. Feedback when clicking */
+.input-holder .scroll-bar:vertical .thumb:pressed {
+    -fx-background-color: #B83A2D; /* Red pop */
+}
+
+/* 5. Nuking the ugly arrow buttons again */
+.input-holder .scroll-bar .increment-button,
+.input-holder .scroll-bar .decrement-button {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+}
+
+.input-holder .scroll-bar .increment-arrow,
+.input-holder .scroll-bar .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0;
 }
 
 .input-label {
@@ -177,6 +238,50 @@
 
 .dashboard-scroll > .viewport {
     -fx-background-color: transparent;
+}
+
+.dashboard-scroll .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 14;
+    -fx-opacity: 0.1;
+}
+
+.dashboard-scroll:hover .scroll-bar:vertical {
+    -fx-opacity: 0.6;
+}
+
+.dashboard-scroll .scroll-bar:vertical:hover {
+    -fx-opacity: 1.0;
+}
+
+.dashboard-scroll .scroll-bar:vertical .thumb {
+    -fx-background-color: #D2B48C;
+    -fx-background-radius: 15;
+    -fx-background-insets: 2 2 2 2;
+    -fx-pref-height: 25;
+    -fx-min-height: 25;
+    -fx-max-height: 25;
+}
+
+.dashboard-scroll .scroll-bar:vertical .thumb:hover,
+.dashboard-scroll .scroll-bar:vertical .thumb:pressed {
+    -fx-background-color: #B83A2D;
+}
+
+.dashboard-scroll .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+
+.dashboard-scroll .scroll-bar .increment-button,
+.dashboard-scroll .scroll-bar .decrement-button {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+}
+
+.dashboard-scroll .scroll-bar .increment-arrow,
+.dashboard-scroll .scroll-bar .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0;
 }
 
 .logo {

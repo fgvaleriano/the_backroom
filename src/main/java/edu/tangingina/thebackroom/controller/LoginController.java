@@ -71,11 +71,12 @@ public class LoginController {
         pwTxt = inputPW();
         btn_holder = button_holder(stage);
 
+        VBox.setMargin(userLabel, new Insets(65, 0, 0, 0));
         form.getChildren().addAll(userLabel, userTxt, pwLabel, pwTxt, btn_holder);
 
         StackPane rightWraper = new StackPane(form);
         rightWraper.setAlignment(Pos.CENTER_RIGHT);
-        rightWraper.setPadding(new Insets(120, 80,0,0));
+        rightWraper.setPadding(new Insets(120, 115,0,0));
 
         content.setRight(rightWraper);
 
@@ -93,6 +94,7 @@ public class LoginController {
         signUp = signUp();
         guest = guest(stage);
 
+        VBox.setMargin(rememberMe_checkBox, new Insets(0, 0, 30, 0));
         holder.getChildren().addAll(rememberMe_checkBox, login, signUp, guest);
 
         return holder;
@@ -221,8 +223,6 @@ public class LoginController {
         rememberMe_checkBox = new CheckBox("Remember Me");
         rememberMe_checkBox.setFont(FontLoader.light(12));
 
-        //added the styling na for remmeber me, but u nlang sa positioning...
-        rememberMe_checkBox.getStylesheets().add(getClass().getResource("/edu/tangingina/thebackroom/lander_holder.css").toExternalForm());
         rememberMe_checkBox.getStyleClass().add("remember-me-box");
         rememberMe_checkBox.setStyle("-fx-font-family: 'Inter 24pt SemiBold'; -fx-font-size: 15");
 

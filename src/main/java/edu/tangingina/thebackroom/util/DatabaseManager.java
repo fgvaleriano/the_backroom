@@ -41,6 +41,8 @@ public class DatabaseManager {
                 url = "jdbc:mysql://localhost/thebackroom_db";
                 username = prop.getProperty("local_default_user_username");
                 password = prop.getProperty("local_default_user_password");
+                username = prop.getProperty("local_mod_username");
+                password = prop.getProperty("local_mod_password");
             }
         }catch (Exception e){
             e.printStackTrace();

@@ -23,7 +23,8 @@ public class ConfigManager {
         System.out.println("      The Backroom: Initilaization      ");
         System.out.println("========================================");
 
-        System.out.println("Please enter a MySQL account with CREATE privileges (e.g., 'root')");
+        System.out.println("Please enter a MySQL account with Administrative privileges (e.g. root).");
+        System.out.println("(Required for: CREATE DATABASE, CREATE USER, and GRANT PRIVILEGES)\n");
 
         System.out.print("Username: ");
         String user = scan.nextLine();

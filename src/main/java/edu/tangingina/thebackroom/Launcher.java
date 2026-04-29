@@ -12,7 +12,11 @@ public class Launcher {
             Application.launch(TheBackroom.class, args);
         }else{
             check.initialize();
-            Application.launch(TheBackroom.class, args);
+            System.out.println("\n====================================================================");
+            System.out.println("                         SETUP SUCCESSFUL!                               ");
+            System.out.println("      Please rerun the program to apply configuration changes. ");
+            System.out.println("======================================================================");
+            System.exit(0); // Kill the app here so they have to restart
         }
     }
 }

@@ -110,7 +110,7 @@ public class TheBackroom extends Application {
     public static ArrayList<String> top6VidGenre;
     public static ArrayList<String> top6GameGenre;
 
-    public static boolean onlineDatabase = true;
+    public static boolean onlineDatabase = false;
 
     @Override
     public void start(Stage primaryStage) {
