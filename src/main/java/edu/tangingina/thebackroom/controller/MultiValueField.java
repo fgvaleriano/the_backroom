@@ -136,4 +136,17 @@ public class MultiValueField {
     public java.util.List<String> getValues() {
         return values;
     }
+
+    public void setValues(String commaSeparatedValues) {
+        values.clear();
+        valuesPane.getChildren().clear();
+
+        if (commaSeparatedValues == null || commaSeparatedValues.isEmpty()) return;
+        String[] items = commaSeparatedValues.split(",\\s*");
+
+        for (String value : items) {
+            inputField.setText(value);
+            addCurrentValue();
+        }
+    }
 }

@@ -10,6 +10,7 @@ module edu.tangingina.thebackroom {
     requires de.mkammerer.argon2;
     requires com.sun.jna;
     requires javafx.graphics;
+    requires edu.tangingina.thebackroom;
 
     opens edu.tangingina.thebackroom.controller to javafx.fxml;
     opens edu.tangingina.thebackroom to javafx.fxml;

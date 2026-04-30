@@ -818,5 +818,23 @@ public class FileManager {
         }
     }
 
+    public static ResultSet getMediaData (int mediaId) {
+        String sql = "select * from media where media_id = ?";
+
+        try {
+            DatabaseManager dm = new DatabaseManager();
+            dm.getConnection();
+
+            PreparedStatement pstmt = dm.conn.prepareStatement(sql);
+            pstmt.setInt(1, mediaId);
+
+            return pstmt.executeQuery();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
 }

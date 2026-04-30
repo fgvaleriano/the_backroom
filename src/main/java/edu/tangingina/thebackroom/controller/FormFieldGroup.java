@@ -7,7 +7,7 @@ import javafx.scene.layout.HBox;
 public class FormFieldGroup {
     /*
         Main use is for input field validation
-
+        Also used in update media archive
      */
 
     private HBox view;
@@ -39,5 +39,11 @@ public class FormFieldGroup {
 
     public void clearError() {
         inputs.getStyleClass().remove("input-field-error");
+    }
+
+    public void setValue(String value) {
+        if (inputs instanceof TextInputControl textInput) {
+            textInput.setText(value != null ? value : "");
+        }
     }
 }

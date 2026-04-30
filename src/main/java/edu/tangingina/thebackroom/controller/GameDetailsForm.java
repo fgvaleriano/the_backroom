@@ -8,6 +8,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.sql.ResultSet;
+
 public class GameDetailsForm extends BaseMediaForm{
     /*
         Handles specific inputs for books such as:
@@ -143,6 +145,29 @@ public class GameDetailsForm extends BaseMediaForm{
 
     public MultiValueField getGenreField() {
         return genreField;
+    }
+
+    public void populateForm(ResultSet rs) {
+        try {
+            titleField.setValue(rs.getString("name"));
+            synopsisField.setValue(rs.getString("synopsis"));
+            engineField.setValue(rs.getString("game_engine"));
+            systemReqsField.setValue(rs.getString("system_requirements"));
+
+            gameDevField.setValues(rs.getString("game_developer"));
+            gameStudioField.setValues(rs.getString("game_studio"));
+            modeField.setValues(rs.getString("game_mode"));
+            genreField.setValues(rs.getString("genre"));
+
+            linkField.setLink(rs.getString("access_link"));
+
+            String path = rs.getString("icon_path");
+            widgetField.setImage(path);
+
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage());
+            ex.printStackTrace();
+        }
     }
 
 

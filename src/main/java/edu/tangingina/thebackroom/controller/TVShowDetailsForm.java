@@ -8,6 +8,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.sql.ResultSet;
+import java.util.Map;
+
 public class TVShowDetailsForm extends BaseMediaForm{
     /*
         Handles specific inputs for books such as:
@@ -141,5 +144,27 @@ public class TVShowDetailsForm extends BaseMediaForm{
 
     public MultiValueField getGenreField() {
         return genreField;
+    }
+
+    public void populateForm(ResultSet rs) {
+        try {
+            titleField.setValue(rs.getString("name"));
+            seasonField.setValue(rs.getString("season"));
+            episodeField.setValue(rs.getString("episode"));
+            statusField.setValue(rs.getString("status"));
+            synopsisField.setValue(rs.getString("synopsis"));
+
+            directorField.setValues(rs.getString("director"));
+            studioField.setValues(rs.getString("studio"));
+            genreField.setValues(rs.getString("genre"));
+            linkField.setLink(rs.getString("access_link"));
+
+            String path = rs.getString("icon_path");
+            widgetField.setImage(path);
+
+        } catch (Exception ex) {
+            System.err.println("Error populating TV Show form: " + ex.getMessage());
+            ex.printStackTrace();
+        }
     }
 }
