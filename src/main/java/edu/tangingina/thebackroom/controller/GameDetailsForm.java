@@ -217,7 +217,7 @@ public class GameDetailsForm extends BaseMediaForm{
     }
 
     public void populateForm(ResultSet rs, String game_dev, String game_studio, String category, String game_mode,
-                             String platform) {
+                             String platform, String links) {
         try {
             titleField.setValue(rs.getString("name"));
             synopsisField.setValue(rs.getString("synopsis"));
@@ -230,7 +230,7 @@ public class GameDetailsForm extends BaseMediaForm{
             genreField.setValues(category);
             platformField.setValues(platform);
 
-            linkField.setLink(rs.getString("access_link"));
+            linkField.setLink(links);
 
             String path = rs.getString("icon_path");
             widgetField.setImage(path);

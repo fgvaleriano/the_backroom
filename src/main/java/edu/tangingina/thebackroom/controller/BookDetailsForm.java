@@ -205,7 +205,8 @@ public class BookDetailsForm extends BaseMediaForm {
         return genreField;
     }
 
-    public void populateForm (ResultSet rs, String author, String category, String publisher, String icon) {
+    public void populateForm (ResultSet rs, String author, String category, String publisher, String icon,
+                              String links) {
         try {
             titleField.setValue(rs.getString("name"));
             ISBNfield.setValue(rs.getString("isbn"));
@@ -217,9 +218,10 @@ public class BookDetailsForm extends BaseMediaForm {
             publisherField.setValues(publisher);
             genreField.setValues(category);
 
-            linkField.setLink(rs.getString("access_link"));
+            linkField.setLink(links);
 
-            widgetField.setImage(icon);
+            String path = rs.getString("icon_path");
+            widgetField.setImage(path);
 
         } catch (Exception ex) {
             System.err.println("Error populating Book From: "+ ex.getMessage());

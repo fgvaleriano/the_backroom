@@ -208,25 +208,26 @@ public class UpdateArchive {
 
                 String icon = FileManager.getString(id);
                 String category = FileManager.getCategory(id);
+                String links = FileManager.getAccessLinks(id);
 
                 switch (type) {
                     case MediaType.Book -> {
                         String author = FileManager.getPersonnelName(id, "Author");
                         String publisher = FileManager.getCompanyName(id, "Publisher");
-                        System.out.println(icon);
-                        bookDetailsForm.populateForm(rs, author, category, publisher, icon);
+
+                        bookDetailsForm.populateForm(rs, author, category, publisher, icon, links);
                     }
                     case MediaType.TvShow -> {
                         String director = FileManager.getPersonnelName(id, "Director");
                         String studio = FileManager.getCompanyName(id, "Production Studio");
                         //String category = FileManager.getCategory(id);
-                        tvShowDetailsForm.populateForm(rs, director, studio, category);
+                        tvShowDetailsForm.populateForm(rs, director, studio, category, links);
                     }
                     case MediaType.Movie -> {
                         String director = FileManager.getPersonnelName(id, "Director");
                         String studio = FileManager.getCompanyName(id, "Production Studio");
                         //String category = FileManager.getCategory(id);
-                        filmDetailsForm.populateForm(rs, director, studio, category);
+                        filmDetailsForm.populateForm(rs, director, studio, category, links);
 
                     }
                     case MediaType.Game -> {
@@ -235,7 +236,7 @@ public class UpdateArchive {
                         //String category = FileManager.getCategory(id);
                         String mode = FileManager.getCategory(id);
                         String platform = FileManager.getPlatform(id);
-                        gameDetailsForm.populateForm(rs, dev, studio, category, mode, platform);
+                        gameDetailsForm.populateForm(rs, dev, studio, category, mode, platform, links);
                     }
                 }
             }

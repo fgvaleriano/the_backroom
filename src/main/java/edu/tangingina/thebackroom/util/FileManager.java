@@ -965,13 +965,36 @@ public class FileManager {
             pstmt.setInt(1, mediaId);
             ResultSet rs = pstmt.executeQuery();
 
-            if (rs.next()) return rs.getString("name");
+            if (rs.next()) return rs.getString("path");
 
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
 
-        return "Uncategorized";
+        return "";
+    }
+
+    public static String getAccessLinks (int mediaId) {
+        StringBuilder links = new StringBuilder();
+        try {
+            DatabaseManager dm = new DatabaseManager();
+            dm.getConnection();
+
+            PreparedStatement pstmt = dm.conn.prepareStatement(UpdateArchiveQueries.fetch_access_links);
+
+            pstmt.setInt(1, mediaId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                if (links.length() > 0) links.append(", ");
+                links.append(rs.getString("Name")).append("| ").append(rs.getString("URL"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return links.toString();
     }
 }

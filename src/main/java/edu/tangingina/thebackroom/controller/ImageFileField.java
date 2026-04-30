@@ -41,6 +41,8 @@ public class ImageFileField {
         Label label = new Label(labelText);
         label.setFont(FontLoader.bold(18));
         label.getStyleClass().add("input-label");
+        Region space = new Region();
+        space.setMinWidth(40);
 
         filePathField = new TextField();
         filePathField.setFont(FontLoader.light(14));
@@ -54,7 +56,7 @@ public class ImageFileField {
         browseBtn = createBrowseBtn();
         clearBtn = createClearButton();
 
-        HBox inputRow = new HBox(12, label, filePathField, browseBtn, clearBtn);
+        HBox inputRow = new HBox(12, label, space, filePathField, browseBtn, clearBtn);
         inputRow.setAlignment(Pos.CENTER_LEFT);
 
         Region spacer = new Region();

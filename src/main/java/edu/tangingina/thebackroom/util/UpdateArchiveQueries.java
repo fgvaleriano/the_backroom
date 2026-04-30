@@ -30,5 +30,8 @@ public class UpdateArchiveQueries {
             "from platform pf  join media_game_platform " +
             "mgp on pf.platform_id = mgp.platform_id where mgp.media_id = ?";
 
-    public static final String getString = "select icon_path from media where media_id = ?";
+    public static final String getString = "select icon_path as path from media where media_id = ?";
+
+    public static final String fetch_access_links = "select w.name, ma.url from website w " +
+            "join media_access ma on w.website_id = ma.website_id where ma.media_id = ?";
 }

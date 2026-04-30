@@ -227,10 +227,19 @@ public class AccessLinkField {
                 chip.setOnAction(e -> {
                     values.remove(newLink);
                     valuesPane.getChildren().remove(chip);
+                    if (values.isEmpty()) {
+                        valuesRow.setVisible(false);
+                        valuesRow.setManaged(false);
+                    }
                 });
 
                 valuesPane.getChildren().add(chip);
             }
+        }
+
+        if (!values.isEmpty()) {
+            valuesRow.setVisible(true);
+            valuesRow.setManaged(true);
         }
     }
 }
