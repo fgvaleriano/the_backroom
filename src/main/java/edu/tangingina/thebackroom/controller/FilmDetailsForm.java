@@ -135,14 +135,14 @@ public class FilmDetailsForm extends BaseMediaForm{
         return genreField;
     }
 
-    public void populateForm (ResultSet rs) {
+    public void populateForm (ResultSet rs, String director) {
         try {
             titleField.setValue(rs.getString("name"));
             synopsisField.setValue(rs.getString("synopsis"));
             durationField.setValue(rs.getString("duration"));
             languageField.setValue(rs.getString("language"));
 
-            directorField.setValues(rs.getString("director"));
+            directorField.setValues(director);
             studioField.setValues(rs.getString("studio"));
             genreField.setValues(rs.getString("genre"));
             linkField.setLink(rs.getString("access_link"));

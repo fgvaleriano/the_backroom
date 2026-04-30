@@ -836,5 +836,26 @@ public class FileManager {
         }
     }
 
+    public static String getPersonnelName (int mediaId, String role) {
+        try {
+            DatabaseManager dm = new DatabaseManager();
+            dm.getConnection();
+
+            PreparedStatement pstmt = dm.conn.prepareStatement(UpdateQueries.fetch_person_by_role);
+
+            pstmt.setInt(1, mediaId);
+            pstmt.setString(2, role);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) return rs.getString("name");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return "";
+    }
+
 
 }

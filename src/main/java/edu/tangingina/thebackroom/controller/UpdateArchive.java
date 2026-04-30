@@ -64,12 +64,14 @@ public class UpdateArchive {
         header.setMaxWidth(Double.MAX_VALUE);
         header.setAlignment(Pos.CENTER);
 
+        mediaTypeRow = getMediaType();
+
         mediaTypeSelector.setValue(mediaType);
         mediaTypeSelector.setDisable(true);
 
         dynamicForm = getDynamicForm(mediaType);
 
-        ResultSet rs = FileManager.getMediaData(mediaId);
+        /*ResultSet rs = FileManager.getMediaData(mediaId);
 
         try {
             if (rs != null && rs.next()) {
@@ -82,7 +84,7 @@ public class UpdateArchive {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }*/
         //pulling data from db and populating form
         loadDataFromDB(mediaId, mediaType);
 
@@ -169,6 +171,8 @@ public class UpdateArchive {
         dynamicForm.setAlignment(Pos.TOP_LEFT);
         dynamicForm.setPadding(new Insets(10, 0,0, 15));
 
+        updateDynamicForm(mediaType);
+
         return dynamicForm;
     }
 
@@ -194,7 +198,7 @@ public class UpdateArchive {
                         gameDetailsForm.getView()
                 );
             }
-            case "Film" -> {
+            case "Movie" -> {
                 filmDetailsForm = new FilmDetailsForm();
                 dynamicForm.getChildren().addAll(
                         filmDetailsForm.getView()
@@ -210,6 +214,22 @@ public class UpdateArchive {
     }
 
     private static void loadDataFromDB(int id, String type) {
-
+        try {
+            ResultSet rs = FileManager.getMediaData(id);
+            if (rs != null && rs.next()) {
+                switch (type) {
+                    case "Book" -> bookDetailsForm.populateForm(rs);
+                    case "TV Show" -> tvShowDetailsForm.populateForm(rs);
+                    case "Movie" -> {
+                        String director = FileManager.getPersonnelName(id, "Director");
+                        filmDetailsForm.populateForm(rs, director);
+                    }
+                    case "Game" -> gameDetailsForm.populateForm(rs);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error loading data from DB: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

@@ -3,6 +3,7 @@ package edu.tangingina.thebackroom.controller.dashboard;
 import edu.tangingina.thebackroom.TheBackroom;
 import edu.tangingina.thebackroom.controller.AddArchive_v2;
 import edu.tangingina.thebackroom.controller.LoginController;
+import edu.tangingina.thebackroom.controller.UpdateArchive;
 import edu.tangingina.thebackroom.util.MediaItem;
 import javafx.geometry.*;
 import javafx.geometry.Pos;
@@ -108,7 +109,12 @@ public class DashboardShell extends BorderPane {
 
     private void openImportDialog() { ImportDialog.importDialogView(); }
 
-    private void openExportDialog() { ExportDialog.exportDialogView(); }
+    //private void openExportDialog() { ExportDialog.exportDialogView(); }
+
+    //temporary for update testing
+    private void openExportDialog() {
+        UpdateArchive.updateArchiveView(23, "Movie");
+    }
 
     private void logout() {
         TheBackroom.sm.showLogin();
