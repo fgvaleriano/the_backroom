@@ -898,5 +898,45 @@ public class FileManager {
         return "Uncategorized";
     }
 
+    public static String getMode (int mediaId) {
+        try {
+            DatabaseManager dm = new DatabaseManager();
+            dm.getConnection();
+
+            PreparedStatement pstmt = dm.conn.prepareStatement(UpdateQueries.fetch_game_mode);
+
+            pstmt.setInt(1, mediaId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) return rs.getString("name");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return "Uncategorized";
+    }
+
+    public static String getPlatform (int mediaId) {
+        try {
+            DatabaseManager dm = new DatabaseManager();
+            dm.getConnection();
+
+            PreparedStatement pstmt = dm.conn.prepareStatement(UpdateQueries.fetch_game_platform);
+
+            pstmt.setInt(1, mediaId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) return rs.getString("name");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return "Uncategorized";
+    }
+
 
 }

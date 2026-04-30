@@ -26,12 +26,12 @@ public class FilmDetailsForm extends BaseMediaForm{
         view.getChildren().add(formColumn());
 
         titleField = FormFieldFactory.createTextField("Title", 520);
-        directorField = FormFieldFactory.createMultiValueField("Director", 175);
-        studioField = FormFieldFactory.createMultiValueField("Studio", 175);
+        directorField = FormFieldFactory.createMultiValueField("Director", 200);
+        studioField = FormFieldFactory.createMultiValueField("Studio", 200);
         synopsisField = FormFieldFactory.createTextArea("Synopsis", 520);
         genreField = FormFieldFactory.createMultiValueField("Genre", 120);
         durationField = FormFieldFactory.createTextField("Duration", 120);
-        languageField = FormFieldFactory.createTextField("Language", 120);
+        languageField = FormFieldFactory.createTextField("Language", 200);
         linkField = FormFieldFactory.createAccessLinkField("Access Link");
         widgetField = FormFieldFactory.createImageFileField("Book Cover", 200);
 

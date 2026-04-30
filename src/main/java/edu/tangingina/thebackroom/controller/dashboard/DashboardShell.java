@@ -113,7 +113,7 @@ public class DashboardShell extends BorderPane {
 
     //temporary for update testing
     private void openExportDialog() {
-        UpdateArchive.updateArchiveView(13, "TvShow");
+        UpdateArchive.updateArchiveView(5, "Book");
     }
 
     private void logout() {

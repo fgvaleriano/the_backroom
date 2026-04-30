@@ -20,5 +20,9 @@ public class UpdateQueries {
     public static final String fetch_category = "select c.name from category c " +
             "join media_category mc on c.category_id = mc.category_id where mc.media_id = ?";
 
-    public static final String fetch_game_mode = "";
+    public static final String fetch_game_mode = "select m.name from mode m join " +
+            "media_game_mode mode on m.mode_id = mode.mode_id where mode.media_id = ?";
+
+    public static final String fetch_game_platform = "select pf.name from platform pf  join media_game_platform " +
+            "mgp on pf.platform_id = mgp.platform_id where mgp.media_id = ?";
 }

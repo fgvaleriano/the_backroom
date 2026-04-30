@@ -204,7 +204,12 @@ public class UpdateArchive {
             ResultSet rs = FileManager.getMediaData(id);
             if (rs != null && rs.next()) {
                 switch (type) {
-                    case "Book" -> bookDetailsForm.populateForm(rs);
+                    case "Book" -> {
+                        String author = FileManager.getPersonnelName(id, "Author");
+                        String publisher = FileManager.getCompanyName(id, "Publisher");
+                        String category = FileManager.getCategory(id);
+                        bookDetailsForm.populateForm(rs, author, category, publisher);
+                    }
                     case "TvShow" -> {
                         String director = FileManager.getPersonnelName(id, "Director");
                         String studio = FileManager.getCompanyName(id, "Production Studio");
@@ -218,7 +223,14 @@ public class UpdateArchive {
                         filmDetailsForm.populateForm(rs, director, studio, category);
 
                     }
-                    case "Game" -> gameDetailsForm.populateForm(rs);
+                    case "Game" -> {
+                        String dev = FileManager.getPersonnelName(id, "Game Developer");
+                        String studio = FileManager.getCompanyName(id, "Game Studio");
+                        String category = FileManager.getCategory(id);
+                        String mode = FileManager.getCategory(id);
+                        String platform = FileManager.getPlatform(id);
+                        gameDetailsForm.populateForm(rs, dev, studio, category, mode, platform);
+                    }
                 }
             }
         } catch (SQLException e) {

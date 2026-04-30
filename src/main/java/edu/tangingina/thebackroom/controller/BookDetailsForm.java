@@ -32,13 +32,13 @@ public class BookDetailsForm extends BaseMediaForm {
         view.getChildren().add(formColumn());
 
         titleField = FormFieldFactory.createTextField("Title", 520);
-        authorField = FormFieldFactory.createMultiValueField("Author", 175);
+        authorField = FormFieldFactory.createMultiValueField("Author", 200);
         synopsisField = FormFieldFactory.createTextArea("Synopsis", 520);
-        genreField = FormFieldFactory.createMultiValueField("Genre", 120);
-        publisherField = FormFieldFactory.createMultiValueField("Publisher", 175);
+        publisherField = FormFieldFactory.createMultiValueField("Publisher", 200);
+        genreField = FormFieldFactory.createMultiValueField("Genre", 200);
         pageField = FormFieldFactory.createTextField("Page Count", 120);
-        ISBNfield = FormFieldFactory.createTextField("ISBN", 120);
-        editionField = FormFieldFactory.createTextField("Edition", 120);
+        ISBNfield = FormFieldFactory.createTextField("ISBN", 200);
+        editionField = FormFieldFactory.createTextField("Edition", 200);
         linkField = FormFieldFactory.createAccessLinkField("Access Link");
         widgetField = FormFieldFactory.createImageFileField("Book Cover", 200);
 
@@ -149,7 +149,7 @@ public class BookDetailsForm extends BaseMediaForm {
         return genreField;
     }
 
-    public void populateForm (ResultSet rs) {
+    public void populateForm (ResultSet rs, String author, String category, String publisher) {
         try {
             titleField.setValue(rs.getString("name"));
             ISBNfield.setValue(rs.getString("isbn"));
@@ -157,9 +157,9 @@ public class BookDetailsForm extends BaseMediaForm {
             editionField.setValue(rs.getString("edition"));
             synopsisField.setValue(rs.getString("synopsis"));
 
-            authorField.setValues(rs.getString("author"));
-            genreField.setValues(rs.getString("genre"));
-            publisherField.setValues(rs.getString("publisher"));
+            authorField.setValues(author);
+            publisherField.setValues(publisher);
+            genreField.setValues(category);
 
             linkField.setLink(rs.getString("access_link"));
 

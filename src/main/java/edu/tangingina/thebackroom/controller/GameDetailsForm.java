@@ -18,7 +18,7 @@ public class GameDetailsForm extends BaseMediaForm{
             - system requirements
      */
 
-    private MultiValueField gameDevField, gameStudioField, genreField, modeField;
+    private MultiValueField gameDevField, gameStudioField, genreField, modeField, platformField;
     private FormFieldGroup titleField, engineField, systemReqsField, synopsisField;
     private ImageFileField widgetField;
     private AccessLinkField linkField;
@@ -27,14 +27,15 @@ public class GameDetailsForm extends BaseMediaForm{
         view.getChildren().addAll(formColumn());
 
         titleField = FormFieldFactory.createTextField("Title", 520);
-        gameDevField = FormFieldFactory.createMultiValueField("Game Developer", 120);
-        gameStudioField = FormFieldFactory.createMultiValueField("Game Studio", 120);
+        gameDevField = FormFieldFactory.createMultiValueField("Game Developer", 200);
+        gameStudioField = FormFieldFactory.createMultiValueField("Game Studio", 200);
         modeField = FormFieldFactory.createMultiValueField("Game Mode", 120);
-        engineField = FormFieldFactory.createTextField("Game Engine", 120);
+        engineField = FormFieldFactory.createTextField("Game Engine", 200);
+        platformField = FormFieldFactory.createMultiValueField("Platform", 200);
         genreField = FormFieldFactory.createMultiValueField("Genre", 120);
         linkField = FormFieldFactory.createAccessLinkField("Access Link");
         widgetField = FormFieldFactory.createImageFileField("Cover Art", 200);
-        systemReqsField = FormFieldFactory.createTextArea("System Request", 520);
+        systemReqsField = FormFieldFactory.createTextArea("System Requirements", 520);
         synopsisField = FormFieldFactory.createTextArea("Synopsis", 520);
 
         formColumn().getChildren().addAll(
@@ -44,6 +45,7 @@ public class GameDetailsForm extends BaseMediaForm{
                 synopsisField.getView(),
                 modeField.getView(),
                 engineField.getView(),
+                platformField.getView(),
                 genreField.getView(),
                 FormFieldFactory.createYearPicker("Release Year", 120),
                 systemReqsField.getView(),
@@ -147,17 +149,19 @@ public class GameDetailsForm extends BaseMediaForm{
         return genreField;
     }
 
-    public void populateForm(ResultSet rs) {
+    public void populateForm(ResultSet rs, String game_dev, String game_studio, String category, String game_mode,
+                             String platform) {
         try {
             titleField.setValue(rs.getString("name"));
             synopsisField.setValue(rs.getString("synopsis"));
             engineField.setValue(rs.getString("game_engine"));
             systemReqsField.setValue(rs.getString("system_requirements"));
 
-            gameDevField.setValues(rs.getString("game_developer"));
-            gameStudioField.setValues(rs.getString("game_studio"));
-            modeField.setValues(rs.getString("game_mode"));
-            genreField.setValues(rs.getString("genre"));
+            gameDevField.setValues(game_dev);
+            gameStudioField.setValues(game_studio);
+            modeField.setValues(game_mode);
+            genreField.setValues(category);
+            platformField.setValues(platform);
 
             linkField.setLink(rs.getString("access_link"));
 

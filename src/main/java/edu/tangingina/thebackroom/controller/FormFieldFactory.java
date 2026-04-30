@@ -18,6 +18,7 @@ public class FormFieldFactory {
     public static Label createLabel(String labelText) {
         Label label = new Label(labelText);
         label.setFont(FontLoader.bold(18));
+        label.setWrapText(true);
         label.getStyleClass().add("input-label");
 
         label.setMinWidth(labelSectionWidth);
