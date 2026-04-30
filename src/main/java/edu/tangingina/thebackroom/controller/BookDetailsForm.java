@@ -18,6 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import javax.swing.text.Element;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -202,6 +203,28 @@ public class BookDetailsForm extends BaseMediaForm {
 
     public MultiValueField getGenreField() {
         return genreField;
+    }
+
+    public void populateForm (ResultSet rs, String author, String category, String publisher, String icon) {
+        try {
+            titleField.setValue(rs.getString("name"));
+            ISBNfield.setValue(rs.getString("isbn"));
+            pageField.setValue(rs.getString("page_count"));
+            editionField.setValue(rs.getString("edition"));
+            synopsisField.setValue(rs.getString("synopsis"));
+
+            authorField.setValues(author);
+            publisherField.setValues(publisher);
+            genreField.setValues(category);
+
+            linkField.setLink(rs.getString("access_link"));
+
+            widgetField.setImage(icon);
+
+        } catch (Exception ex) {
+            System.err.println("Error populating Book From: "+ ex.getMessage());
+            ex.printStackTrace();
+        }
     }
 
 }

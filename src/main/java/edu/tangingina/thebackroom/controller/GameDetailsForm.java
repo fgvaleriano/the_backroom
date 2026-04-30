@@ -14,6 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -215,5 +216,28 @@ public class GameDetailsForm extends BaseMediaForm{
         return genreField;
     }
 
+    public void populateForm(ResultSet rs, String game_dev, String game_studio, String category, String game_mode,
+                             String platform) {
+        try {
+            titleField.setValue(rs.getString("name"));
+            synopsisField.setValue(rs.getString("synopsis"));
+            engineField.setValue(rs.getString("game_engine"));
+            systemReqsField.setValue(rs.getString("system_requirements"));
 
+            gameDevField.setValues(game_dev);
+            gameStudioField.setValues(game_studio);
+            modeField.setValues(game_mode);
+            genreField.setValues(category);
+            platformField.setValues(platform);
+
+            linkField.setLink(rs.getString("access_link"));
+
+            String path = rs.getString("icon_path");
+            widgetField.setImage(path);
+
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
 }

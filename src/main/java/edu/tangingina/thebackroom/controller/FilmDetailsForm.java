@@ -14,6 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -186,5 +187,26 @@ public class FilmDetailsForm extends BaseMediaForm{
 
     public MultiValueField getGenreField() {
         return genreField;
+    }
+
+    public void populateForm (ResultSet rs, String director, String studio, String category) {
+        try {
+            titleField.setValue(rs.getString("name"));
+            synopsisField.setValue(rs.getString("synopsis"));
+            durationField.setValue(rs.getString("duration"));
+            languageField.setValue(rs.getString("language"));
+
+            directorField.setValues(director);
+            studioField.setValues(studio);
+            genreField.setValues(category);
+            linkField.setLink(rs.getString("access_link"));
+
+            String path = rs.getString("icon_path");
+            widgetField.setImage(path);
+
+        } catch (Exception ex) {
+            System.err.println("Error populating TV Show form: " + ex.getMessage());
+            ex.printStackTrace();
+        }
     }
 }

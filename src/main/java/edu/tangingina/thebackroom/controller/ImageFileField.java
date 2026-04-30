@@ -190,4 +190,21 @@ public class ImageFileField {
         return selectedFile.getName();
     }
 
+
+    public void setImage(String filePath) {
+        if (filePath == null) {
+            clearSelectedImage();
+            return;
+        }
+
+        File file = new File(filePath);
+
+        if (file.exists()) {
+            setSelectedImage(file);
+        } else {
+            System.err.println("Widget image file not found at: " + filePath);
+            clearSelectedImage();
+        }
+    }
+
 }
