@@ -1,9 +1,6 @@
 package edu.tangingina.thebackroom.controller.dashboard;
 
-import edu.tangingina.thebackroom.util.ConfigManager;
-import edu.tangingina.thebackroom.util.DatabaseManager;
-import edu.tangingina.thebackroom.util.ExportManager;
-import edu.tangingina.thebackroom.util.FontLoader;
+import edu.tangingina.thebackroom.util.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.*;
@@ -82,7 +79,7 @@ public class ExportDialog {
                     DatabaseManager db = new DatabaseManager();
                     //db.getConnection();
 
-                    ExportManager.exportData(db, file.getAbsolutePath(), mediaTypeSelector.getValue());
+                    FileManager.exportData(db, file.getAbsolutePath(), mediaTypeSelector.getValue());
                     closeWindow();
                 } catch (Exception ex) {
                     ex.printStackTrace();
