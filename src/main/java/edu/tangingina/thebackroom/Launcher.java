@@ -16,7 +16,7 @@ public class Launcher {
             System.out.println("                         SETUP SUCCESSFUL!                               ");
             System.out.println("      Please rerun the program to apply configuration changes. ");
             System.out.println("======================================================================");
-            System.exit(0); // Kill the app here so they have to restart
+            System.exit(0);
         }
     }
 }

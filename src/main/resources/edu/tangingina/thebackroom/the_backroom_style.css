@@ -424,6 +424,18 @@
     -fx-scale-y: 0.95;
 }
 
+.cards-static {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-effect: dropshadow(gaussian, #EED0AC, 16, 0.2, 0, 6);
+}
+
+.card-alt-static {
+    -fx-background-color: #8B2E2E;
+    -fx-alignment: center;
+    -fx-padding: 10;
+}
+
 /*alternative cards */
 .card-alt {
     -fx-pref-width: 120;
@@ -448,3 +460,43 @@
 .light-bkg {
     -fx-background-color: #F2E4D3;
 }
+
+/* ========== Media Details Page ==========*/
+.detail-page {
+    -fx-padding: 65 0 90 0;
+    -fx-background-color: transparent;
+}
+
+.detail-card {
+    -fx-background-color: rgba(130, 165, 160, 0.15);
+    -fx-background-radius: 14;
+    -fx-padding: 50 60 60 55;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 18, 0.2, 0, 4);
+}
+
+.content-layout {
+    -fx-padding: 5 0 0 0;
+}
+
+.action-bar {
+    -fx-padding: 0 0 8 0;
+}
+
+.media-details-box {
+    -fx-padding: 22 0 0 0;
+}
+
+.media-divider {
+    -fx-min-height: 2;
+    -fx-pref-height: 2;
+    -fx-max-height: 2;
+    -fx-background-color: rgba(30, 30, 30, 0.45);
+    -fx-pref-width: 650;
+    -fx-padding: 0 5 0 5;
+}
+
+.media-no-input {
+    -fx-text-fill: #888888;
+}
+
+

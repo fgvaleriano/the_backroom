@@ -5,6 +5,8 @@ import edu.tangingina.thebackroom.model.Media;
 import javafx.geometry.*;
 import javafx.scene.image.*;
 
+import java.util.function.Consumer;
+
 public class DashboardHomeView extends BaseView{
     /*
         Responsible for showing dashboard content of the home page
@@ -12,8 +14,11 @@ public class DashboardHomeView extends BaseView{
 
     ImageView titleLogo, logo;
     MediaSection books, games, films;
-    public DashboardHomeView(){
+    private Consumer<Integer> mediaSelected; // New field
+
+    public DashboardHomeView(Consumer<Integer> mediaSelected){
         //dont merge this part na
+        this.mediaSelected = mediaSelected;
         buildLayout();
     }
 
@@ -28,21 +33,20 @@ public class DashboardHomeView extends BaseView{
         //book section
 
         //below this dont need to merge
-        books = new MediaSection("Books");
-        Media m;
+        books = new MediaSection("Books", mediaSelected);
         for(Integer id : TheBackroom.bookMedia){
-            m = TheBackroom.mediaList.get(id);
+            Media m = TheBackroom.mediaList.get(id);
             books.addCard(m.getID().toString(), m.getMediaIcon());
         }
 
-        games = new MediaSection("Games");
+        games = new MediaSection("Games", mediaSelected);
         for(Integer id : TheBackroom.gameMedia){
-            m = TheBackroom.mediaList.get(id);
+            Media m = TheBackroom.mediaList.get(id);
             games.addCard(m.getID().toString(), m.getMediaIcon());
         }
-        films = new MediaSection("Films and TV Shows");
+        films = new MediaSection("Films and TV Shows", mediaSelected);
         for(Integer id : TheBackroom.videoMedia){
-            m = TheBackroom.mediaList.get(id);
+            Media m = TheBackroom.mediaList.get(id);
             films.addCard(m.getID().toString(), m.getMediaIcon());
         }
 

@@ -9,6 +9,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class MediaSection extends VBox {
     /*
@@ -18,8 +19,10 @@ public class MediaSection extends VBox {
     private Label sectionTitle;
     private FlowPane cardContainer;
 
-    public MediaSection(String title) {
+    private Consumer<Integer> onMediaSelected;
 
+    public MediaSection(String title, Consumer<Integer> onMediaSelected) {
+        this.onMediaSelected = onMediaSelected;
         buildLayout(title);
 
     }
@@ -48,16 +51,14 @@ public class MediaSection extends VBox {
 
         card.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.PRIMARY) {
-                System.out.println("User clicked on " + TheBackroom.mediaList.get(Integer.valueOf(title)).getMediaName());
+
+                if (onMediaSelected != null) {
+                    onMediaSelected.accept(Integer.valueOf(title));
+                }
+                //We switch scenes here
             }
         });
 
         cardContainer.getChildren().add(card);
-    }
-
-    public void addCards(List<MediaItem> items) {
-        for (MediaItem item : items) {
-            addCard(item.getTitle(), item.getImagePath());
-        }
     }
 }

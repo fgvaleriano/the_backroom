@@ -9,6 +9,7 @@ public class FontLoader {
     public static final String semi_bold_family;
     public static final String light_family;
     public static final String extra_family;
+    public static final String plex_family;
 
     static {
         Font regular = Font.loadFont(
@@ -36,11 +37,17 @@ public class FontLoader {
                 10
         );
 
+        Font plex = Font.loadFont(
+                FontLoader.class.getResourceAsStream("/edu/tangingina/thebackroom/assets/IBMPlexMono-Regular.ttf"),
+                10
+        );
+
         regular_family = regular.getFamily();
         bold_family = bold.getFamily();
         semi_bold_family =  semi_bold.getFamily();
         light_family = light.getFamily();
         extra_family = extra.getFamily();
+        plex_family = plex.getFamily();
     }
 
     public static Font regular(double size) {
@@ -61,6 +68,10 @@ public class FontLoader {
 
     public static Font extra(double size) {
         return Font.font(extra_family, size);
+    }
+
+    public static Font plex(double size) {
+        return Font.font(plex_family, size);
     }
 
     public static void debug() {

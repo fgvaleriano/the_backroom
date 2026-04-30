@@ -24,45 +24,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
-/*
-===================================================
-  (ノಠ益ಠ)ノ  The Fucking To do LIST!!!!!!!
-==================================================
-    [] UI ARCHITECTURE & FIXES
-       - Fix FXML Location: Use leading slash "/edu/tangingina/..."
-       - Controller Pathing: Ensure fx:controller includes full package name.
-       - Resource Migration: Move all CSS and static icons to /resources.
-
-    [] UI DESIGN & WORKFLOW
-       - Scene Switching: Methods in TheBackroom.java to toggle between views.
-       - Button Logic: Add onAction handlers to switch VBox visibility (Step 1, 2, 3).
-       - Controller Linking: Match all @FXML variables with FXML fx:id.
-
-    [] DATABASE ENGINE (AIVEN CLOUD)
-       - Connection: Finalize DatabaseManager.java with SSL and Aiven URI.
-       - Schema Setup: Create tables for Users, Archives, and Favorites.
-       - DAO & Impl: Create interfaces and classes; Impl MUST throw Exceptions.
-
-    [] HOME PAGE & SEARCH
-       - Data Fetching: Query to get all media (Movies, Books, etc.) for the home view.
-       - Search Filter: Implement "WHERE name LIKE %?%" logic in the DAO.
-       - Category Filter: Filter results by Media Type or Genre.
-
-    [] PERSONALIZATION & FAVORITES
-       - Favorites Table: Schema (user_id, archive_id) to link items to users.
-       - Recommendations: Query to suggest items based on the user's favorite genre.
-       - Toggle Feature: Heart/Star button to add or remove items from Favorites.
-
-    [] ERROR HANDLING & POLISH
-       - UI Alerts: Use JavaFX Alerts to display errors thrown by the Impl.
-       - Validation: Prevent saving if required fields (Name, Type) are empty.
-
-    [DONE] LOGIN & SIGNUP
-
-    [] (ノಠ益ಠ)ノ MAKE EVRYTHING FUCKING WORK........... (ಥ﹏ಥ)(╥﹏╥)(╥﹏╥)(╥﹏╥)
-
- */
-
 public class TheBackroom extends Application {
     public static boolean inSession = false;
     public static Users currUser;
@@ -80,7 +41,7 @@ public class TheBackroom extends Application {
     public static SceneManager sm;
 
     public static FileManager fm;
-    InternetManager im = new InternetManager();
+    public static InternetManager im = new InternetManager();
 
     public static CategoryDaoImpl categoryDao = new CategoryDaoImpl();
     public static WebsiteDaoImpl websiteDao = new WebsiteDaoImpl();

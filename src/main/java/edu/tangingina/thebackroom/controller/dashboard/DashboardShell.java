@@ -6,6 +6,7 @@ import edu.tangingina.thebackroom.controller.LoginController;
 import edu.tangingina.thebackroom.util.MediaItem;
 import javafx.geometry.*;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
@@ -13,6 +14,7 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class DashboardShell extends BorderPane {
     /*
@@ -24,6 +26,7 @@ public class DashboardShell extends BorderPane {
     private ScrollPane scrollPane;
     private StackPane center;
     private Image noiseImg;
+    private Consumer<Integer> onMediaSelected;
 
     public DashboardShell() {
         //this.setTop(new NavbarComponent());             //navigation bar will always be on top
@@ -35,10 +38,11 @@ public class DashboardShell extends BorderPane {
         this.getStyleClass().add("dashboard-shell"); //a tag for this class for later refreshing....
 
         navBar = new NavbarComponent(
-                () -> setView(new DashboardHomeView()),
-                () -> setView(new MediaCategoryView("Books")),
-                () -> setView(new MediaCategoryView("Games")),
-                () -> setView( new MediaCategoryView("Movie", "TvShow")));
+                () -> showHome(),
+                () -> showCategory("Books"),
+                () -> showCategory("Games"),
+                () -> showCategory("Movie", "TvShow")
+        );
 
 
         if(TheBackroom.currUser == null){
@@ -90,15 +94,28 @@ public class DashboardShell extends BorderPane {
         center.getChildren().addAll(noise, noiseLayer, scrollPane);
 
         this.setCenter(center);
-
-        setView(new DashboardHomeView());
+        showHome();
     }
 
     //for the modular switcher
     public void setView(BaseView view) {
         javafx.application.Platform.runLater(() -> {
             contentArea.getChildren().clear();
-            contentArea.getChildren().add(view.getView());
+
+            // Ensure the view expands to fill the Shell's height
+            Node viewNode = view.getView();
+            VBox.setVgrow(viewNode, Priority.ALWAYS);
+
+            contentArea.getChildren().add(viewNode);
+
+            if (view instanceof MediaDetailsView) {
+                scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+                contentArea.setPrefHeight(Region.USE_COMPUTED_SIZE);
+            } else {
+                scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+                contentArea.prefHeightProperty().unbind();
+                contentArea.setPrefHeight(Region.USE_COMPUTED_SIZE);
+            }
         });
 
     }
@@ -107,10 +124,10 @@ public class DashboardShell extends BorderPane {
         String current = NavbarComponent.currentView;
 
         switch (current) {
-            case "Home" -> setView(new DashboardHomeView());
-            case "Book" -> setView(new MediaCategoryView("Books"));
-            case "Game" -> setView(new MediaCategoryView("Games"));
-            case "Film/TvShow" -> setView(new MediaCategoryView("Movie", "TvShow"));
+            case "Home" -> showHome();
+            case "Book" -> showCategory("Books");
+            case "Game" -> showCategory("Games");
+            case "Film/TvShow" -> showCategory("Movie", "TvShow");
         }
     }
 
@@ -155,6 +172,24 @@ public class DashboardShell extends BorderPane {
 
     private void login(){
         TheBackroom.sm.showLogin();
+    }
+
+    private void openMediaDetails(int mediaID, Runnable onBack){
+        MediaDetailsView mediaDetails = new MediaDetailsView(mediaID, onBack);
+        setView(mediaDetails);
+        scrollPane.setVvalue(0);
+    }
+
+    private void showHome() {
+        setView(new DashboardHomeView(id -> openMediaDetails(id, this::showHome)));
+    }
+
+    private void showCategory(String type) {
+        setView(new MediaCategoryView(type, id -> openMediaDetails(id, () -> showCategory(type))));
+    }
+
+    private void showCategory(String type1, String type2) {
+        setView(new MediaCategoryView(type1, type2, id -> openMediaDetails(id, () -> showCategory(type1, type2))));
     }
 }
 

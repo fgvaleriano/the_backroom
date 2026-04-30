@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class MediaCategoryView extends BaseView{
@@ -17,14 +18,17 @@ public class MediaCategoryView extends BaseView{
      */
 
     private final List<String> types;
+    private Consumer<Integer> onMediaSelected;
 
-    public MediaCategoryView(String mediaType) {
+    public MediaCategoryView(String mediaType, Consumer<Integer> onMediaSelected) {
+        this.onMediaSelected = onMediaSelected;
         this.types = List.of(mediaType);
         buildLayout();
     }
 
-    public MediaCategoryView(String type1, String type2) {
+    public MediaCategoryView(String type1, String type2, Consumer<Integer> onMediaSelected) {
         this.types = List.of(type1, type2);
+        this.onMediaSelected = onMediaSelected;
         buildLayout();
     }
 
@@ -81,11 +85,11 @@ public class MediaCategoryView extends BaseView{
 
         if(groupedByGenre != null){
             for (Map.Entry<String, List<Media>> entry : groupedByGenre.entrySet()) {
-                MediaSection section = new MediaSection(entry.getKey());
+                MediaSection section = new MediaSection(entry.getKey(), onMediaSelected);
 
                 // Add each real Media object to the UI
                 for (Media m : entry.getValue()) {
-                    section.addCard(m.getMediaName(), m.getMediaIcon());
+                    section.addCard(m.getID().toString(), m.getMediaIcon());
                 }
 
                 root.getChildren().add(section);
