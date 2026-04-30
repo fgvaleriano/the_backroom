@@ -146,17 +146,18 @@ public class TVShowDetailsForm extends BaseMediaForm{
         return genreField;
     }
 
-    public void populateForm(ResultSet rs) {
+    public void populateForm(ResultSet rs, String director, String studio, String category) {
         try {
+            System.out.println("Reached here");
             titleField.setValue(rs.getString("name"));
-            seasonField.setValue(rs.getString("season"));
-            episodeField.setValue(rs.getString("episode"));
-            statusField.setValue(rs.getString("status"));
             synopsisField.setValue(rs.getString("synopsis"));
+            seasonField.setValue(rs.getString("season_count"));
+            episodeField.setValue(rs.getString("episode_count"));
+            statusField.setValue(rs.getString("status"));
 
-            directorField.setValues(rs.getString("director"));
-            studioField.setValues(rs.getString("studio"));
-            genreField.setValues(rs.getString("genre"));
+            directorField.setValues(director);
+            studioField.setValues(studio);
+            genreField.setValues(category);
             linkField.setLink(rs.getString("access_link"));
 
             String path = rs.getString("icon_path");

@@ -16,4 +16,9 @@ public class UpdateQueries {
     public static final String fetch_company_by_role = "select c.name from company c " +
             "join media_company mc on c.company_id = mc.company_id join role r on mc.role_id = r.role_id " +
             "where mc.media_id = ? and r.name = ?";
+
+    public static final String fetch_category = "select c.name from category c " +
+            "join media_category mc on c.category_id = mc.category_id where mc.media_id = ?";
+
+    public static final String fetch_game_mode = "";
 }

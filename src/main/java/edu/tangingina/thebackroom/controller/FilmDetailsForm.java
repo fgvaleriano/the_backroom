@@ -135,7 +135,7 @@ public class FilmDetailsForm extends BaseMediaForm{
         return genreField;
     }
 
-    public void populateForm (ResultSet rs, String director) {
+    public void populateForm (ResultSet rs, String director, String studio, String category) {
         try {
             titleField.setValue(rs.getString("name"));
             synopsisField.setValue(rs.getString("synopsis"));
@@ -143,8 +143,8 @@ public class FilmDetailsForm extends BaseMediaForm{
             languageField.setValue(rs.getString("language"));
 
             directorField.setValues(director);
-            studioField.setValues(rs.getString("studio"));
-            genreField.setValues(rs.getString("genre"));
+            studioField.setValues(studio);
+            genreField.setValues(category);
             linkField.setLink(rs.getString("access_link"));
 
             String path = rs.getString("icon_path");

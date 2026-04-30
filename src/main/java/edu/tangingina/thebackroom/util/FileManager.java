@@ -857,5 +857,46 @@ public class FileManager {
         return "";
     }
 
+    public static String getCompanyName (int mediaId, String role) {
+        try {
+            DatabaseManager dm = new DatabaseManager();
+            dm.getConnection();
+
+            PreparedStatement pstmt = dm.conn.prepareStatement(UpdateQueries.fetch_company_by_role);
+
+            pstmt.setInt(1, mediaId);
+            pstmt.setString(2, role);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) return rs.getString("name");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return "";
+    }
+
+    public static String getCategory (int mediaId) {
+        try {
+            DatabaseManager dm = new DatabaseManager();
+            dm.getConnection();
+
+            PreparedStatement pstmt = dm.conn.prepareStatement(UpdateQueries.fetch_category);
+
+            pstmt.setInt(1, mediaId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) return rs.getString("name");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return "Uncategorized";
+    }
+
 
 }

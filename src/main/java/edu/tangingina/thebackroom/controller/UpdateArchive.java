@@ -71,20 +71,6 @@ public class UpdateArchive {
 
         dynamicForm = getDynamicForm(mediaType);
 
-        /*ResultSet rs = FileManager.getMediaData(mediaId);
-
-        try {
-            if (rs != null && rs.next()) {
-                switch (mediaType) {
-                    case "Book" -> bookDetailsForm.populateForm(rs);
-                    case "TVShow" -> tvShowDetailsForm.populateForm(rs);
-                    case "Film" -> filmDetailsForm.populateForm(rs);
-                    case "Game" -> gameDetailsForm.populateForm(rs);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }*/
         //pulling data from db and populating form
         loadDataFromDB(mediaId, mediaType);
 
@@ -204,7 +190,7 @@ public class UpdateArchive {
                         filmDetailsForm.getView()
                 );
             }
-            case "TV Show" -> {
+            case "TvShow" -> {
                 tvShowDetailsForm = new TVShowDetailsForm();
                 dynamicForm.getChildren().addAll(
                         tvShowDetailsForm.getView()
@@ -219,10 +205,18 @@ public class UpdateArchive {
             if (rs != null && rs.next()) {
                 switch (type) {
                     case "Book" -> bookDetailsForm.populateForm(rs);
-                    case "TV Show" -> tvShowDetailsForm.populateForm(rs);
+                    case "TvShow" -> {
+                        String director = FileManager.getPersonnelName(id, "Director");
+                        String studio = FileManager.getCompanyName(id, "Production Studio");
+                        String category = FileManager.getCategory(id);
+                        tvShowDetailsForm.populateForm(rs, director, studio, category);
+                    }
                     case "Movie" -> {
                         String director = FileManager.getPersonnelName(id, "Director");
-                        filmDetailsForm.populateForm(rs, director);
+                        String studio = FileManager.getCompanyName(id, "Production Studio");
+                        String category = FileManager.getCategory(id);
+                        filmDetailsForm.populateForm(rs, director, studio, category);
+
                     }
                     case "Game" -> gameDetailsForm.populateForm(rs);
                 }
