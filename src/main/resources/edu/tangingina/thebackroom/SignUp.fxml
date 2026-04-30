@@ -158,13 +158,16 @@
                               </DropShadow>
                            </effect>
                         </PasswordField>
-                        <CheckBox fx:id="rememberBox" mnemonicParsing="false" onAction="#rememberChecked" prefHeight="22.0" prefWidth="397.0" styleClass="remember-me-box" stylesheets="@lander_holder.css" text="Remember Me">
+                        <CheckBox fx:id="rememberBox" mnemonicParsing="false" onAction="#rememberChecked" prefHeight="22.0" prefWidth="397.0" styleClass="remember-me-box" stylesheets="@the_backroom_style.css" text="Remember Me">
                            <font>
                               <Font name="Inter 24pt SemiBold" size="20.0" />
                            </font>
                            <VBox.margin>
-                              <Insets top="15.0" />
+                              <Insets left="50.5" top="15.0" />
                            </VBox.margin>
+                           <padding>
+                              <Insets left="30.0" />
+                           </padding>
                         </CheckBox>
                         <Label fx:id="errorLabel" text="Error Display" textAlignment="CENTER" textFill="#d27e31" wrapText="true">
                            <font>
