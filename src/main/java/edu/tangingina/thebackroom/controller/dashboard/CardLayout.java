@@ -22,6 +22,8 @@ public class CardLayout extends StackPane {
     private Label altText;
 
     public CardLayout(String title, String imagePath) {
+        //dont merge this i think...
+
         this.title = title;
         this.imagePath = imagePath;
 
@@ -81,6 +83,7 @@ public class CardLayout extends StackPane {
 
     //when card image is unaccessible
     public StackPane createAltCard() {
+        //dont merge this na....
         StackPane altCard = new StackPane();
         altCard.getStyleClass().add("card-alt");
 

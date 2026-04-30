@@ -13,6 +13,7 @@ public class DashboardHomeView extends BaseView{
     ImageView titleLogo, logo;
     MediaSection books, games, films;
     public DashboardHomeView(){
+        //dont merge this part na
         buildLayout();
     }
 
@@ -25,6 +26,8 @@ public class DashboardHomeView extends BaseView{
 
         //media cards
         //book section
+
+        //below this dont need to merge
         books = new MediaSection("Books");
         Media m;
         for(Integer id : TheBackroom.bookMedia){
