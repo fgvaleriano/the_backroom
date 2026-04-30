@@ -50,6 +50,7 @@ public class DashboardShell extends BorderPane {
         }else if(TheBackroom.currUser.getRole().equals("MODERATOR")){
             navBar.setAdd(this::openAddArchiveDialog);
             navBar.setImport(this::openImportDialog);
+            navBar.setExport(this::openExportDialog);
             navBar.setLogOut(this::logout);
         }else{
             navBar.setLogOut(this::logout);
@@ -136,6 +137,8 @@ public class DashboardShell extends BorderPane {
     }
 
     private void openImportDialog() { ImportDialog.importDialogView(); }
+
+    private void openExportDialog() { ExportDialog.exportDialogView(); }
 
     private void logout() {
         TheBackroom.sm.showLogin();

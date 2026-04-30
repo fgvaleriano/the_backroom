@@ -10,12 +10,15 @@ import javafx.stage.Stage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.sql.*;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.*;
 
 public class FileManager {
     private CategoryDaoImpl categoryDao =  TheBackroom.categoryDao;
@@ -739,4 +742,81 @@ public class FileManager {
     }
 
 
+    public static void exportData (DatabaseManager dm, String filePath, String selectedType) {
+        System.out.println("Preparing to save data");
+        String baseCols = "media_id, name, release_year, synopsis";
+        String specificCols = "";
+        String query;
+
+        try {
+            dm.getConnection();
+            Connection conn = dm.conn;
+
+            if (selectedType != null) {
+                switch (selectedType) {
+                    case "Book":
+                        specificCols = ", isbn, page_count, edition, language";
+                        break;
+                    case "Film":
+                        specificCols = ", duration, language";
+                        break;
+                    case "TV Show":
+                        specificCols = ", season_count, episode_count, status, language";
+                        break;
+                    case "Game":
+                        specificCols = ", game_engine, system_requirements, status";
+                        break;
+                    default:
+                        baseCols = "*";
+                        break;
+                }
+            }
+
+            query = "Select " + baseCols + specificCols + " from media";
+
+            if (selectedType != null && !selectedType.equals("All Media")) {
+                query += " where media_type = ?";
+            }
+
+            try (PreparedStatement pstmt = conn.prepareStatement(query);
+                 PrintWriter out = new PrintWriter(new File(filePath))) {
+
+                if (selectedType != null && !selectedType.equals("All Media")) {
+                    pstmt.setString(1, selectedType);
+                }
+
+                ResultSet rs = pstmt.executeQuery();
+                ResultSetMetaData rsmd = rs.getMetaData();
+                int columns = rsmd.getColumnCount();
+
+                for (int i = 1; i <= columns; i++) {
+                    out.print(rsmd.getColumnName(i) + (i < columns ? ", " : ""));
+                }
+                out.println();
+
+                while (rs.next()) {
+                    for (int i = 1; i <= columns; i++) {
+                        String colName = rsmd.getColumnName(i);
+                        String val = rs.getString(i);
+
+                        if (val == null) {
+                            out.print("" + (i < columns ? "," : ""));
+                        } else {
+                            if (colName.equalsIgnoreCase("isbn")) {
+                                out.print("=\"" + val + "\"");
+                            } else {
+                                out.print(val.replace(",", ";"));
+                            }
+                            out.print(i < columns ? "," : "");
+                        }
+                    }
+                    out.println();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
