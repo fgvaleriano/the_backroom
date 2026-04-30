@@ -10,6 +10,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import javax.swing.text.Element;
+import java.io.File;
 import java.sql.*;
 import java.util.Arrays;
 import java.util.Map;
@@ -149,7 +150,7 @@ public class BookDetailsForm extends BaseMediaForm {
         return genreField;
     }
 
-    public void populateForm (ResultSet rs, String author, String category, String publisher) {
+    public void populateForm (ResultSet rs, String author, String category, String publisher, String icon) {
         try {
             titleField.setValue(rs.getString("name"));
             ISBNfield.setValue(rs.getString("isbn"));
@@ -163,8 +164,17 @@ public class BookDetailsForm extends BaseMediaForm {
 
             linkField.setLink(rs.getString("access_link"));
 
-            String path = rs.getString("icon_path");
-            widgetField.setImage(path);
+            widgetField.setImage(icon);
+
+            /*String path = rs.getString("icon_path");
+            if (path != null && !path.isEmpty()) {
+                File file = new File(path);
+                if (file.exists()) {
+                    //Image img = new Image(file.toURI().toString());
+                    widgetField.setImage(path);
+                }
+            }*/
+            //widgetField.setImage(path);
 
         } catch (Exception ex) {
             System.err.println("Error populating Book From: "+ ex.getMessage());

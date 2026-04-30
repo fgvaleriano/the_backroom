@@ -203,30 +203,34 @@ public class UpdateArchive {
         try {
             ResultSet rs = FileManager.getMediaData(id);
             if (rs != null && rs.next()) {
+
+                String icon = FileManager.getString(id);
+                String category = FileManager.getCategory(id);
+
                 switch (type) {
                     case "Book" -> {
                         String author = FileManager.getPersonnelName(id, "Author");
                         String publisher = FileManager.getCompanyName(id, "Publisher");
-                        String category = FileManager.getCategory(id);
-                        bookDetailsForm.populateForm(rs, author, category, publisher);
+                        System.out.println(icon);
+                        bookDetailsForm.populateForm(rs, author, category, publisher, icon);
                     }
                     case "TvShow" -> {
                         String director = FileManager.getPersonnelName(id, "Director");
                         String studio = FileManager.getCompanyName(id, "Production Studio");
-                        String category = FileManager.getCategory(id);
+                        //String category = FileManager.getCategory(id);
                         tvShowDetailsForm.populateForm(rs, director, studio, category);
                     }
                     case "Movie" -> {
                         String director = FileManager.getPersonnelName(id, "Director");
                         String studio = FileManager.getCompanyName(id, "Production Studio");
-                        String category = FileManager.getCategory(id);
+                        //String category = FileManager.getCategory(id);
                         filmDetailsForm.populateForm(rs, director, studio, category);
 
                     }
                     case "Game" -> {
                         String dev = FileManager.getPersonnelName(id, "Game Developer");
                         String studio = FileManager.getCompanyName(id, "Game Studio");
-                        String category = FileManager.getCategory(id);
+                        //String category = FileManager.getCategory(id);
                         String mode = FileManager.getCategory(id);
                         String platform = FileManager.getPlatform(id);
                         gameDetailsForm.populateForm(rs, dev, studio, category, mode, platform);
