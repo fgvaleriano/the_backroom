@@ -38,6 +38,9 @@ public class BookDetailsForm extends BaseMediaForm {
     private FormFieldGroup titleField, ISBNfield, pageField, editionField, synopsisField, yearField;
     private ImageFileField widgetField;
     private AccessLinkField linkField;
+    private boolean isUpdateMode = false;
+    private int mediaId = -1;
+    private Button btn;
 
     public BookDetailsForm() {
         view.getChildren().add(formColumn());
@@ -74,65 +77,25 @@ public class BookDetailsForm extends BaseMediaForm {
     }
 
     private Node addButton(){
-        Button btn = new Button();
+        btn = new Button();
         btn.getStyleClass().add("image-button");
+
+        refreshButton();
+
+        btn.setOnAction(e -> {
+            if (validateInputs()) {
+                if (isUpdateMode) {
+                    handleUpdate();
+                } else {
+                    handleAdd();
+                }
+            }
+        });
         Image img = new Image(getClass().getResourceAsStream(
                 "/edu/tangingina/thebackroom/assets/add_btn.png"));
         ImageView view = new ImageView(img);
         view.setPreserveRatio(true);
         view.setFitWidth(125);
-
-        btn.setGraphic(view);
-        btn.setOnAction(e -> {
-            System.out.println(validateInputs());
-            if (validateInputs()) {
-                MediaDaoImpl mediaDao = TheBackroom.mediaDao;
-                Utility util = TheBackroom.util;
-                FileManager fm = TheBackroom.fm;
-
-                String title = titleField.getUserInput();
-                MediaType mediaType = MediaType.Book;
-                String synopsis = synopsisField.getUserInput();
-
-                ComboBox<Integer> yearPicker = (ComboBox<Integer>) yearField.getInputs();
-
-                String year = "2024";
-                if(yearPicker != null){
-                    year = String.valueOf(yearPicker.getValue());
-                }
-
-                String imgIcon = fm.saveIMGRelative(widgetField.getSelectedFile());
-                List<String> genre = genreField.getValues();
-                List<AccessLinkField.AccessLink> onlineAccess = linkField.getValues();
-                String isbn = ISBNfield.getUserInput();
-                String edition = editionField.getUserInput();
-                String pageCount = pageField.getUserInput();
-                List<String> author = authorField.getValues();
-                List<String> publisher = publisherField.getValues();
-
-                ArrayList<Category> mediaGenre = util.ensureCategoryExist(genre);
-                ArrayList<Website> mediaWebsite = util.ensureWebsiteExists(onlineAccess);
-                ArrayList<Person> bookAuthor = util.ensurePersonExist(author, "Author");
-                ArrayList<Company> bookPublisher = util.ensureCompanyExists(publisher, "Publisher");
-
-
-                Media media = new Media(0, title, mediaType, year, synopsis, imgIcon, mediaWebsite, mediaGenre);
-                media.setBookDetails(isbn, pageCount, edition, bookAuthor, bookPublisher);
-
-                try{
-                    mediaDao.addMedia(media);
-                    mediaList.put(media.getID(), media);
-                    mediaUniqID.put(util.getMediaKey(media.getMediaName(), media.getMediaType().name(), media.getReleaseYear()), media.getID());
-                    TheBackroom.bookMedia.add(media.getID());
-                    //Show Output Situation
-                    AddArchive_v2.closeWindow();
-
-                }catch (Exception e1){
-                    e1.getMessage();
-                }
-
-            }
-        });
 
         HBox container = new HBox(btn);
         container.setAlignment(Pos.CENTER);
@@ -229,4 +192,111 @@ public class BookDetailsForm extends BaseMediaForm {
         }
     }
 
+    //call beofre showing update form
+    public void setUpdateMode(int mediaId) {
+        this.isUpdateMode = true;
+        this.mediaId = mediaId;
+        refreshButton();
+    }
+
+    private void refreshButton() {
+        String assetName = isUpdateMode ? "update_btn.png" : "add_btn.png";
+        Image img = new Image(getClass().getResourceAsStream("/edu/tangingina/thebackroom/assets/" + assetName));
+        ImageView view = new ImageView(img);
+        view.setPreserveRatio(true);
+        view.setFitWidth(125);
+        btn.setGraphic(view);
+    }
+
+    private void handleAdd() {
+        MediaDaoImpl mediaDao = TheBackroom.mediaDao;
+        Utility util = TheBackroom.util;
+        FileManager fm = TheBackroom.fm;
+
+        String title = titleField.getUserInput();
+        MediaType mediaType = MediaType.Book;
+        String synopsis = synopsisField.getUserInput();
+
+        ComboBox<Integer> yearPicker = (ComboBox<Integer>) yearField.getInputs();
+
+        String year = "2024";
+        if(yearPicker != null){
+            year = String.valueOf(yearPicker.getValue());
+        }
+
+        String imgIcon = fm.saveIMGRelative(widgetField.getSelectedFile());
+        List<String> genre = genreField.getValues();
+        List<AccessLinkField.AccessLink> onlineAccess = linkField.getValues();
+        String isbn = ISBNfield.getUserInput();
+        String edition = editionField.getUserInput();
+        String pageCount = pageField.getUserInput();
+        List<String> author = authorField.getValues();
+        List<String> publisher = publisherField.getValues();
+
+        ArrayList<Category> mediaGenre = util.ensureCategoryExist(genre);
+        ArrayList<Website> mediaWebsite = util.ensureWebsiteExists(onlineAccess);
+        ArrayList<Person> bookAuthor = util.ensurePersonExist(author, "Author");
+        ArrayList<Company> bookPublisher = util.ensureCompanyExists(publisher, "Publisher");
+
+
+        Media media = new Media(0, title, mediaType, year, synopsis, imgIcon, mediaWebsite, mediaGenre);
+        media.setBookDetails(isbn, pageCount, edition, bookAuthor, bookPublisher);
+
+        try{
+            mediaDao.addMedia(media);
+            mediaList.put(media.getID(), media);
+            mediaUniqID.put(util.getMediaKey(media.getMediaName(), media.getMediaType().name(), media.getReleaseYear()), media.getID());
+            TheBackroom.bookMedia.add(media.getID());
+            //Show Output Situation
+            AddArchive_v2.closeWindow();
+
+        }catch (Exception e1){
+            e1.getMessage();
+        }
+    }
+
+    private void handleUpdate() {
+        System.out.println("Update mode");
+        /*MediaDaoImpl mediaDao = TheBackroom.mediaDao;
+        Utility util = TheBackroom.util;
+        FileManager fm = TheBackroom.fm;
+
+        String title = titleField.getUserInput();
+        MediaType mediaType = MediaType.Book;
+        String synopsis = synopsisField.getUserInput();
+
+        ComboBox<Integer> yearPicker = (ComboBox<Integer>) yearField.getInputs();
+        String year = "2024";
+        if (yearPicker != null) year = String.valueOf(yearPicker.getValue());
+
+        // Only save new image if the user picked one, otherwise keep existing path
+        String imgIcon = widgetField.getSelectedFile() != null
+                ? fm.saveIMGRelative(widgetField.getSelectedFile())
+                : widgetField.getCurrentPath(); // add getCurrentPath() to ImageFileField
+
+        List<String> genre = genreField.getValues();
+        List<AccessLinkField.AccessLink> onlineAccess = linkField.getValues();
+        String isbn = ISBNfield.getUserInput();
+        String edition = editionField.getUserInput();
+        String pageCount = pageField.getUserInput();
+        List<String> author = authorField.getValues();
+        List<String> publisher = publisherField.getValues();
+
+        ArrayList<Category> mediaGenre = util.ensureCategoryExist(genre);
+        ArrayList<Website> mediaWebsite = util.ensureWebsiteExists(onlineAccess);
+        ArrayList<Person> bookAuthor = util.ensurePersonExist(author, "Author");
+        ArrayList<Company> bookPublisher = util.ensureCompanyExists(publisher, "Publisher");
+
+        Media media = new Media(mediaId, title, mediaType, year, synopsis, imgIcon, mediaWebsite, mediaGenre);
+        media.setBookDetails(isbn, pageCount, edition, bookAuthor, bookPublisher);
+
+        try {
+            mediaDao.updateMedia(media); // wire this to your UPDATE SQL query
+            mediaList.put(mediaId, media);
+            mediaUniqID.put(util.getMediaKey(title, mediaType.name(), year), mediaId);
+            UpdateArchive.closeWindow();
+        } catch (Exception e1) {
+            e1.getMessage();
+        }*/
+    }
 }

@@ -214,7 +214,7 @@ public class UpdateArchive {
                     case MediaType.Book -> {
                         String author = FileManager.getPersonnelName(id, "Author");
                         String publisher = FileManager.getCompanyName(id, "Publisher");
-
+                        bookDetailsForm.setUpdateMode(id);
                         bookDetailsForm.populateForm(rs, author, category, publisher, icon, links);
                     }
                     case MediaType.TvShow -> {
