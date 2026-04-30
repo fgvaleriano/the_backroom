@@ -1,9 +1,11 @@
 package edu.tangingina.thebackroom.controller.dashboard;
 
+import edu.tangingina.thebackroom.TheBackroom;
 import edu.tangingina.thebackroom.util.FontLoader;
 import edu.tangingina.thebackroom.util.MediaItem;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 
 import java.util.List;
@@ -17,7 +19,9 @@ public class MediaSection extends VBox {
     private FlowPane cardContainer;
 
     public MediaSection(String title) {
+
         buildLayout(title);
+
     }
 
     private void buildLayout(String title) {
@@ -41,6 +45,13 @@ public class MediaSection extends VBox {
 
     public void addCard(String title, String imagePath) {
         CardLayout card = new CardLayout(title, imagePath);
+
+        card.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.PRIMARY) {
+                System.out.println("User clicked on " + TheBackroom.mediaList.get(Integer.valueOf(title)).getMediaName());
+            }
+        });
+
         cardContainer.getChildren().add(card);
     }
 
