@@ -57,6 +57,7 @@ public class DashboardShell extends BorderPane {
         }
         //we need to verify first the current user for the userDropdown, before creating the profile dropdown
         navBar.setProfileDropdown();
+       navBar.setSearch(this::showSearch);
 
         StackPane navWrapper = new StackPane(navBar);
         navWrapper.setPadding(new Insets(0, 0, 10, 0));
@@ -140,6 +141,10 @@ public class DashboardShell extends BorderPane {
 
     private void openExportDialog() { ExportDialog.exportDialogView(); }
 
+    private void showSearch() {
+        setView(new SearchView(id -> openMediaDetails(id, this::showSearch)));
+    }
+
     private void logout() {
         TheBackroom.sm.showLogin();
 
@@ -149,28 +154,6 @@ public class DashboardShell extends BorderPane {
         }
 
         TheBackroom.currUser = null;
-
-        //=====================>>>>Do the showing of medias na on the front page and for each yes <<<<=====================
-
-        /*
-        Stage stage = (Stage) this.getScene().getWindow();
-        boolean maxSize = stage.isMaximized();
-
-        double currentWid = stage.getWidth();
-        double currentHi = stage.getHeight();
-
-        LoginController logout = new LoginController();
-        StackPane loginRoot = logout.getLayout(stage);
-
-        Scene loginScene = new Scene(loginRoot, currentWid, currentHi);
-        stage.setScene(loginScene);
-        stage.show();
-        stage.setResizable(false);
-        loginScene.getStylesheets().add(getClass().
-                getResource("/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm());
-        stage.setScene(loginScene);
-        stage.setMaximized(maxSize);
-        */
     }
 
     private void login(){

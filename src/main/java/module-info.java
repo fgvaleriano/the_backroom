@@ -11,6 +11,7 @@ module edu.tangingina.thebackroom {
     requires com.sun.jna;
     requires javafx.graphics;
     requires javafx.media;
+    requires java.smartcardio;
 
     opens edu.tangingina.thebackroom.controller to javafx.fxml;
     opens edu.tangingina.thebackroom to javafx.fxml;

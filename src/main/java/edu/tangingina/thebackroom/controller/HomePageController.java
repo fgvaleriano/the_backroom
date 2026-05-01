@@ -13,7 +13,7 @@ import java.util.Objects;
 public class HomePageController {
     StackPane root;
     Image image;
-    ImageView imageView, titleView, logoView, titleImage, logoImage;
+    ImageView imageView, titleView, titleImage, logoImage;
     VBox titleBox;
     HBox navBar, navBtns;
     Button bkBtn, gmBtn, fmBtn, prfBtn, searchBar;

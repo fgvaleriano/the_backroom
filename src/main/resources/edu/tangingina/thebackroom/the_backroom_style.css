@@ -349,9 +349,10 @@
     -fx-font-size: 14px;
     -fx-padding: 8 18 8 18;
     -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, #EED0AC, 16, 0.2, 0, 6);
 }
 
-.search-button:pressed, .profile-circle:hover, .profile-circle:pressed {
+.search-btn:hover, .profile-circle:hover, .profile-circle:pressed {
     -fx-scale-x: 0.95;
     -fx-scale-y: 0.95;
 }
@@ -507,6 +508,19 @@
     -fx-effect: dropshadow(gaussian, #D27E31, 15, 0, 0, 0);
     -fx-border-color: #D27E31;
     -fx-border-radius: 5;
+}
+
+/*  SEARCH STYLING */
+
+.search-field {
+    -fx-background-radius: 10;
+    -fx-background-color: #FFFAFA;
+        -fx-padding: 6 10 6 10;
+        -fx-effect: dropshadow(gaussian, #EED0AC, 15, 0, 0, 0);
+}
+
+.result-header-text {
+    -fx-text-fill: #3B3A3A;
 }
 
 
