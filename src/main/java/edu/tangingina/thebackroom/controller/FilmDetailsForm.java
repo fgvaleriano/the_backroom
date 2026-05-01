@@ -4,11 +4,13 @@ import edu.tangingina.thebackroom.TheBackroom;
 import edu.tangingina.thebackroom.dao.impl.MediaDaoImpl;
 import edu.tangingina.thebackroom.model.*;
 import edu.tangingina.thebackroom.util.FileManager;
+import edu.tangingina.thebackroom.util.FontLoader;
 import edu.tangingina.thebackroom.util.Utility;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -35,19 +37,20 @@ public class FilmDetailsForm extends BaseMediaForm{
     private int mediaId = -1;
     private boolean isUpdateMode = false;
     private Button btn;
+    private Label errorLabel;
 
     public FilmDetailsForm() {
         view.getChildren().add(formColumn());
 
         titleField = FormFieldFactory.createTextField("Title", 520);
-        directorField = FormFieldFactory.createMultiValueField("Director", 175);
-        studioField = FormFieldFactory.createMultiValueField("Studio", 175);
+        directorField = FormFieldFactory.createMultiValueField("Director", 200);
+        studioField = FormFieldFactory.createMultiValueField("Studio", 200);
         synopsisField = FormFieldFactory.createTextArea("Synopsis", 520);
-        genreField = FormFieldFactory.createMultiValueField("Genre", 120);
-        durationField = FormFieldFactory.createTextField("Duration", 120);
-        languageField = FormFieldFactory.createTextField("Language", 120);
+        genreField = FormFieldFactory.createMultiValueField("Genre", 200);
+        durationField = FormFieldFactory.createTextField("Duration", 200);
+        languageField = FormFieldFactory.createTextField("Language", 200);
         linkField = FormFieldFactory.createAccessLinkField("Access Link");
-        widgetField = FormFieldFactory.createImageFileField("Movie Poster", 200);
+        widgetField = FormFieldFactory.createImageFileField("Movie Poster", 250);
         yearField = FormFieldFactory.createYearPicker("Release Year", 120);
 
         formColumn().getChildren().addAll(
@@ -72,6 +75,12 @@ public class FilmDetailsForm extends BaseMediaForm{
         btn = new Button();
         btn.getStyleClass().add("image-button");
 
+        errorLabel = new Label("An error occurred, please try again");
+        errorLabel.setFont(FontLoader.bold(20));
+        errorLabel.getStyleClass().add("error-label");
+        errorLabel.setVisible(false);
+        errorLabel.setManaged(false);
+
         refreshButton();
 
         btn.setOnAction(e -> {
@@ -83,13 +92,11 @@ public class FilmDetailsForm extends BaseMediaForm{
                 }
             }
         });
-        Image img = new Image(getClass().getResourceAsStream(
-                "/edu/tangingina/thebackroom/assets/add_btn.png"));
-        ImageView view = new ImageView(img);
-        view.setPreserveRatio(true);
-        view.setFitWidth(125);
 
-        HBox container = new HBox(btn);
+        HBox btnContainer = new HBox(btn);
+        btnContainer.setAlignment(Pos.CENTER);
+
+        VBox container = new VBox(8, btnContainer, errorLabel);
         container.setAlignment(Pos.CENTER);
         container.setPrefWidth(520);
 
@@ -162,6 +169,11 @@ public class FilmDetailsForm extends BaseMediaForm{
             durationField.setValue(rs.getString("duration"));
             languageField.setValue(rs.getString("language"));
 
+            ComboBox<Integer> yearPicker = (ComboBox<Integer>) yearField.getInputs();
+            if (yearPicker != null) {
+                yearPicker.setValue(Integer.parseInt(rs.getString("release_year")));
+            }
+
             directorField.setValues(director);
             studioField.setValues(studio);
             genreField.setValues(category);
@@ -232,11 +244,13 @@ public class FilmDetailsForm extends BaseMediaForm{
             mediaDao.addMedia(media);
             mediaList.put(media.getID(), media);
             mediaUniqID.put(util.getMediaKey(media.getMediaName(), media.getMediaType().name(), media.getReleaseYear()), media.getID());
-            TheBackroom.videoMedia.add(media.getID());
-            //Show Output Situation
+            TheBackroom.bookMedia.add(media.getID());
+
             AddArchive_v2.closeWindow();
 
         }catch (Exception e1){
+            errorLabel.setVisible(true);
+            errorLabel.setManaged(true);
             e1.getMessage();
         }
     }

@@ -34,6 +34,7 @@ public class ImageFileField {
     private Button browseBtn, clearBtn;
     private ImageView imagePreview;
     private StackPane previewBox;
+    private String currentPath;
 
     private File selectedFile;
 
@@ -194,6 +195,7 @@ public class ImageFileField {
 
 
     public void setImage(String filePath) {
+        this.currentPath = filePath;
         if (filePath == null) {
             clearSelectedImage();
             return;
@@ -207,6 +209,10 @@ public class ImageFileField {
             System.err.println("Widget image file not found at: " + filePath);
             clearSelectedImage();
         }
+    }
+
+    public String getCurrentPath() {
+        return currentPath;
     }
 
 }

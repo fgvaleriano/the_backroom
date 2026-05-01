@@ -26,6 +26,8 @@ public class UpdateArchiveQueries {
     public static final String fetch_game_mode = "select group_concat(m.name separator ', ') as all_mode from mode m join " +
             "media_game_mode mode on m.mode_id = mode.mode_id where mode.media_id = ?";
 
+    public static final String fetch_tv_show_status = "select statuc from tv_show_details where media_id = ?";
+
     public static final String fetch_game_platform = "select group_concat(pf.name separator ', ') as all_platform " +
             "from platform pf  join media_game_platform " +
             "mgp on pf.platform_id = mgp.platform_id where mgp.media_id = ?";
@@ -34,4 +36,18 @@ public class UpdateArchiveQueries {
 
     public static final String fetch_access_links = "select w.name, ma.url from website w " +
             "join media_access ma on w.website_id = ma.website_id where ma.media_id = ?";
+
+    public static final String update_media = "update media set name = ?, synopsis = ?, release_year = ?, " +
+            "icon path = ? where media_id = ?";
+
+    public static final String update_book_deets = "update book_details set isbn = ?, page_count = ?, edition = ? " +
+            "where media _id = ?";
+
+    public static final String delete_media_category = "delete from media_catgegory where media_id = ?";
+
+    public static final String delete_media_personnel = "delete from media_personnel where media_id = ? and role = ?";
+
+    public static final String delete_media_company = "delete from media_company where media_id = ? and role = ?";
+
+    public static final String delete_media_access = "delete from media_access where media_id = ?";
 }

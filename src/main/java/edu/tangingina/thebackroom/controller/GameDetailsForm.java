@@ -4,11 +4,13 @@ import edu.tangingina.thebackroom.TheBackroom;
 import edu.tangingina.thebackroom.dao.impl.MediaDaoImpl;
 import edu.tangingina.thebackroom.model.*;
 import edu.tangingina.thebackroom.util.FileManager;
+import edu.tangingina.thebackroom.util.FontLoader;
 import edu.tangingina.thebackroom.util.Utility;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -36,20 +38,21 @@ public class GameDetailsForm extends BaseMediaForm{
     private int mediaId = -1;
     private boolean isUpdateMode = false;
     private Button btn;
+    private Label errorLabel;
 
     public GameDetailsForm() {
         view.getChildren().addAll(formColumn());
 
         titleField = FormFieldFactory.createTextField("Title", 520);
-        gameDevField = FormFieldFactory.createMultiValueField("Game Developer", 120);
-        gameStudioField = FormFieldFactory.createMultiValueField("Game Studio", 120);
-        gamePublisherField = FormFieldFactory.createMultiValueField("Game Publisher", 120);
-        modeField = FormFieldFactory.createMultiValueField("Game Mode", 120);
-        platformField = FormFieldFactory.createMultiValueField("Game Platform", 120);
-        engineField = FormFieldFactory.createTextField("Game Engine", 120);
-        genreField = FormFieldFactory.createMultiValueField("Genre", 120);
+        gameDevField = FormFieldFactory.createMultiValueField("Game Developer", 200);
+        gameStudioField = FormFieldFactory.createMultiValueField("Game Studio", 200);
+        gamePublisherField = FormFieldFactory.createMultiValueField("Game Publisher", 200);
+        modeField = FormFieldFactory.createMultiValueField("Game Mode", 200);
+        platformField = FormFieldFactory.createMultiValueField("Game Platform", 200);
+        engineField = FormFieldFactory.createTextField("Game Engine", 200);
+        genreField = FormFieldFactory.createMultiValueField("Genre", 200);
         linkField = FormFieldFactory.createAccessLinkField("Access Link");
-        widgetField = FormFieldFactory.createImageFileField("Cover Art", 200);
+        widgetField = FormFieldFactory.createImageFileField("Cover Art", 250);
         systemReqsField = FormFieldFactory.createTextArea("System Requirements", 520);
         synopsisField = FormFieldFactory.createTextArea("Synopsis", 520);
         yearField = FormFieldFactory.createYearPicker("Release Year", 120);
@@ -79,6 +82,12 @@ public class GameDetailsForm extends BaseMediaForm{
         btn = new Button();
         btn.getStyleClass().add("image-button");
 
+        errorLabel = new Label("An error occurred, please try again");
+        errorLabel.setFont(FontLoader.bold(20));
+        errorLabel.getStyleClass().add("error-label");
+        errorLabel.setVisible(false);
+        errorLabel.setManaged(false);
+
         refreshButton();
 
         btn.setOnAction(e -> {
@@ -90,13 +99,11 @@ public class GameDetailsForm extends BaseMediaForm{
                 }
             }
         });
-        Image img = new Image(getClass().getResourceAsStream(
-                "/edu/tangingina/thebackroom/assets/add_btn.png"));
-        ImageView view = new ImageView(img);
-        view.setPreserveRatio(true);
-        view.setFitWidth(125);
 
-        HBox container = new HBox(btn);
+        HBox btnContainer = new HBox(btn);
+        btnContainer.setAlignment(Pos.CENTER);
+
+        VBox container = new VBox(8, btnContainer, errorLabel);
         container.setAlignment(Pos.CENTER);
         container.setPrefWidth(520);
 
@@ -179,6 +186,11 @@ public class GameDetailsForm extends BaseMediaForm{
             engineField.setValue(rs.getString("game_engine"));
             systemReqsField.setValue(rs.getString("system_requirements"));
 
+            ComboBox<Integer> yearPicker = (ComboBox<Integer>) yearField.getInputs();
+            if (yearPicker != null) {
+                yearPicker.setValue(Integer.parseInt(rs.getString("release_year")));
+            }
+
             gameDevField.setValues(game_dev);
             gameStudioField.setValues(game_studio);
             modeField.setValues(game_mode);
@@ -252,8 +264,8 @@ public class GameDetailsForm extends BaseMediaForm{
             mediaDao.addMedia(media);
             mediaList.put(media.getID(), media);
             mediaUniqID.put(util.getMediaKey(media.getMediaName(), media.getMediaType().name(), media.getReleaseYear()), media.getID());
-            TheBackroom.gameMedia.add(media.getID());
-            //Show Output Situation
+            TheBackroom.bookMedia.add(media.getID());
+
             AddArchive_v2.closeWindow();
 
         }catch (Exception e1){
@@ -269,5 +281,51 @@ public class GameDetailsForm extends BaseMediaForm{
 
     private void handleUpdate() {
         System.out.println("Update mode");
+
+        MediaDaoImpl mediaDao = TheBackroom.mediaDao;
+        Utility util = TheBackroom.util;
+        FileManager fm = TheBackroom.fm;
+
+        String title = titleField.getUserInput();
+        MediaType mediaType = MediaType.Game;
+        String synopsis = synopsisField.getUserInput();
+
+        ComboBox<Integer> yearPicker = (ComboBox<Integer>) yearField.getInputs();
+        String year = "2024";
+        if (yearPicker != null) year = String.valueOf(yearPicker.getValue());
+
+        String imgIcon = widgetField.getSelectedFile() != null
+                ? fm.saveIMGRelative(widgetField.getSelectedFile())
+                : widgetField.getCurrentPath();
+        List<String> genre = genreField.getValues();
+        List<AccessLinkField.AccessLink> onlineAccess = linkField.getValues();
+        String engine = engineField.getUserInput();
+        String requirements = systemReqsField.getUserInput();
+        List<String> developer = gameDevField.getValues();
+        List<String> studio = gameStudioField.getValues();
+        List<String> platforms = platformField.getValues();
+        List<String> modes = modeField.getValues();
+
+        ArrayList<Category> mediaGenre = util.ensureCategoryExist(genre);
+        ArrayList<Website> mediaWebsite = util.ensureWebsiteExists(onlineAccess);
+        ArrayList<Person> gameDev = util.ensurePersonExist(developer, "Game Developer");
+        ArrayList<Company> gameStudio = util.ensureCompanyExists(studio, "Game Studio");
+        ArrayList<Platform> gamePlatforms = util.ensureGamePlatformExists(platforms);
+        ArrayList<GameMode> gameModes = util.ensureGameModeExists(modes);
+
+        Media media = new Media(mediaId, title, mediaType, year, synopsis, imgIcon, mediaWebsite, mediaGenre);
+        media.setGameDetails(engine, requirements, gameDev, gameStudio, gamePlatforms, gameModes);
+
+        try {
+            //FileManager.updateMedia(media);  connect to back end here
+            mediaList.put(mediaId, media);
+            mediaUniqID.put(util.getMediaKey(title, mediaType.name(), year), mediaId);
+            UpdateArchive.closeWindow();
+        } catch (Exception e) {
+            System.err.println("Update failed: " + e.getMessage());
+            errorLabel.setVisible(true);
+            errorLabel.setManaged(true);
+            e.printStackTrace();
+        }
     }
 }

@@ -4,6 +4,7 @@ import edu.tangingina.thebackroom.TheBackroom;
 import edu.tangingina.thebackroom.dao.impl.MediaDaoImpl;
 import edu.tangingina.thebackroom.model.*;
 import edu.tangingina.thebackroom.util.FileManager;
+import edu.tangingina.thebackroom.util.FontLoader;
 import edu.tangingina.thebackroom.util.Utility;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -38,21 +39,22 @@ public class TVShowDetailsForm extends BaseMediaForm{
     private int mediaId = -1;
     private boolean isUpdateMode = false;
     private Button btn;
+    private Label errorLabel;
 
 
     public TVShowDetailsForm() {
         view.getChildren().addAll(formColumn());
 
         titleField = FormFieldFactory.createTextField("Title", 520);
-        directorField = FormFieldFactory.createMultiValueField("Director", 175);
-        studioField = FormFieldFactory.createMultiValueField("Studio", 120);
+        directorField = FormFieldFactory.createMultiValueField("Director", 200);
+        studioField = FormFieldFactory.createMultiValueField("Studio", 200);
         synopsisField = FormFieldFactory.createTextArea("Synopsis", 520);
         genreField = FormFieldFactory.createMultiValueField("Genre", 120);
         seasonField = FormFieldFactory.createTextField("Season Count", 120);
         episodeField = FormFieldFactory.createTextField("Episode Count", 120);
-        statusField = FormFieldFactory.createStatusPicker("Status", 120);
+        statusField = FormFieldFactory.createStatusPicker("Status", 200);
         linkField = FormFieldFactory.createAccessLinkField("Access Link");
-        widgetField = FormFieldFactory.createImageFileField("Book Cover", 200);
+        widgetField = FormFieldFactory.createImageFileField("Book Cover", 250);
         yearField = FormFieldFactory.createYearPicker("Release Year", 120);
 
 
@@ -79,6 +81,12 @@ public class TVShowDetailsForm extends BaseMediaForm{
         btn = new Button();
         btn.getStyleClass().add("image-button");
 
+        errorLabel = new Label("An error occurred, please try again");
+        errorLabel.setFont(FontLoader.bold(20));
+        errorLabel.getStyleClass().add("error-label");
+        errorLabel.setVisible(false);
+        errorLabel.setManaged(false);
+
         refreshButton();
 
         btn.setOnAction(e -> {
@@ -90,13 +98,11 @@ public class TVShowDetailsForm extends BaseMediaForm{
                 }
             }
         });
-        Image img = new Image(getClass().getResourceAsStream(
-                "/edu/tangingina/thebackroom/assets/add_btn.png"));
-        ImageView view = new ImageView(img);
-        view.setPreserveRatio(true);
-        view.setFitWidth(125);
 
-        HBox container = new HBox(btn);
+        HBox btnContainer = new HBox(btn);
+        btnContainer.setAlignment(Pos.CENTER);
+
+        VBox container = new VBox(8, btnContainer, errorLabel);
         container.setAlignment(Pos.CENTER);
         container.setPrefWidth(520);
 
@@ -167,7 +173,13 @@ public class TVShowDetailsForm extends BaseMediaForm{
         return genreField;
     }
 
-    public void populateForm(ResultSet rs, String director, String studio, String category, String links) {
+    public void setUpdateMode(int mediaId) {
+        this.isUpdateMode = true;
+        this.mediaId = mediaId;
+        refreshButton();
+    }
+
+    public void populateForm(ResultSet rs, String director, String studio, String category, String links, String status) {
         try {
             System.out.println("Reached here");
             titleField.setValue(rs.getString("name"));
@@ -175,6 +187,11 @@ public class TVShowDetailsForm extends BaseMediaForm{
             seasonField.setValue(rs.getString("season_count"));
             episodeField.setValue(rs.getString("episode_count"));
             statusField.setValue(rs.getString("status"));
+
+            ComboBox<Integer> yearPicker = (ComboBox<Integer>) yearField.getInputs();
+            if (yearPicker != null) {
+                yearPicker.setValue(Integer.parseInt(rs.getString("release_year")));
+            }
 
             directorField.setValues(director);
             studioField.setValues(studio);
@@ -188,12 +205,6 @@ public class TVShowDetailsForm extends BaseMediaForm{
             System.err.println("Error populating TV Show form: " + ex.getMessage());
             ex.printStackTrace();
         }
-    }
-
-    public void setUpdateMode(int mediaId) {
-        this.isUpdateMode = true;
-        this.mediaId = mediaId;
-        refreshButton();
     }
 
     private void refreshButton() {
@@ -242,8 +253,8 @@ public class TVShowDetailsForm extends BaseMediaForm{
             mediaDao.addMedia(media);
             mediaList.put(media.getID(), media);
             mediaUniqID.put(util.getMediaKey(media.getMediaName(), media.getMediaType().name(), media.getReleaseYear()), media.getID());
-            TheBackroom.videoMedia.add(media.getID());
-            //Show Output Situation
+            TheBackroom.bookMedia.add(media.getID());
+
             AddArchive_v2.closeWindow();
 
         }catch (Exception e1){
@@ -252,6 +263,48 @@ public class TVShowDetailsForm extends BaseMediaForm{
     }
     private void handleUpdate() {
         System.out.println("Update mode");
+        MediaDaoImpl mediaDao = TheBackroom.mediaDao;
+        Utility util = TheBackroom.util;
+        FileManager fm = TheBackroom.fm;
+
+        String title = titleField.getUserInput();
+        MediaType mediaType = MediaType.TvShow;
+        String synopsis = synopsisField.getUserInput();
+
+        ComboBox<Integer> yearPicker = (ComboBox<Integer>) yearField.getInputs();
+        String year = "2024";
+        if (yearPicker != null) year = String.valueOf(yearPicker.getValue());
+
+        String imgIcon = widgetField.getSelectedFile() != null
+                ? fm.saveIMGRelative(widgetField.getSelectedFile())
+                : widgetField.getCurrentPath();
+        List<String> genre = genreField.getValues();
+        List<AccessLinkField.AccessLink> onlineAccess = linkField.getValues();
+        String seasons = seasonField.getUserInput();
+        String episodes = episodeField.getUserInput();
+        String status = statusField.getUserInput();
+        List<String> director = directorField.getValues();
+        List<String> studio = studioField.getValues();
+
+        ArrayList<Category> mediaGenre = util.ensureCategoryExist(genre);
+        ArrayList<Website> mediaWebsite = util.ensureWebsiteExists(onlineAccess);
+        ArrayList<Person> tvDirector = util.ensurePersonExist(director, "Director");
+        ArrayList<Company> tvStudio = util.ensureCompanyExists(studio, "Production Studio");
+
+        Media media = new Media(mediaId, title, mediaType, year, synopsis, imgIcon, mediaWebsite, mediaGenre);
+        media.setTvShowDetails(seasons, episodes, status, tvDirector, tvStudio);
+
+        try {
+            //connect to backend
+            mediaList.put(mediaId, media);
+            mediaUniqID.put(util.getMediaKey(title, mediaType.name(), year), mediaId);
+            UpdateArchive.closeWindow();
+        } catch (Exception e) {
+            System.err.println("Update failed: " + e.getMessage());
+            errorLabel.setVisible(true);
+            errorLabel.setManaged(true);
+            e.printStackTrace();
+        }
     }
 }
 

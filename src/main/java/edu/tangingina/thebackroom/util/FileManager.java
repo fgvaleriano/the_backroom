@@ -932,6 +932,26 @@ public class FileManager {
         return "Uncategorized";
     }
 
+    public static String getTvShowStatus (int mediaId) {
+        try {
+            DatabaseManager dm = new DatabaseManager();
+            dm.getConnection();
+
+            PreparedStatement pstmt = dm.conn.prepareStatement(UpdateArchiveQueries.fetch_tv_show_status);
+
+            pstmt.setInt(1, mediaId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("status");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
+
     public static String getPlatform (int mediaId) {
         try {
             DatabaseManager dm = new DatabaseManager();
@@ -965,7 +985,7 @@ public class FileManager {
             pstmt.setInt(1, mediaId);
             ResultSet rs = pstmt.executeQuery();
 
-            if (rs.next()) return rs.getString("path");
+            if (rs.next()) return rs.getString("icon_path");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -997,4 +1017,5 @@ public class FileManager {
 
         return links.toString();
     }
+
 }
