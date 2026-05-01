@@ -74,7 +74,7 @@ public class FormFieldFactory {
         inputLabel.setFont(FontLoader.regular(18));
 
         inputLabel.getStyleClass().add("input-label");
-        status.getItems().addAll("Book", "Game", "Film", "TV Show");
+        status.getItems().addAll("Ongoing", "Finished", "Cancelled");
 
         status.setPrefWidth(size);
         status.setMinWidth(Control.USE_PREF_SIZE);
@@ -117,4 +117,3 @@ public class FormFieldFactory {
     }
 
 }
-

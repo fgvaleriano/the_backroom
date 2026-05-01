@@ -21,9 +21,9 @@ public class NavbarComponent extends HBox {
     private ImageView logo;
     private Region spacer;
     private HBox btnHolder;
-    private Button homeBtn, booksBtn, gamesBtn, filmsBtn;
+    private Button homeBtn, booksBtn, gamesBtn, filmsBtn, searchBtn;
     private MenuItem addBtn, exportBtn, importBtn,logoutBtn, loginBtn;
-    private Runnable onImport, onLogout, onLogin, onAdd, onExport;
+    private Runnable onImport, onLogout, onLogin, onAdd, onExport, onSearch;
     public static String currentView = "Home";
 
 
@@ -81,13 +81,10 @@ public class NavbarComponent extends HBox {
 
     public void setProfileDropdown(){
         //search bar and profile
-        Button searchBtn = new Button("Search...");
+        searchBtn = new Button("Search...");
         searchBtn.setFont(FontLoader.regular(15));
         searchBtn.setPrefWidth(200);
         searchBtn.getStyleClass().add("search-btn");
-
-        /*Circle profileCircle = new Circle(15);
-        profileCircle.getStyleClass().add("profile-circle");*/
 
         spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -155,7 +152,16 @@ public class NavbarComponent extends HBox {
             });
         }
 
-        exportBtn = createDropdownButton("Export");
+        if(onExport != null){
+            exportBtn = createDropdownButton("Export");
+            exportBtn.setOnAction(e -> {
+                System.out.println("Exporting archive");
+                profileMenu.hide();
+                Platform.runLater(
+                        () -> {if (onExport != null) onExport.run(); }
+                );
+            });
+        }
 
 
         if(onLogout != null){
@@ -190,7 +196,7 @@ public class NavbarComponent extends HBox {
         }
 
         profileCircle.setOnMouseClicked(e -> {
-           profileMenu.show(profileCircle, Side.BOTTOM, 0, 5);
+            profileMenu.show(profileCircle, Side.BOTTOM, 0, 5);
         });
 
         wrapper.getChildren().add(profileCircle);
@@ -222,7 +228,14 @@ public class NavbarComponent extends HBox {
         this.onLogin = onLogin;
     }
 
+    public void setExport(Runnable onExport){this.onExport = onExport;}
+
     public void setAdd(Runnable onAdd){
         this.onAdd = onAdd;
+    }
+
+    public void setSearch(Runnable onSearch){
+        this.onSearch = onSearch;
+        searchBtn.setOnAction(e -> onSearch.run());
     }
 }

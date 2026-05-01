@@ -349,9 +349,10 @@
     -fx-font-size: 14px;
     -fx-padding: 8 18 8 18;
     -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, #EED0AC, 16, 0.2, 0, 6);
 }
 
-.search-button:pressed, .profile-circle:hover, .profile-circle:pressed {
+.search-btn:hover, .profile-circle:hover, .profile-circle:pressed {
     -fx-scale-x: 0.95;
     -fx-scale-y: 0.95;
 }
@@ -499,70 +500,26 @@
     -fx-text-fill: #888888;
 }
 
-/* --- Initialization Window --- */
-.setup-root {
-    -fx-background-color: #E6E2D7;
+.error-label {
+    -fx-text-fill: #CA772A;
 }
 
-.setup-title {
-    -fx-text-fill: rgba(139, 46, 46, 1);
-    -fx-padding: 0 0 5 0;
+.combo-box-error {
+    -fx-effect: dropshadow(gaussian, #D27E31, 15, 0, 0, 0);
+    -fx-border-color: #D27E31;
+    -fx-border-radius: 5;
 }
 
-.setup-title-success {
-    -fx-text-fill: #2B3A32;
-    -fx-padding: 0 0 5 0;
+/*  SEARCH STYLING */
+
+.search-field {
+    -fx-background-radius: 10;
+    -fx-background-color: #FFFAFA;
+        -fx-padding: 6 10 6 10;
+        -fx-effect: dropshadow(gaussian, #EED0AC, 15, 0, 0, 0);
 }
 
-.setup-subtitle {
-    -fx-text-fill: #4A4A4A;
-    -fx-text-alignment: center;
-    -fx-line-spacing: 5px;
-    -fx-padding: 5 15 15 15;
+.result-header-text {
+    -fx-text-fill: #3B3A3A;
 }
 
-.setup-field {
-    -fx-background-color: #FAFAFA;
-    -fx-text-fill: #111111;
-    -fx-prompt-text-fill: #888888;
-    -fx-padding: 14px;
-    -fx-background-radius: 7px;
-    -fx-border-color: rgba(139, 46, 46, 0.8);
-    -fx-border-radius: 7px;
-    -fx-border-width: 1px;
-    -fx-max-width: 350px;
-}
-
-.setup-field:focused {
-    -fx-border-width: 2px;
-    -fx-border-color: rgba(139, 46, 46, 1);
-}
-
-.setup-btn-dark-academia {
-    -fx-background-color: #2B3A32;
-    -fx-text-fill: #E6E2D7;
-    -fx-padding: 14px 30px;
-    -fx-background-radius: 6px;
-    -fx-cursor: hand;
-    -fx-pref-width: 240px;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 6, 0, 0, 3);
-}
-
-.setup-btn-dark-academia:hover {
-    -fx-background-color: #1F2A24;
-}
-
-.setup-status {
-    -fx-padding: 5 0 0 0;
-}
-
-.setup-dialog-pane {
-    -fx-background-color: #F7F5EF;
-    -fx-border-color: rgba(139, 46, 46, 0.4);
-    -fx-border-width: 1px;
-    -fx-border-radius: 12px;
-    -fx-background-radius: 12px;
-    -fx-padding: 40px;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.25), 25, 0, 0, 8);
-    -fx-max-width: 500px;
-}

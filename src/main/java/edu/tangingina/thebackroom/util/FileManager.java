@@ -7,15 +7,11 @@ import edu.tangingina.thebackroom.model.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.sql.*;
+import java.util.*;
 
 public class FileManager {
     private CategoryDaoImpl categoryDao =  TheBackroom.categoryDao;
@@ -736,6 +732,282 @@ public class FileManager {
         }
 
         return "uploads/mediaIcon/" + newFileName;
+    }
+
+    public static void exportData (DatabaseManager dm, String filePath, String selectedType) {
+        System.out.println("Preparing to save data");
+        String baseCols = "media_id, name, release_year, synopsis";
+        String specificCols = "";
+        String query;
+
+        try {
+            dm.getConnection();
+            Connection conn = dm.conn;
+
+            if (selectedType != null) {
+                switch (selectedType) {
+                    case "Book":
+                        specificCols = ", isbn, page_count, edition, language";
+                        break;
+                    case "Film":
+                        specificCols = ", duration, language";
+                        break;
+                    case "TV Show":
+                        specificCols = ", season_count, episode_count, status, language";
+                        break;
+                    case "Game":
+                        specificCols = ", game_engine, system_requirements, status";
+                        break;
+                    default:
+                        baseCols = "*";
+                        break;
+                }
+            }
+
+            query = "Select " + baseCols + specificCols + " from media";
+
+            if (selectedType != null && !selectedType.equals("All Media")) {
+                query += " where media_type = ?";
+            }
+
+            try (PreparedStatement pstmt = conn.prepareStatement(query);
+                 PrintWriter out = new PrintWriter(new File(filePath))) {
+
+                if (selectedType != null && !selectedType.equals("All Media")) {
+                    pstmt.setString(1, selectedType);
+                }
+
+                ResultSet rs = pstmt.executeQuery();
+                ResultSetMetaData rsmd = rs.getMetaData();
+                int columns = rsmd.getColumnCount();
+
+                for (int i = 1; i <= columns; i++) {
+                    out.print(rsmd.getColumnName(i) + (i < columns ? ", " : ""));
+                }
+                out.println();
+
+                while (rs.next()) {
+                    for (int i = 1; i <= columns; i++) {
+                        String colName = rsmd.getColumnName(i);
+                        String val = rs.getString(i);
+
+                        if (val == null) {
+                            out.print("" + (i < columns ? "," : ""));
+                        } else {
+                            if (colName.equalsIgnoreCase("isbn")) {
+                                out.print("=\"" + val + "\"");
+                            } else {
+                                out.print(val.replace(",", ";"));
+                            }
+                            out.print(i < columns ? "," : "");
+                        }
+                    }
+                    out.println();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static ResultSet getMediaData (int mediaId) {
+        String sql = "select * from media where media_id = ?";
+
+        try {
+            DatabaseManager dm = new DatabaseManager();
+            dm.getConnection();
+
+            PreparedStatement pstmt = dm.conn.prepareStatement(sql);
+            pstmt.setInt(1, mediaId);
+
+            return pstmt.executeQuery();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String getPersonnelName (int mediaId, String role) {
+        try {
+            DatabaseManager dm = new DatabaseManager();
+            dm.getConnection();
+
+            PreparedStatement pstmt = dm.conn.prepareStatement(UpdateArchiveQueries.fetch_person_by_role);
+
+            pstmt.setInt(1, mediaId);
+            pstmt.setString(2, role);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                String personnel = rs.getString("all_personnel");
+                return (personnel != null) ? personnel : "";
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return "";
+    }
+
+    public static String getCompanyName (int mediaId, String role) {
+        try {
+            DatabaseManager dm = new DatabaseManager();
+            dm.getConnection();
+
+            PreparedStatement pstmt = dm.conn.prepareStatement(UpdateArchiveQueries.fetch_company_by_role);
+
+            pstmt.setInt(1, mediaId);
+            pstmt.setString(2, role);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                String company = rs.getString("all_company");
+                return (company != null) ? company : "";
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return "";
+    }
+
+    public static String getCategory (int mediaId) {
+        try {
+            DatabaseManager dm = new DatabaseManager();
+            dm.getConnection();
+
+            PreparedStatement pstmt = dm.conn.prepareStatement(UpdateArchiveQueries.fetch_category);
+
+            pstmt.setInt(1, mediaId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                String category = rs.getString("all_category");
+                return (category != null) ? category : "";
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return "Uncategorized";
+    }
+
+    public static String getMode (int mediaId) {
+        try {
+            DatabaseManager dm = new DatabaseManager();
+            dm.getConnection();
+
+            PreparedStatement pstmt = dm.conn.prepareStatement(UpdateArchiveQueries.fetch_game_mode);
+
+            pstmt.setInt(1, mediaId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                String mode = rs.getString("all_mode");
+                return (mode != null) ? mode : "";
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return "Uncategorized";
+    }
+
+    public static String getTvShowStatus (int mediaId) {
+        try {
+            DatabaseManager dm = new DatabaseManager();
+            dm.getConnection();
+
+            PreparedStatement pstmt = dm.conn.prepareStatement(UpdateArchiveQueries.fetch_tv_show_status);
+
+            pstmt.setInt(1, mediaId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("status");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
+
+    public static String getPlatform (int mediaId) {
+        try {
+            DatabaseManager dm = new DatabaseManager();
+            dm.getConnection();
+
+            PreparedStatement pstmt = dm.conn.prepareStatement(UpdateArchiveQueries.fetch_game_platform);
+
+            pstmt.setInt(1, mediaId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                String platform = rs.getString("all_platform");
+                return (platform != null) ? platform : "";
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return "Uncategorized";
+    }
+
+    public static String getString (int mediaId) {
+        try {
+            DatabaseManager dm = new DatabaseManager();
+            dm.getConnection();
+
+            PreparedStatement pstmt = dm.conn.prepareStatement(UpdateArchiveQueries.fetch_game_platform);
+
+            pstmt.setInt(1, mediaId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) return rs.getString("icon_path");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return "";
+    }
+
+    public static String getAccessLinks (int mediaId) {
+        StringBuilder links = new StringBuilder();
+        try {
+            DatabaseManager dm = new DatabaseManager();
+            dm.getConnection();
+
+            PreparedStatement pstmt = dm.conn.prepareStatement(UpdateArchiveQueries.fetch_access_links);
+
+            pstmt.setInt(1, mediaId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                if (links.length() > 0) links.append(", ");
+                links.append(rs.getString("Name")).append("| ").append(rs.getString("URL"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return links.toString();
     }
 
 
