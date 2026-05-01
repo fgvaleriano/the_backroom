@@ -33,6 +33,9 @@ public class GameDetailsForm extends BaseMediaForm{
     private FormFieldGroup titleField, engineField, systemReqsField, synopsisField, yearField;
     private ImageFileField widgetField;
     private AccessLinkField linkField;
+    private int mediaId = -1;
+    private boolean isUpdateMode = false;
+    private Button btn;
 
     public GameDetailsForm() {
         view.getChildren().addAll(formColumn());
@@ -73,74 +76,26 @@ public class GameDetailsForm extends BaseMediaForm{
     }
 
     private Node addButton(){
-        Button btn = new Button();
+        btn = new Button();
         btn.getStyleClass().add("image-button");
 
+        refreshButton();
+
+        btn.setOnAction(e -> {
+            if (validateInputs()) {
+                if (isUpdateMode) {
+                    handleUpdate();
+                } else {
+                    handleAdd();
+                }
+            }
+        });
         Image img = new Image(getClass().getResourceAsStream(
                 "/edu/tangingina/thebackroom/assets/add_btn.png"));
         ImageView view = new ImageView(img);
         view.setPreserveRatio(true);
         view.setFitWidth(125);
 
-        btn.setGraphic(view);
-        btn.setOnAction(e -> {
-            if (validateInputs()) {
-                MediaDaoImpl mediaDao = TheBackroom.mediaDao;
-                Utility util = TheBackroom.util;
-                FileManager fm = TheBackroom.fm;
-
-                String title = titleField.getUserInput();
-                MediaType mediaType = MediaType.Game;
-                String synopsis = synopsisField.getUserInput();
-
-                ComboBox<Integer> yearPicker = (ComboBox<Integer>) yearField.getInputs();
-
-                String year = "2024";
-                if(yearPicker != null){
-                    year = String.valueOf(yearPicker.getValue());
-                }
-                String imgIcon = fm.saveIMGRelative(widgetField.getSelectedFile());
-                List<String> genre = genreField.getValues();
-                List<AccessLinkField.AccessLink> onlineAccess = linkField.getValues();
-
-                String gameEngine = engineField.getUserInput();
-                String systemRequirements = systemReqsField.getUserInput();
-                List<String> mode = modeField.getValues();
-                List<String> platform = platformField.getValues();
-                List<String> gameDev = gameDevField.getValues();
-                List<String> gameStudio = gameStudioField.getValues();
-                List<String> gamePublisher = gamePublisherField.getValues();
-
-                ArrayList<Category> mediaGenre = util.ensureCategoryExist(genre);
-                ArrayList<Website> mediaWebsite = util.ensureWebsiteExists(onlineAccess);
-                ArrayList<Person> mediaGameDev = util.ensurePersonExist(gameDev, "Game Developer");
-                ArrayList<Company> mediaGameStudio = util.ensureCompanyExists(gameStudio, "Game Studio");
-                ArrayList<Company> mediaGamePublisher = util.ensureCompanyExists(gamePublisher, "Publisher");
-                ArrayList<GameMode> mediaGameMode = util.ensureGameModeExists(mode);
-                ArrayList<Platform> mediaGamePlatform = util.ensureGamePlatformExists(platform);
-
-                ArrayList<Company> mediaGameCompany = new ArrayList<>();
-                mediaGameCompany.addAll(mediaGamePublisher);
-                mediaGameCompany.addAll(mediaGameStudio);
-
-                Media media = new Media(0, title, mediaType, year, synopsis, imgIcon, mediaWebsite, mediaGenre);
-                media.setGameDetails(gameEngine, systemRequirements, mediaGameDev, mediaGameCompany, mediaGamePlatform, mediaGameMode);
-
-
-                try{
-                    mediaDao.addMedia(media);
-                    mediaList.put(media.getID(), media);
-                    mediaUniqID.put(util.getMediaKey(media.getMediaName(), media.getMediaType().name(), media.getReleaseYear()), media.getID());
-                    TheBackroom.gameMedia.add(media.getID());
-                    //Show Output Situation
-                    AddArchive_v2.closeWindow();
-
-                }catch (Exception e1){
-                    e1.getMessage();
-                }
-
-            }
-        });
         HBox container = new HBox(btn);
         container.setAlignment(Pos.CENTER);
         container.setPrefWidth(520);
@@ -239,5 +194,80 @@ public class GameDetailsForm extends BaseMediaForm{
             System.err.println(ex.getMessage());
             ex.printStackTrace();
         }
+    }
+
+    private void refreshButton() {
+        String assetName = isUpdateMode ? "update_btn.png" : "add_btn.png";
+        Image img = new Image(getClass().getResourceAsStream("/edu/tangingina/thebackroom/assets/" + assetName));
+        ImageView view = new ImageView(img);
+        view.setPreserveRatio(true);
+        view.setFitWidth(125);
+        btn.setGraphic(view);
+    }
+
+    private void handleAdd() {
+        MediaDaoImpl mediaDao = TheBackroom.mediaDao;
+        Utility util = TheBackroom.util;
+        FileManager fm = TheBackroom.fm;
+
+        String title = titleField.getUserInput();
+        MediaType mediaType = MediaType.Game;
+        String synopsis = synopsisField.getUserInput();
+
+        ComboBox<Integer> yearPicker = (ComboBox<Integer>) yearField.getInputs();
+
+        String year = "2024";
+        if(yearPicker != null){
+            year = String.valueOf(yearPicker.getValue());
+        }
+        String imgIcon = fm.saveIMGRelative(widgetField.getSelectedFile());
+        List<String> genre = genreField.getValues();
+        List<AccessLinkField.AccessLink> onlineAccess = linkField.getValues();
+
+        String gameEngine = engineField.getUserInput();
+        String systemRequirements = systemReqsField.getUserInput();
+        List<String> mode = modeField.getValues();
+        List<String> platform = platformField.getValues();
+        List<String> gameDev = gameDevField.getValues();
+        List<String> gameStudio = gameStudioField.getValues();
+        List<String> gamePublisher = gamePublisherField.getValues();
+
+        ArrayList<Category> mediaGenre = util.ensureCategoryExist(genre);
+        ArrayList<Website> mediaWebsite = util.ensureWebsiteExists(onlineAccess);
+        ArrayList<Person> mediaGameDev = util.ensurePersonExist(gameDev, "Game Developer");
+        ArrayList<Company> mediaGameStudio = util.ensureCompanyExists(gameStudio, "Game Studio");
+        ArrayList<Company> mediaGamePublisher = util.ensureCompanyExists(gamePublisher, "Publisher");
+        ArrayList<GameMode> mediaGameMode = util.ensureGameModeExists(mode);
+        ArrayList<Platform> mediaGamePlatform = util.ensureGamePlatformExists(platform);
+
+        ArrayList<Company> mediaGameCompany = new ArrayList<>();
+        mediaGameCompany.addAll(mediaGamePublisher);
+        mediaGameCompany.addAll(mediaGameStudio);
+
+        Media media = new Media(0, title, mediaType, year, synopsis, imgIcon, mediaWebsite, mediaGenre);
+        media.setGameDetails(gameEngine, systemRequirements, mediaGameDev, mediaGameCompany, mediaGamePlatform, mediaGameMode);
+
+
+        try{
+            mediaDao.addMedia(media);
+            mediaList.put(media.getID(), media);
+            mediaUniqID.put(util.getMediaKey(media.getMediaName(), media.getMediaType().name(), media.getReleaseYear()), media.getID());
+            TheBackroom.gameMedia.add(media.getID());
+            //Show Output Situation
+            AddArchive_v2.closeWindow();
+
+        }catch (Exception e1){
+            e1.getMessage();
+        }
+    }
+
+    public void setUpdateMode(int mediaId) {
+        this.isUpdateMode = true;
+        this.mediaId = mediaId;
+        refreshButton();
+    }
+
+    private void handleUpdate() {
+        System.out.println("Update mode");
     }
 }

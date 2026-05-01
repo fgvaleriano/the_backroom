@@ -257,7 +257,8 @@ public class BookDetailsForm extends BaseMediaForm {
 
     private void handleUpdate() {
         System.out.println("Update mode");
-        /*MediaDaoImpl mediaDao = TheBackroom.mediaDao;
+
+        MediaDaoImpl mediaDao = TheBackroom.mediaDao;
         Utility util = TheBackroom.util;
         FileManager fm = TheBackroom.fm;
 
@@ -297,6 +298,6 @@ public class BookDetailsForm extends BaseMediaForm {
             UpdateArchive.closeWindow();
         } catch (Exception e1) {
             e1.getMessage();
-        }*/
+        }
     }
 }

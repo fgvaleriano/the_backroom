@@ -32,6 +32,9 @@ public class FilmDetailsForm extends BaseMediaForm{
     private FormFieldGroup titleField, durationField, languageField, synopsisField, yearField;
     private ImageFileField widgetField;
     private AccessLinkField linkField;
+    private int mediaId = -1;
+    private boolean isUpdateMode = false;
+    private Button btn;
 
     public FilmDetailsForm() {
         view.getChildren().add(formColumn());
@@ -66,63 +69,26 @@ public class FilmDetailsForm extends BaseMediaForm{
     }
 
     private Node addButton(){
-        Button btn = new Button();
+        btn = new Button();
         btn.getStyleClass().add("image-button");
 
+        refreshButton();
+
+        btn.setOnAction(e -> {
+            if (validateInputs()) {
+                if (isUpdateMode) {
+                    handleUpdate();
+                } else {
+                    handleAdd();
+                }
+            }
+        });
         Image img = new Image(getClass().getResourceAsStream(
                 "/edu/tangingina/thebackroom/assets/add_btn.png"));
         ImageView view = new ImageView(img);
         view.setPreserveRatio(true);
         view.setFitWidth(125);
 
-        btn.setGraphic(view);
-        btn.setOnAction(e -> {
-            if (validateInputs()) {
-                MediaDaoImpl mediaDao = TheBackroom.mediaDao;
-                Utility util = TheBackroom.util;
-                FileManager fm = TheBackroom.fm;
-
-                String title = titleField.getUserInput();
-                MediaType mediaType = MediaType.Movie;
-                String synopsis = synopsisField.getUserInput();
-
-                ComboBox<Integer> yearPicker = (ComboBox<Integer>) yearField.getInputs();
-
-                String year = "2024";
-                if(yearPicker != null){
-                    year = String.valueOf(yearPicker.getValue());
-                }
-                String imgIcon = fm.saveIMGRelative(widgetField.getSelectedFile());
-                List<String> genre = genreField.getValues();
-                List<AccessLinkField.AccessLink> onlineAccess = linkField.getValues();
-
-                String duration  = durationField.getUserInput();
-                String language = languageField.getUserInput();
-                List<String> director = directorField.getValues();
-                List<String> studio = studioField.getValues();
-
-                ArrayList<Category> mediaGenre = util.ensureCategoryExist(genre);
-                ArrayList<Website> mediaWebsite = util.ensureWebsiteExists(onlineAccess);
-                ArrayList<Person> movieDirector = util.ensurePersonExist(director, "Director");
-                ArrayList<Company> movieStudio = util.ensureCompanyExists(studio, "Production Studio");
-
-                Media media = new Media(0, title, mediaType, year, synopsis, imgIcon, mediaWebsite, mediaGenre);
-                media.setMovieDetails(duration, language, movieDirector, movieStudio);
-
-
-                try{
-                    mediaDao.addMedia(media);
-                    mediaList.put(media.getID(), media);
-                    mediaUniqID.put(util.getMediaKey(media.getMediaName(), media.getMediaType().name(), media.getReleaseYear()), media.getID());
-                    TheBackroom.videoMedia.add(media.getID());
-                    //Show Output Situation
-                    AddArchive_v2.closeWindow();
-
-                }catch (Exception e1){
-                    e1.getMessage();
-                }
-            }
-        });
         HBox container = new HBox(btn);
         container.setAlignment(Pos.CENTER);
         container.setPrefWidth(520);
@@ -207,6 +173,71 @@ public class FilmDetailsForm extends BaseMediaForm{
         } catch (Exception ex) {
             System.err.println("Error populating TV Show form: " + ex.getMessage());
             ex.printStackTrace();
+        }
+    }
+
+    private void refreshButton() {
+        String assetName = isUpdateMode ? "update_btn.png" : "add_btn.png";
+        Image img = new Image(getClass().getResourceAsStream("/edu/tangingina/thebackroom/assets/" + assetName));
+        ImageView view = new ImageView(img);
+        view.setPreserveRatio(true);
+        view.setFitWidth(125);
+        btn.setGraphic(view);
+    }
+
+    public void setUpdateMode(int mediaId) {
+        this.isUpdateMode = true;
+        this.mediaId = mediaId;
+        refreshButton();
+    }
+
+    private void handleUpdate() {
+        System.out.println("Update mode");
+    }
+
+    private void handleAdd() {
+        MediaDaoImpl mediaDao = TheBackroom.mediaDao;
+        Utility util = TheBackroom.util;
+        FileManager fm = TheBackroom.fm;
+
+        String title = titleField.getUserInput();
+        MediaType mediaType = MediaType.Movie;
+        String synopsis = synopsisField.getUserInput();
+
+        ComboBox<Integer> yearPicker = (ComboBox<Integer>) yearField.getInputs();
+
+        String year = "2024";
+        if(yearPicker != null){
+            year = String.valueOf(yearPicker.getValue());
+        }
+        String imgIcon = fm.saveIMGRelative(widgetField.getSelectedFile());
+        List<String> genre = genreField.getValues();
+        List<AccessLinkField.AccessLink> onlineAccess = linkField.getValues();
+
+        String duration  = durationField.getUserInput();
+        String language = languageField.getUserInput();
+        List<String> director = directorField.getValues();
+        List<String> studio = studioField.getValues();
+
+        ArrayList<Category> mediaGenre = util.ensureCategoryExist(genre);
+        ArrayList<Website> mediaWebsite = util.ensureWebsiteExists(onlineAccess);
+        ArrayList<Person> movieDirector = util.ensurePersonExist(director, "Director");
+        ArrayList<Company> movieStudio = util.ensureCompanyExists(studio, "Production Studio");
+
+        Media media = new Media(0, title, mediaType, year, synopsis, imgIcon, mediaWebsite, mediaGenre);
+        media.setMovieDetails(duration, language, movieDirector, movieStudio);
+
+
+        try{
+            mediaDao.addMedia(media);
+            mediaList.put(media.getID(), media);
+            mediaUniqID.put(util.getMediaKey(media.getMediaName(), media.getMediaType().name(), media.getReleaseYear()), media.getID());
+            TheBackroom.videoMedia.add(media.getID());
+            //Show Output Situation
+            AddArchive_v2.closeWindow();
+
+        }catch (Exception e1){
+            e1.getMessage();
         }
     }
 }

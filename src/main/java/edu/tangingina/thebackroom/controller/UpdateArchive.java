@@ -220,22 +220,22 @@ public class UpdateArchive {
                     case MediaType.TvShow -> {
                         String director = FileManager.getPersonnelName(id, "Director");
                         String studio = FileManager.getCompanyName(id, "Production Studio");
-                        //String category = FileManager.getCategory(id);
+                        tvShowDetailsForm.setUpdateMode(id);
                         tvShowDetailsForm.populateForm(rs, director, studio, category, links);
                     }
                     case MediaType.Movie -> {
                         String director = FileManager.getPersonnelName(id, "Director");
                         String studio = FileManager.getCompanyName(id, "Production Studio");
-                        //String category = FileManager.getCategory(id);
+                        tvShowDetailsForm.setUpdateMode(id);
                         filmDetailsForm.populateForm(rs, director, studio, category, links);
 
                     }
                     case MediaType.Game -> {
                         String dev = FileManager.getPersonnelName(id, "Game Developer");
                         String studio = FileManager.getCompanyName(id, "Game Studio");
-                        //String category = FileManager.getCategory(id);
                         String mode = FileManager.getCategory(id);
                         String platform = FileManager.getPlatform(id);
+                        tvShowDetailsForm.setUpdateMode(id);
                         gameDetailsForm.populateForm(rs, dev, studio, category, mode, platform, links);
                     }
                 }
