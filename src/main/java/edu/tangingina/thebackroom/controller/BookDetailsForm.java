@@ -45,6 +45,8 @@ public class BookDetailsForm extends BaseMediaForm {
     private Button btn;
     private Label errorLabel;
 
+    private Media oldMedia;
+
     public BookDetailsForm() {
         view.getChildren().add(formColumn());
 
@@ -167,41 +169,27 @@ public class BookDetailsForm extends BaseMediaForm {
         return isValid;
     }
 
-    public MultiValueField getAuthorField() {
-        return authorField;
-    }
+    public void populateForm (String author, String category, String publisher, String path,
+                              String links, Media media) {
 
-    public MultiValueField getGenreField() {
-        return genreField;
-    }
+        TheBackroom.util.setIfNotNull(titleField, media.getMediaName());
+        TheBackroom.util.setIfNotNull(ISBNfield, media.getISBN());
+        TheBackroom.util.setIfNotNull(editionField, media.getEdition());
+        TheBackroom.util.setIfNotNull(synopsisField, media.getSynopsis());
+        TheBackroom.util.setIfNotNull(pageField, media.getPageCount());
 
-    public void populateForm (ResultSet rs, String author, String category, String publisher, String icon,
-                              String links) {
-        try {
-            titleField.setValue(rs.getString("name"));
-            ISBNfield.setValue(rs.getString("isbn"));
-            pageField.setValue(rs.getString("page_count"));
-            editionField.setValue(rs.getString("edition"));
-            synopsisField.setValue(rs.getString("synopsis"));
-
-            ComboBox<Integer> yearPicker = (ComboBox<Integer>) yearField.getInputs();
-            if (yearPicker != null) {
-                yearPicker.setValue(Integer.parseInt(rs.getString("release_year")));
-            }
-
-            authorField.setValues(author);
-            publisherField.setValues(publisher);
-            genreField.setValues(category);
-
-            linkField.setLink(links);
-
-            String path = rs.getString("icon_path");
-            widgetField.setImage(path);
-
-        } catch (Exception ex) {
-            System.err.println("Error populating Book From: "+ ex.getMessage());
-            ex.printStackTrace();
+        ComboBox<Integer> yearPicker = (ComboBox<Integer>) yearField.getInputs();
+        if (yearPicker != null && media.getReleaseYear() != null && !media.getReleaseYear().equals("null")) {
+            yearPicker.setValue(Integer.valueOf(media.getReleaseYear()));
         }
+
+        TheBackroom.util.setIfNotNull(authorField, author);
+        TheBackroom.util.setIfNotNull(publisherField, publisher);
+        TheBackroom.util.setIfNotNull(genreField, category);
+        TheBackroom.util.setIfNotNull(linkField, links);
+        TheBackroom.util.setIfNotNull(widgetField, path);
+
+        setOldMedia(media);
     }
 
     //call beofre showing update form
@@ -303,16 +291,24 @@ public class BookDetailsForm extends BaseMediaForm {
         Media media = new Media(mediaId, title, mediaType, year, synopsis, imgIcon, mediaWebsite, mediaGenre);
         media.setBookDetails(isbn, pageCount, edition, bookAuthor, bookPublisher);
 
-        try {
-            // connect sa query backend to udpate
+        try{
+            //if the name was updated, then we update our cache
+            if(!media.getMediaName().equals(oldMedia.getMediaName())){
+                TheBackroom.mediaUniqID.remove(TheBackroom.util.getMediaKey(oldMedia.getMediaName(), oldMedia.getMediaType().name(), oldMedia.getReleaseYear()));
+                TheBackroom.mediaUniqID.put(TheBackroom.util.getMediaKey(media.getMediaName(), media.getMediaType().name(), media.getReleaseYear()), media.getID());
+            }
+
+            mediaDao.updateMedia(media, oldMedia);
             mediaList.put(mediaId, media);
-            mediaUniqID.put(util.getMediaKey(title, mediaType.name(), year), mediaId);
             UpdateArchive.closeWindow();
-        } catch (Exception e1) {
+        }catch (Exception e){
             errorLabel.setVisible(true);
             errorLabel.setManaged(true);
-            e1.getMessage();
         }
+    }
+
+    private void setOldMedia(Media media){
+        this.oldMedia = media;
     }
 
 

@@ -39,6 +39,8 @@ public class FilmDetailsForm extends BaseMediaForm{
     private Button btn;
     private Label errorLabel;
 
+    private Media oldMedia;
+
     public FilmDetailsForm() {
         view.getChildren().add(formColumn());
 
@@ -151,41 +153,26 @@ public class FilmDetailsForm extends BaseMediaForm{
             isValid = false;
         }
 
-        return true;
+        return isValid;
     }
 
-    public MultiValueField getDirectorField() {
-        return directorField;
-    }
+    public void populateForm (String director, String studio, String category, String links, String path, Media media) {
+        TheBackroom.util.setIfNotNull(titleField, media.getMediaName());
+        TheBackroom.util.setIfNotNull(synopsisField, media.getSynopsis());
+        TheBackroom.util.setIfNotNull(durationField, media.getDuration());
+        TheBackroom.util.setIfNotNull(languageField, media.getLanguage());
 
-    public MultiValueField getGenreField() {
-        return genreField;
-    }
-
-    public void populateForm (ResultSet rs, String director, String studio, String category, String links) {
-        try {
-            titleField.setValue(rs.getString("name"));
-            synopsisField.setValue(rs.getString("synopsis"));
-            durationField.setValue(rs.getString("duration"));
-            languageField.setValue(rs.getString("language"));
-
-            ComboBox<Integer> yearPicker = (ComboBox<Integer>) yearField.getInputs();
-            if (yearPicker != null) {
-                yearPicker.setValue(Integer.parseInt(rs.getString("release_year")));
-            }
-
-            directorField.setValues(director);
-            studioField.setValues(studio);
-            genreField.setValues(category);
-            linkField.setLink(links);
-
-            String path = rs.getString("icon_path");
-            widgetField.setImage(path);
-
-        } catch (Exception ex) {
-            System.err.println("Error populating TV Show form: " + ex.getMessage());
-            ex.printStackTrace();
+        ComboBox<Integer> yearPicker = (ComboBox<Integer>) yearField.getInputs();
+        if (yearPicker != null && media.getReleaseYear() != null && !media.getReleaseYear().equals("null")) {
+            yearPicker.setValue(Integer.valueOf(media.getReleaseYear()));
         }
+
+        TheBackroom.util.setIfNotNull(directorField, director);
+        TheBackroom.util.setIfNotNull(studioField, studio);
+        TheBackroom.util.setIfNotNull(genreField, category);
+        TheBackroom.util.setIfNotNull(linkField, links);
+        TheBackroom.util.setIfNotNull(widgetField, path);
+        setOldMedia(media);
     }
 
     private void refreshButton() {
@@ -201,10 +188,6 @@ public class FilmDetailsForm extends BaseMediaForm{
         this.isUpdateMode = true;
         this.mediaId = mediaId;
         refreshButton();
-    }
-
-    private void handleUpdate() {
-        System.out.println("Update mode");
     }
 
     private void handleAdd() {
@@ -244,7 +227,7 @@ public class FilmDetailsForm extends BaseMediaForm{
             mediaDao.addMedia(media);
             mediaList.put(media.getID(), media);
             mediaUniqID.put(util.getMediaKey(media.getMediaName(), media.getMediaType().name(), media.getReleaseYear()), media.getID());
-            TheBackroom.bookMedia.add(media.getID());
+            TheBackroom.videoMedia.add(media.getID());
 
             AddArchive_v2.closeWindow();
 
@@ -253,5 +236,61 @@ public class FilmDetailsForm extends BaseMediaForm{
             errorLabel.setManaged(true);
             e1.getMessage();
         }
+    }
+
+    private void handleUpdate() {
+        System.out.println("Update mode");
+
+        MediaDaoImpl mediaDao = TheBackroom.mediaDao;
+        Utility util = TheBackroom.util;
+        FileManager fm = TheBackroom.fm;
+
+        String title = titleField.getUserInput();
+        MediaType mediaType = MediaType.Book;
+        String synopsis = synopsisField.getUserInput();
+
+        ComboBox<Integer> yearPicker = (ComboBox<Integer>) yearField.getInputs();
+        String year = "2024";
+        if (yearPicker != null) year = String.valueOf(yearPicker.getValue());
+
+        // saves only if nagpick ng new path
+        String imgIcon = widgetField.getSelectedFile() != null
+                ? fm.saveIMGRelative(widgetField.getSelectedFile())
+                : widgetField.getCurrentPath();
+
+        List<String> genre = genreField.getValues();
+        List<AccessLinkField.AccessLink> onlineAccess = linkField.getValues();
+
+        String duration  = durationField.getUserInput();
+        String language = languageField.getUserInput();
+        List<String> director = directorField.getValues();
+        List<String> studio = studioField.getValues();
+
+        ArrayList<Category> mediaGenre = util.ensureCategoryExist(genre);
+        ArrayList<Website> mediaWebsite = util.ensureWebsiteExists(onlineAccess);
+        ArrayList<Person> movieDirector = util.ensurePersonExist(director, "Director");
+        ArrayList<Company> movieStudio = util.ensureCompanyExists(studio, "Production Studio");
+
+        Media media = new Media(0, title, mediaType, year, synopsis, imgIcon, mediaWebsite, mediaGenre);
+        media.setMovieDetails(duration, language, movieDirector, movieStudio);
+
+        try{
+            //if the name was updated, then we update our cache
+            if(!media.getMediaName().equals(oldMedia.getMediaName())){
+                TheBackroom.mediaUniqID.remove(TheBackroom.util.getMediaKey(oldMedia.getMediaName(), oldMedia.getMediaType().name(), oldMedia.getReleaseYear()));
+                TheBackroom.mediaUniqID.put(TheBackroom.util.getMediaKey(media.getMediaName(), media.getMediaType().name(), media.getReleaseYear()), media.getID());
+            }
+
+            mediaDao.updateMedia(media, oldMedia);
+            mediaList.put(mediaId, media);
+            UpdateArchive.closeWindow();
+        }catch (Exception e){
+            errorLabel.setVisible(true);
+            errorLabel.setManaged(true);
+        }
+    }
+
+    private void setOldMedia(Media media){
+        this.oldMedia = media;
     }
 }

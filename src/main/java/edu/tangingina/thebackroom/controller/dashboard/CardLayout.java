@@ -98,7 +98,7 @@ public class CardLayout extends StackPane {
             return imgView;
 
         } catch (Exception e) {
-            System.err.println("Error processing image path: " + imagePath);
+            //System.err.println("Error processing image path: " + imagePath);
             return null;
         }
     }

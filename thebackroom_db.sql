@@ -469,6 +469,15 @@ JOIN `media_category`
 JOIN `category` `c`
     ON `media_category`.`category_id` = `c`.`category_id`;
 
+-- Index Creation
+CREATE INDEX `idx_media_name` ON `media` (`name`);
+CREATE INDEX `idx_media_type` ON `media` (`media_type`);
+CREATE INDEX `idx_media_year` ON `media` (`release_year`);
+CREATE INDEX `idx_media_type_year` ON `media` (`media_type`, `release_year`);
+CREATE INDEX `idx_person_name` ON `person` (`name`);
+CREATE INDEX `idx_company_name` ON `company` (`name`);
+CREATE INDEX `idx_platform_name` ON `platform` (`name`);
+
 -- Setup Permissions for Moderator
 GRANT SELECT, INSERT, UPDATE ON `thebackroom_db`.* TO 'app_moderator'@'localhost';
 GRANT DELETE ON `thebackroom_db`.`media_access` TO 'app_moderator'@'localhost';

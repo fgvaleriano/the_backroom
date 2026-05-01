@@ -293,7 +293,7 @@ public class MediaDetailsView extends BaseView {
     private void addDetail(VBox container, String label, String value) {
         String displayValue;
 
-        if (value == null || value.trim().isEmpty()) {
+        if (value == null || value.trim().isEmpty() || value.equals("null")) {
             displayValue = "No input";
         } else {
             displayValue = value;

@@ -47,7 +47,10 @@ public class MediaSection extends VBox {
     }
 
     public void addCard(String title, String imagePath) {
-        CardLayout card = new CardLayout(title, imagePath);
+        String mediaTitle = TheBackroom.mediaList.get(Integer.valueOf(title)).getMediaName();
+
+        //we use the media title here so that if no img we set the name of the media on the empty card
+        CardLayout card = new CardLayout(mediaTitle, imagePath);
 
         card.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.PRIMARY) {

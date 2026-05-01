@@ -1,12 +1,16 @@
 package edu.tangingina.thebackroom.controller;
 
+import edu.tangingina.thebackroom.TheBackroom;
+import edu.tangingina.thebackroom.controller.dashboard.DashboardShell;
 import edu.tangingina.thebackroom.model.Media;
 import edu.tangingina.thebackroom.model.MediaType;
 import edu.tangingina.thebackroom.util.DatabaseManager;
 import edu.tangingina.thebackroom.util.FileManager;
 import edu.tangingina.thebackroom.util.FontLoader;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -74,7 +78,7 @@ public class UpdateArchive {
         dynamicForm = getDynamicForm(mediaType);
 
         //pulling data from db and populating form
-        loadDataFromDB(mediaId, mediaType);
+        loadData(mediaId, mediaType);
 
         formContent.getChildren().add(dynamicForm);
         innerCard.getChildren().addAll(header, inputHolder);
@@ -88,11 +92,19 @@ public class UpdateArchive {
 
         window.setScene(scene);
         window.showAndWait();
+
     }
 
     //closing dialog box
     public static void closeWindow() {
         window.close();
+        Scene sc = TheBackroom.sm.getMainScene();
+
+        Node found = sc.lookup(".dashboard-shell");
+        if(found instanceof DashboardShell shell){
+            shell.refreshCurrentView();
+
+        }
     }
 
     //dark background
@@ -201,49 +213,45 @@ public class UpdateArchive {
         }
     }
 
-    private static void loadDataFromDB(int id, MediaType type) {
-        try {
-            ResultSet rs = FileManager.getMediaData(id);
-            if (rs != null && rs.next()) {
+    private static void loadData(int id, MediaType type) {
+        Media media = TheBackroom.mediaList.get(id);
 
-                String icon = FileManager.getString(id);
-                String category = FileManager.getCategory(id);
-                String links = FileManager.getAccessLinks(id);
+        String icon = media.getMediaIcon();
+        String category = TheBackroom.util.processListGenre(media.getMediaGenres());
+        String links = TheBackroom.util.processWebsiteList(media.getOnlineAccess());
 
-                switch (type) {
-                    case MediaType.Book -> {
-                        String author = FileManager.getPersonnelName(id, "Author");
-                        String publisher = FileManager.getCompanyName(id, "Publisher");
-                        bookDetailsForm.setUpdateMode(id);
-                        bookDetailsForm.populateForm(rs, author, category, publisher, icon, links);
-                    }
-                    case MediaType.TvShow -> {
-                        String director = FileManager.getPersonnelName(id, "Director");
-                        String studio = FileManager.getCompanyName(id, "Production Studio");
-                        String status = FileManager.getPersonnelName(id, "Status");
-                        tvShowDetailsForm.setUpdateMode(id);
-                        tvShowDetailsForm.populateForm(rs, director, studio, category, links, status);
-                    }
-                    case MediaType.Movie -> {
-                        String director = FileManager.getPersonnelName(id, "Director");
-                        String studio = FileManager.getCompanyName(id, "Production Studio");
-                        filmDetailsForm.setUpdateMode(id);
-                        filmDetailsForm.populateForm(rs, director, studio, category, links);
-
-                    }
-                    case MediaType.Game -> {
-                        String dev = FileManager.getPersonnelName(id, "Game Developer");
-                        String studio = FileManager.getCompanyName(id, "Game Studio");
-                        String mode = FileManager.getCategory(id);
-                        String platform = FileManager.getPlatform(id);
-                        gameDetailsForm.setUpdateMode(id);
-                        gameDetailsForm.populateForm(rs, dev, studio, category, mode, platform, links);
-                    }
-                }
+        switch (type){
+            case MediaType.Book -> {
+                String author = TheBackroom.util.processPersonList(media.getMediaPersonnel());
+                String publisher = TheBackroom.util.processCompanyList(media.getMediaCompany(), "Publisher");
+                bookDetailsForm.setUpdateMode(id);
+                bookDetailsForm.populateForm(author, category, publisher, icon, links, media);
             }
-        } catch (SQLException e) {
-            System.err.println("Error loading data from DB: " + e.getMessage());
-            e.printStackTrace();
+
+            case MediaType.TvShow -> {
+                String director = TheBackroom.util.processPersonList(media.getMediaPersonnel());
+                String studio = TheBackroom.util.processCompanyList(media.getMediaCompany(), "Production Studio");
+                tvShowDetailsForm.setUpdateMode(id);
+                tvShowDetailsForm.populateForm(director, studio, category, icon, links, media);
+            }
+
+            case MediaType.Movie -> {
+                String director = TheBackroom.util.processPersonList(media.getMediaPersonnel());
+                String studio = TheBackroom.util.processCompanyList(media.getMediaCompany(), "Production Studio");
+                filmDetailsForm.setUpdateMode(id);
+                filmDetailsForm.populateForm(director, studio, category, links, icon, media);
+
+            }
+
+            case MediaType.Game -> {
+                String dev = TheBackroom.util.processPersonList(media.getMediaPersonnel());
+                String studio = TheBackroom.util.processCompanyList(media.getMediaCompany(), "Game Studio");
+                String publisher = TheBackroom.util.processCompanyList(media.getMediaCompany(), "Publisher");
+                String mode = TheBackroom.util.processModeList(media.getGameMode());
+                String platform = TheBackroom.util.procssPlatformList(media.getGamePlatform());
+                gameDetailsForm.setUpdateMode(id);
+                gameDetailsForm.populateForm(dev, studio, category, mode, platform, links, publisher, icon, media);
+            }
         }
     }
 }

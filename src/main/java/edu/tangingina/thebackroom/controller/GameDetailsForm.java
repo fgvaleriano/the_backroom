@@ -40,6 +40,8 @@ public class GameDetailsForm extends BaseMediaForm{
     private Button btn;
     private Label errorLabel;
 
+    private Media oldMedia;
+
     public GameDetailsForm() {
         view.getChildren().addAll(formColumn());
 
@@ -166,46 +168,27 @@ public class GameDetailsForm extends BaseMediaForm{
         return isValid;
     }
 
-    public MultiValueField getGameDevField() {
-        return gameDevField;
-    }
+    public void populateForm(String game_dev, String game_studio, String category, String game_mode,
+                             String game_platform, String links, String game_publisher, String path, Media media) {
 
-    public MultiValueField getGameStudioField() {
-        return gameStudioField;
-    }
+        TheBackroom.util.setIfNotNull(titleField, media.getMediaName());
+        TheBackroom.util.setIfNotNull(synopsisField, media.getSynopsis());
+        TheBackroom.util.setIfNotNull(engineField, media.getGameEngine());
+        TheBackroom.util.setIfNotNull(systemReqsField, media.getSystemRequirements());
 
-    public MultiValueField getGenreField() {
-        return genreField;
-    }
-
-    public void populateForm(ResultSet rs, String game_dev, String game_studio, String category, String game_mode,
-                             String platform, String links) {
-        try {
-            titleField.setValue(rs.getString("name"));
-            synopsisField.setValue(rs.getString("synopsis"));
-            engineField.setValue(rs.getString("game_engine"));
-            systemReqsField.setValue(rs.getString("system_requirements"));
-
-            ComboBox<Integer> yearPicker = (ComboBox<Integer>) yearField.getInputs();
-            if (yearPicker != null) {
-                yearPicker.setValue(Integer.parseInt(rs.getString("release_year")));
-            }
-
-            gameDevField.setValues(game_dev);
-            gameStudioField.setValues(game_studio);
-            modeField.setValues(game_mode);
-            genreField.setValues(category);
-            platformField.setValues(platform);
-
-            linkField.setLink(links);
-
-            String path = rs.getString("icon_path");
-            widgetField.setImage(path);
-
-        } catch (Exception ex) {
-            System.err.println(ex.getMessage());
-            ex.printStackTrace();
+        ComboBox<Integer> yearPicker = (ComboBox<Integer>) yearField.getInputs();
+        if (yearPicker != null && media.getReleaseYear() != null && !media.getReleaseYear().equals("null")) {
+            yearPicker.setValue(Integer.valueOf(media.getReleaseYear()));
         }
+
+        TheBackroom.util.setIfNotNull(gameDevField, game_dev);
+        TheBackroom.util.setIfNotNull(gameStudioField, game_studio);
+        TheBackroom.util.setIfNotNull(gamePublisherField, game_publisher);
+        TheBackroom.util.setIfNotNull(modeField, game_mode);
+        TheBackroom.util.setIfNotNull(genreField, category);
+        TheBackroom.util.setIfNotNull(platformField, game_platform);
+        TheBackroom.util.setIfNotNull(linkField, links);
+        TheBackroom.util.setIfNotNull(widgetField, path);
     }
 
     private void refreshButton() {
@@ -264,7 +247,7 @@ public class GameDetailsForm extends BaseMediaForm{
             mediaDao.addMedia(media);
             mediaList.put(media.getID(), media);
             mediaUniqID.put(util.getMediaKey(media.getMediaName(), media.getMediaType().name(), media.getReleaseYear()), media.getID());
-            TheBackroom.bookMedia.add(media.getID());
+            TheBackroom.gameMedia.add(media.getID());
 
             AddArchive_v2.closeWindow();
 

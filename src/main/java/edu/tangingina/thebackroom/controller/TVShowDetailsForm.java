@@ -41,6 +41,8 @@ public class TVShowDetailsForm extends BaseMediaForm{
     private Button btn;
     private Label errorLabel;
 
+    private Media oldMedia;
+
 
     public TVShowDetailsForm() {
         view.getChildren().addAll(formColumn());
@@ -118,6 +120,7 @@ public class TVShowDetailsForm extends BaseMediaForm{
         episodeField.clearError();
         statusField.clearError();
         genreField.clearError();
+        directorField.clearError();
         studioField.clearError();
         synopsisField.clearError();
         linkField.clearError();
@@ -157,6 +160,11 @@ public class TVShowDetailsForm extends BaseMediaForm{
             isValid = false;
         }
 
+        if (directorField.isEmpty()) {
+            directorField.showError();
+            isValid = false;
+        }
+
         if (linkField.isEmpty()) {
             linkField.showError();
             isValid = false;
@@ -165,46 +173,34 @@ public class TVShowDetailsForm extends BaseMediaForm{
         return isValid;
     }
 
-    public MultiValueField getDirectorField() {
-        return directorField;
-    }
-
-    public MultiValueField getGenreField() {
-        return genreField;
-    }
-
     public void setUpdateMode(int mediaId) {
         this.isUpdateMode = true;
         this.mediaId = mediaId;
         refreshButton();
     }
 
-    public void populateForm(ResultSet rs, String director, String studio, String category, String links, String status) {
-        try {
-            System.out.println("Reached here");
-            titleField.setValue(rs.getString("name"));
-            synopsisField.setValue(rs.getString("synopsis"));
-            seasonField.setValue(rs.getString("season_count"));
-            episodeField.setValue(rs.getString("episode_count"));
-            statusField.setValue(rs.getString("status"));
+    public void populateForm(String director, String studio, String category, String path, String links, Media media) {
 
-            ComboBox<Integer> yearPicker = (ComboBox<Integer>) yearField.getInputs();
-            if (yearPicker != null) {
-                yearPicker.setValue(Integer.parseInt(rs.getString("release_year")));
-            }
+        TheBackroom.util.setIfNotNull(titleField, media.getMediaName());
+        TheBackroom.util.setIfNotNull(synopsisField, media.getSynopsis());
+        TheBackroom.util.setIfNotNull(seasonField, media.getSeasonCount());
+        TheBackroom.util.setIfNotNull(episodeField, media.getEpisodeCount());
 
-            directorField.setValues(director);
-            studioField.setValues(studio);
-            genreField.setValues(category);
-            linkField.setLink(links);
-
-            String path = rs.getString("icon_path");
-            widgetField.setImage(path);
-
-        } catch (Exception ex) {
-            System.err.println("Error populating TV Show form: " + ex.getMessage());
-            ex.printStackTrace();
+        ComboBox<Integer> yearPicker = (ComboBox<Integer>) yearField.getInputs();
+        if (yearPicker != null && media.getReleaseYear() != null && !media.getReleaseYear().equals("null")) {
+            yearPicker.setValue(Integer.valueOf(media.getReleaseYear()));
         }
+
+        ComboBox<String> statusPicker = (ComboBox<String>) statusField.getInputs();
+        if(statusPicker != null && media.getStatus() != null && !media.getReleaseYear().equals("null")){
+            statusPicker.setValue(media.getStatus());
+        }
+
+        TheBackroom.util.setIfNotNull(directorField, director);
+        TheBackroom.util.setIfNotNull(studioField, studio);
+        TheBackroom.util.setIfNotNull(genreField, category);
+        TheBackroom.util.setIfNotNull(linkField, links);
+        TheBackroom.util.setIfNotNull(widgetField, path);
     }
 
     private void refreshButton() {
@@ -253,7 +249,7 @@ public class TVShowDetailsForm extends BaseMediaForm{
             mediaDao.addMedia(media);
             mediaList.put(media.getID(), media);
             mediaUniqID.put(util.getMediaKey(media.getMediaName(), media.getMediaType().name(), media.getReleaseYear()), media.getID());
-            TheBackroom.bookMedia.add(media.getID());
+            TheBackroom.videoMedia.add(media.getID());
 
             AddArchive_v2.closeWindow();
 

@@ -579,13 +579,23 @@ public class MediaDaoImpl implements MediaDao {
                 ArrayList<GameMode> oldGameMode = oldMedia.getGameMode();
                 ArrayList<GameMode> newGameMode = media.getGameMode();
 
-                for (GameMode gm : oldGameMode) {
-                    if (!newGameMode.contains(gm)) removeMediaGameMode(media.getID(), gm);
+                for (GameMode oldGm : oldGameMode) {
+                    boolean stillExists = newGameMode.stream()
+                            .anyMatch(newGm -> newGm.getGameModeID() == oldGm.getGameModeID());
+                    if (!stillExists) {
+                        removeMediaGameMode(media.getID(), oldGm);
+                    }
                 }
 
                 //we add only for the new things which we will remove things that already exists
-                ArrayList<GameMode> tempGameMode = new ArrayList<>(newGameMode);
-                tempGameMode.removeAll(oldGameMode);
+                ArrayList<GameMode> tempGameMode = new ArrayList<>();
+                for (GameMode newGm : newGameMode) {
+                    boolean isNew = oldGameMode.stream()
+                            .noneMatch(oldGm -> oldGm.getGameModeID() == newGm.getGameModeID());
+                    if (isNew) {
+                        tempGameMode.add(newGm);
+                    }
+                }
                 media.setGameMode(tempGameMode);
                 addMediaGameMode(media);
                 media.setGameMode(newGameMode);
@@ -594,13 +604,18 @@ public class MediaDaoImpl implements MediaDao {
                 ArrayList<Platform> oldPlatform = oldMedia.getGamePlatform();
                 ArrayList<Platform> newPlatform = media.getGamePlatform();
 
-                for (Platform p : oldPlatform) {
-                    if (!newPlatform.contains(p)) removeMediaGamePlatform(media.getID(), p);
+                for (Platform oldP : oldPlatform) {
+                    boolean stillExists = newPlatform.stream()
+                            .anyMatch(newP -> newP.getPlatformID() == oldP.getPlatformID());
+                    if (!stillExists) removeMediaGamePlatform(media.getID(), oldP);
                 }
 
-                //we add only for the new things which we will remove things that already exists
-                ArrayList<Platform> tempPlatform = new ArrayList<>(newPlatform);
-                tempPlatform.removeAll(oldPlatform);
+                ArrayList<Platform> tempPlatform = new ArrayList<>();
+                for (Platform newP : newPlatform) {
+                    boolean isNew = oldPlatform.stream()
+                            .noneMatch(oldP -> oldP.getPlatformID() == newP.getPlatformID());
+                    if (isNew) tempPlatform.add(newP);
+                }
                 media.setGamePlatform(tempPlatform);
                 addMediaGamePlatform(media);
                 media.setGamePlatform(newPlatform);
@@ -610,13 +625,19 @@ public class MediaDaoImpl implements MediaDao {
             ArrayList<Person> oldPersonnel = oldMedia.getMediaPersonnel();
             ArrayList<Person> newPersonnel = media.getMediaPersonnel();
 
-            for (Person p : oldPersonnel) {
-                if (!newPersonnel.contains(p)) removeMediaPersonnel(media.getID(), p);
+            for (Person oldP : oldPersonnel) {
+                // Matching by Person ID AND Role ID
+                boolean stillExists = newPersonnel.stream()
+                        .anyMatch(newP -> newP.getPersonID() == oldP.getPersonID() && newP.getPersonRoleId() == oldP.getPersonRoleId());
+                if (!stillExists) removeMediaPersonnel(media.getID(), oldP);
             }
 
-            //we add only for the new things which we will remove things that already exists
-            ArrayList<Person> tempPersonnel = new ArrayList<>(newPersonnel);
-            tempPersonnel.removeAll(oldPersonnel);
+            ArrayList<Person> tempPersonnel = new ArrayList<>();
+            for (Person newP : newPersonnel) {
+                boolean isNew = oldPersonnel.stream()
+                        .noneMatch(oldP -> oldP.getPersonID() == newP.getPersonID() && oldP.getPersonRoleId() == newP.getPersonRoleId());
+                if (isNew) tempPersonnel.add(newP);
+            }
             media.setMediaPersonnel(tempPersonnel);
             addMediaPersonnel(media);
             media.setMediaPersonnel(newPersonnel);
@@ -625,13 +646,19 @@ public class MediaDaoImpl implements MediaDao {
             ArrayList<Company> oldCompany = oldMedia.getMediaCompany();
             ArrayList<Company> newCompany = media.getMediaCompany();
 
-            for (Company c : oldCompany) {
-                if (!newCompany.contains(c)) removeMediaCompany(media.getID(), c);
+            for (Company oldC : oldCompany) {
+                // Matching by Company ID AND Role ID (since Company has Publisher roles etc.)
+                boolean stillExists = newCompany.stream()
+                        .anyMatch(newC -> newC.getCompanyID() == oldC.getCompanyID() && newC.getCompanyRoleId() == oldC.getCompanyRoleId());
+                if (!stillExists) removeMediaCompany(media.getID(), oldC);
             }
 
-            //we add only for the new things which we will remove things that already exists
-            ArrayList<Company> tempCompany = new ArrayList<>(newCompany);
-            tempCompany.removeAll(oldCompany);
+            ArrayList<Company> tempCompany = new ArrayList<>();
+            for (Company newC : newCompany) {
+                boolean isNew = oldCompany.stream()
+                        .noneMatch(oldC -> oldC.getCompanyID() == newC.getCompanyID() && oldC.getCompanyRoleId() == newC.getCompanyRoleId());
+                if (isNew) tempCompany.add(newC);
+            }
             media.setMediaCompany(tempCompany);
             addMediaCompany(media);
             media.setMediaCompany(newCompany);
@@ -640,28 +667,39 @@ public class MediaDaoImpl implements MediaDao {
             ArrayList<Category> oldCategory = oldMedia.getMediaGenres();
             ArrayList<Category> newCategory = media.getMediaGenres();
 
-            for (Category cat : oldCategory) {
-                if (!newCategory.contains(cat)) removeMediaGenre(media.getID(), cat);
+            for (Category oldCat : oldCategory) {
+                boolean stillExists = newCategory.stream()
+                        .anyMatch(newCat -> newCat.getCategoryID() == oldCat.getCategoryID());
+                if (!stillExists) removeMediaGenre(media.getID(), oldCat);
             }
 
-            //we add only for the new things which we will remove things that already exists
-            ArrayList<Category> tempCategory = new ArrayList<>(newCategory);
-            tempCategory.removeAll(oldCategory);
+            ArrayList<Category> tempCategory = new ArrayList<>();
+            for (Category newCat : newCategory) {
+                boolean isNew = oldCategory.stream()
+                        .noneMatch(oldCat -> oldCat.getCategoryID() == newCat.getCategoryID());
+                if (isNew) tempCategory.add(newCat);
+            }
             media.setMediaGenres(tempCategory);
             addMediaGenre(media);
             media.setMediaGenres(newCategory);
+
 
             //=========Update on the Media Online Access=========//
             ArrayList<Website> oldWebsite = oldMedia.getOnlineAccess();
             ArrayList<Website> newWebsite = media.getOnlineAccess();
 
-            for (Website w : oldWebsite) {
-                if (!newWebsite.contains(w)) removeMediaAccess(media.getID(), w);
+            for (Website oldW : oldWebsite) {
+                boolean stillExists = newWebsite.stream()
+                        .anyMatch(newW -> newW.getWebsiteID() == oldW.getWebsiteID());
+                if (!stillExists) removeMediaAccess(media.getID(), oldW);
             }
 
-            //we add only for the new things which we will remove things that already exists
-            ArrayList<Website> tempWebsite = new ArrayList<>(newWebsite);
-            tempWebsite.removeAll(oldWebsite);
+            ArrayList<Website> tempWebsite = new ArrayList<>();
+            for (Website newW : newWebsite) {
+                boolean isNew = oldWebsite.stream()
+                        .noneMatch(oldW -> oldW.getWebsiteID() == newW.getWebsiteID());
+                if (isNew) tempWebsite.add(newW);
+            }
             media.setOnlineAccess(tempWebsite);
             addMediaAccess(media);
             media.setOnlineAccess(newWebsite);
@@ -674,9 +712,11 @@ public class MediaDaoImpl implements MediaDao {
             try {
                 //we rollback if there was an error
                 DatabaseManager.conn.rollback();
+                DatabaseManager.conn.setAutoCommit(true);
             } catch (Exception e1) {
                 throw e1;
             }
+            e.printStackTrace();
             throw e;
         }
     }

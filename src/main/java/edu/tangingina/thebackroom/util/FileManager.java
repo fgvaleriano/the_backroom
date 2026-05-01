@@ -690,22 +690,27 @@ public class FileManager {
         }
 
         //Here we get the file extension pra kuan for the naming
-        int dotIndex = file.getName().indexOf(".");
-        String imgExtension = "";
-        if(dotIndex > 0){
-            imgExtension = file.getName().substring(dotIndex);
+        if(file != null){
+            int dotIndex = file.getName().indexOf(".");
+            String imgExtension = "";
+            if(dotIndex > 0){
+                imgExtension = file.getName().substring(dotIndex);
+            }
+
+            String newFileName = System.currentTimeMillis() + imgExtension;
+
+            File newFile = new File(dir, newFileName);
+            try{
+                Files.copy(file.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            }catch(Exception e){
+
+            }
+
+            return "uploads/mediaIcon/" + newFileName;
         }
 
-        String newFileName = System.currentTimeMillis() + imgExtension;
+        return null;
 
-        File newFile = new File(dir, newFileName);
-        try{
-            Files.copy(file.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        }catch(Exception e){
-
-        }
-
-        return "uploads/mediaIcon/" + newFileName;
     }
 
     public String saveIMGRelative(String path){
@@ -993,29 +998,6 @@ public class FileManager {
         }
 
         return "";
-    }
-
-    public static String getAccessLinks (int mediaId) {
-        StringBuilder links = new StringBuilder();
-        try {
-            DatabaseManager dm = new DatabaseManager();
-            dm.getConnection();
-
-            PreparedStatement pstmt = dm.conn.prepareStatement(UpdateArchiveQueries.fetch_access_links);
-
-            pstmt.setInt(1, mediaId);
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                if (links.length() > 0) links.append(", ");
-                links.append(rs.getString("Name")).append("| ").append(rs.getString("URL"));
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return links.toString();
     }
 
 }
