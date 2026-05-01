@@ -1,6 +1,7 @@
 package edu.tangingina.thebackroom;
 
 import edu.tangingina.thebackroom.util.ConfigManager;
+import edu.tangingina.thebackroom.util.ConfigSetupWindow;
 import javafx.application.Application;
 
 public class Launcher {
@@ -8,15 +9,10 @@ public class Launcher {
         ConfigManager check = new ConfigManager();
 
         //We check first if the app configuration exists, if not this means we need to intiialize everything first;
-        if(check.checkConfig()){
+        if (!check.checkConfig()) {
+            Application.launch(ConfigSetupWindow.class, args);
+        } else {
             Application.launch(TheBackroom.class, args);
-        }else{
-            check.initialize();
-            System.out.println("\n====================================================================");
-            System.out.println("                         SETUP SUCCESSFUL!                               ");
-            System.out.println("      Please rerun the program to apply configuration changes. ");
-            System.out.println("======================================================================");
-            System.exit(0);
         }
     }
 }
