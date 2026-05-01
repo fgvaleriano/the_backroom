@@ -499,4 +499,14 @@
     -fx-text-fill: #888888;
 }
 
+.error-label {
+    -fx-text-fill: #CA772A;
+}
+
+.combo-box-error {
+    -fx-effect: dropshadow(gaussian, #D27E31, 15, 0, 0, 0);
+    -fx-border-color: #D27E31;
+    -fx-border-radius: 5;
+}
+
 

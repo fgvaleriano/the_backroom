@@ -19,9 +19,9 @@ public class ImportDialog {
     private static Scene scene;
     private static Stage window;
     private static ComboBox<String> mediaTypeSelector;
-    private static Label header, mediaTypeLabel, fileTypeLabel, inputLabel;
+    private static Label header, errorLabel, inputLabel;
     private static StackPane root;
-    private static HBox row, fileTypeRow, mediaTypeRow, file;
+    private static HBox row, file;
     private static File selectedFile;
     private static VBox formContent;
     private static TextField filePathField;
@@ -50,6 +50,13 @@ public class ImportDialog {
         fieldsBox.setPrefWidth(520);
         fieldsBox.setMaxWidth(520);
 
+        // error label
+        errorLabel = new Label("Please upload a file");
+        errorLabel.setFont(FontLoader.bold(16));
+        errorLabel.getStyleClass().add("error-label");
+        errorLabel.setVisible(false);
+        errorLabel.setManaged(false);
+
         file = getInput();
 
         fieldsBox.getChildren().addAll(file);
@@ -70,15 +77,25 @@ public class ImportDialog {
             if (selectedFile == null || filePathField.getText().isBlank()) {
                 if (!filePathField.getStyleClass().contains("error-field")) {
                     filePathField.getStyleClass().add("input-field-error");
+                    errorLabel.setVisible(true);
+                    errorLabel.setManaged(true);
+                    return;
                 }
 
                 filePathField.setPromptText("Please upload a file");
-                return;
+                errorLabel.setVisible(false);
+                errorLabel.setManaged(false);
+                filePathField.getStyleClass().remove("input-field-error");
+                closeWindow();
+
             }
             closeWindow();
         });
 
-        formContent.getChildren().addAll(header, fieldsBox, addBtn);
+        VBox btnContainer = new VBox(8, addBtn, errorLabel);
+        btnContainer.setAlignment(Pos.CENTER);
+
+        formContent.getChildren().addAll(header, fieldsBox, btnContainer);
         root.getChildren().add(formContent);
         StackPane.setAlignment(formContent, Pos.TOP_CENTER);
 
@@ -138,8 +155,11 @@ public class ImportDialog {
             if (selectedFile != null) {
                 filePathField.setText(selectedFile.getAbsolutePath());
                 filePathField.getStyleClass().remove("error-field");
+                errorLabel.setVisible(false);
+                errorLabel.setManaged(false);
             }
         });
+
 
         HBox filePicker = new HBox(10, filePathField, browseBtn);
         filePicker.setAlignment(Pos.CENTER_LEFT);

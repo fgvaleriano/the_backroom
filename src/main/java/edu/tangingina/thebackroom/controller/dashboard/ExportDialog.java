@@ -21,7 +21,7 @@ public class ExportDialog {
     private static ComboBox<String> mediaTypeSelector;
     private static HBox row, mediaTypeRow;
     private static StackPane root;
-    private static Label header, mediaTypeLabel;
+    private static Label header, mediaTypeLabel, errorLabel;
     private static VBox formContent;
 
     public static void exportDialogView() {
@@ -46,6 +46,12 @@ public class ExportDialog {
         fieldsBox.setPrefWidth(520);
         fieldsBox.setMaxWidth(520);
 
+        errorLabel = new Label("Please select a media type");
+        errorLabel.setFont(FontLoader.bold(16));
+        errorLabel.getStyleClass().add("error-label");
+        errorLabel.setVisible(false);
+        errorLabel.setManaged(false);
+
         mediaTypeRow = getMediaType();
 
         fieldsBox.getChildren().addAll(mediaTypeRow);
@@ -61,6 +67,18 @@ public class ExportDialog {
         exportBtn.setGraphic(view);
 
         exportBtn.setOnAction(e -> {
+
+            if (mediaTypeSelector.getValue()== null) {
+                mediaTypeSelector.getStyleClass().add("combo-box-error");
+                errorLabel.setVisible(true);
+                errorLabel.setManaged(true);
+                return;
+            }
+
+            mediaTypeSelector.getStyleClass().remove("combo-box-error");
+            errorLabel.setVisible(false);
+            errorLabel.setManaged(false);
+
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Save Exported Archive");
 
@@ -88,7 +106,10 @@ public class ExportDialog {
             }
         });
 
-        formContent.getChildren().addAll(header, fieldsBox, exportBtn);
+        VBox btnContainer = new VBox(8, exportBtn, errorLabel);
+        btnContainer.setAlignment(Pos.CENTER);
+
+        formContent.getChildren().addAll(header, fieldsBox, btnContainer);
         root.getChildren().add(formContent);
         StackPane.setAlignment(formContent, Pos.TOP_CENTER);
 
