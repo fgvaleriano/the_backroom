@@ -191,4 +191,8 @@ public class Media {
 
     public ArrayList<Platform> getGamePlatform() { return gamePlatform; }
     public void setGamePlatform(ArrayList<Platform> gamePlatform) { this.gamePlatform = gamePlatform; }
+
+    public String getIconPath() {
+        return mediaIcon;
+    }
 }

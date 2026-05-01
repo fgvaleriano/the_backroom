@@ -12,6 +12,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.*;
 
+import static edu.tangingina.thebackroom.TheBackroom.mediaDao;
+
 public class Utility {
     Argon2 argon2 = Argon2Factory.create();
 
@@ -242,7 +244,5 @@ public class Utility {
 
         return mediaGamePlatform;
     }
-
-
 
 }

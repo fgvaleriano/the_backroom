@@ -63,4 +63,11 @@ public class FormFieldGroup {
     public void clearError() {
         inputs.getStyleClass().remove("input-field-error");
     }
+
+    public void setValue(String value) {
+        if (inputs instanceof TextInputControl textInput) {
+            textInput.setText(value != null ? value : "");
+        }
+    }
+
 }

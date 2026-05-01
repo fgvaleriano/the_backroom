@@ -155,7 +155,16 @@ public class NavbarComponent extends HBox {
             });
         }
 
-        exportBtn = createDropdownButton("Export");
+        if(onExport != null){
+            exportBtn = createDropdownButton("Export");
+            exportBtn.setOnAction(e -> {
+                System.out.println("Exporting archive");
+                profileMenu.hide();
+                Platform.runLater(
+                        () -> {if (onExport != null) onExport.run(); }
+                );
+            });
+        }
 
 
         if(onLogout != null){
@@ -221,6 +230,8 @@ public class NavbarComponent extends HBox {
     public void setLogIn(Runnable onLogin){
         this.onLogin = onLogin;
     }
+
+    public void setExport(Runnable onExport){this.onExport = onExport;}
 
     public void setAdd(Runnable onAdd){
         this.onAdd = onAdd;

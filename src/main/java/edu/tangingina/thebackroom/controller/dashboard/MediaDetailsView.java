@@ -1,9 +1,11 @@
 package edu.tangingina.thebackroom.controller.dashboard;
 
 import edu.tangingina.thebackroom.TheBackroom;
+import edu.tangingina.thebackroom.controller.UpdateArchive;
 import edu.tangingina.thebackroom.model.*;
 import edu.tangingina.thebackroom.util.FontLoader;
 import edu.tangingina.thebackroom.util.InternetManager;
+import edu.tangingina.thebackroom.util.UpdateArchiveQueries;
 import javafx.geometry.*;
 import javafx.scene.control.*;
 import javafx.scene.image.*;
@@ -25,6 +27,10 @@ public class MediaDetailsView extends BaseView {
         this.media = TheBackroom.mediaList.get(mediaID);
         this.onBack = onBack;
         buildLayout();
+    }
+
+    private int getMediaID() {
+        return mediaID;
     }
 
     @Override
@@ -74,6 +80,7 @@ public class MediaDetailsView extends BaseView {
         update.setOnAction(e -> {
             System.out.println("Update media: " + media);
 
+            UpdateArchive.updateArchiveView(media.getID(), media.getMediaType());
         });
 
         Region spacce = new Region();

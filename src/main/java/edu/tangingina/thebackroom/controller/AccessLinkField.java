@@ -203,4 +203,43 @@ public class AccessLinkField {
         return values;
     }
 
+    public void setLink(String websiteData) {
+        values.clear();
+        valuesPane.getChildren().clear();
+
+        if (websiteData == null || websiteData.isEmpty()) {return;}
+
+        String[] entries = websiteData.split(",\\s*");
+        for (String entry : entries) {
+            String[] parts = entry.split("\\|");
+
+            if (parts.length == 2) {
+                String name = parts[0].trim();
+                String link = parts[1].trim();
+
+                AccessLink newLink = new AccessLink(name, link);
+                values.add(newLink);
+
+                Button chip = new Button(name);
+                chip.setFont(FontLoader.light(15));
+                chip.getStyleClass().add("input-chip");
+
+                chip.setOnAction(e -> {
+                    values.remove(newLink);
+                    valuesPane.getChildren().remove(chip);
+                    if (values.isEmpty()) {
+                        valuesRow.setVisible(false);
+                        valuesRow.setManaged(false);
+                    }
+                });
+
+                valuesPane.getChildren().add(chip);
+            }
+        }
+
+        if (!values.isEmpty()) {
+            valuesRow.setVisible(true);
+            valuesRow.setManaged(true);
+        }
+    }
 }
