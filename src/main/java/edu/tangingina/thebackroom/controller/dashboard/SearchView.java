@@ -187,7 +187,7 @@ public class SearchView extends BaseView{
 
         for(Media m : TheBackroom.mediaList.values()){
             boolean nameMatch = (name == null ||
-                    m.getMediaName().toLowerCase().contains(name.toLowerCase()));
+                    m.getMediaName().toLowerCase().startsWith(name.toLowerCase()));
 
             boolean typeMatch = (mediaType == null) ||
                     m.getMediaType() == mediaType;
