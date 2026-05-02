@@ -32,6 +32,8 @@ public class DashboardShell extends BorderPane {
     private double savedScrollPosition = 0.0;
     private boolean prevMediaDetails = false;
 
+    private SearchView cachSearchView;
+
     public DashboardShell() {
         //this.setTop(new NavbarComponent());             //navigation bar will always be on top
 
@@ -61,7 +63,7 @@ public class DashboardShell extends BorderPane {
         }
         //we need to verify first the current user for the userDropdown, before creating the profile dropdown
         navBar.setProfileDropdown();
-       navBar.setSearch(this::showSearch);
+        navBar.setSearch(() -> showSearch(false));
 
         StackPane navWrapper = new StackPane(navBar);
         navWrapper.setPadding(new Insets(0, 0, 10, 0));
@@ -166,8 +168,13 @@ public class DashboardShell extends BorderPane {
 
     private void openExportDialog() { ExportDialog.exportDialogView(); }
 
-    private void showSearch() {
-        setView(new SearchView(id -> openMediaDetails(id, this::showSearch)));
+    private void showSearch(boolean cacheView) {
+
+        if(!cacheView || cachSearchView == null){
+            cachSearchView = new SearchView(id -> openMediaDetails(id, () -> showSearch(true)));
+        }
+
+        setView(cachSearchView);
     }
 
     private void logout() {

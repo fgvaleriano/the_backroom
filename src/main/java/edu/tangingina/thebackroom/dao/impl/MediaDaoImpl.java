@@ -100,7 +100,7 @@ public class MediaDaoImpl implements MediaDao {
 
     @Override
     public ArrayList<String> getTopMediaCategory(String category) throws Exception {
-        String query = "SELECT category_name FROM media_category_overview WHERE media_type = ? GROUP BY category_name ORDER BY count(category_name) DESC LIMIT 6;";
+        String query = "SELECT category_name FROM media_category_overview WHERE media_type = ? GROUP BY category_name ORDER BY count(category_name) DESC";
         ArrayList<String> topGenre = new ArrayList<>();
 
         try{
@@ -120,7 +120,7 @@ public class MediaDaoImpl implements MediaDao {
 
     @Override
     public ArrayList<String> getTopMediaCategory(String category1, String category2) throws Exception {
-        String query = "SELECT category_name FROM media_category_overview WHERE media_type = ? or media_type = ? GROUP BY category_name ORDER BY count(category_name) DESC LIMIT 6;";
+        String query = "SELECT category_name FROM media_category_overview WHERE media_type = ? or media_type = ? GROUP BY category_name ORDER BY count(category_name) DESC";
         ArrayList<String> topGenre = new ArrayList<>();
 
         try{

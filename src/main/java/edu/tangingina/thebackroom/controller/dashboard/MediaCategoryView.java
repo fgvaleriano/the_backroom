@@ -63,6 +63,7 @@ public class MediaCategoryView extends BaseView{
 
         if(topGenre != null){
             groupedByGenre = topGenre.stream()
+                    .limit(6)
                     .collect(Collectors.toMap(
                             genreName -> genreName,
                             genreName -> targetMedia.stream()

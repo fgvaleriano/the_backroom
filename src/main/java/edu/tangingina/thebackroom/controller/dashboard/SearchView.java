@@ -1,17 +1,23 @@
 package edu.tangingina.thebackroom.controller.dashboard;
 
+import edu.tangingina.thebackroom.TheBackroom;
+import edu.tangingina.thebackroom.model.Category;
 import edu.tangingina.thebackroom.model.Media;
 import edu.tangingina.thebackroom.model.MediaType;
 import edu.tangingina.thebackroom.util.FontLoader;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
+import javafx.util.Duration;
 
-import javax.smartcardio.Card;
 import java.util.function.Consumer;
+import java.util.*;
 
 public class SearchView extends BaseView{
     /*
@@ -21,13 +27,36 @@ public class SearchView extends BaseView{
 
     private VBox resultSection, card;
     private TextField searchField;
-    private ComboBox<String> filter;
+    private ComboBox<String> filter, filterGenre;
     private FlowPane results;
     private Label header;
     private final Consumer<Integer> onMediaSelected;
 
+    private Timeline timeCounter;
+
+    private ArrayList<String> bookGenre, movieGenre, tvShowGenre, gameGenre;
+
     public SearchView(Consumer<Integer> onMediaSelected) {
         this.onMediaSelected = onMediaSelected;
+
+        try{
+            List<String> bookData = TheBackroom.mediaDao.getTopMediaCategory("Book");
+            List<String> movieData = TheBackroom.mediaDao.getTopMediaCategory("Movie");
+            List<String> tvData = TheBackroom.mediaDao.getTopMediaCategory("TvShow");
+            List<String> gameData = TheBackroom.mediaDao.getTopMediaCategory("Game");
+
+            bookGenre = new ArrayList<>(bookData);
+            movieGenre = new ArrayList<>(movieData);
+            tvShowGenre = new ArrayList<>(tvData);
+            gameGenre = new ArrayList<>(gameData);
+
+            bookGenre.add(0, "All");
+            movieGenre.add(0, "All");
+            tvShowGenre.add(0, "All");
+            gameGenre.add(0, "All");
+        }catch(Exception e){
+
+        }
         buildLayout();
     }
 
@@ -36,6 +65,7 @@ public class SearchView extends BaseView{
         root.setAlignment(Pos.TOP_LEFT);
         root.setPadding(new Insets(40, 40, 40, 200));
         root.getChildren().addAll(createSearchBar(), createResultSection());
+        handleSearch();
     }
 
     //creating search bar
@@ -46,6 +76,34 @@ public class SearchView extends BaseView{
         filter.getStyleClass().add("combo-box");
         filter.setPrefHeight(35);
 
+        filterGenre = new ComboBox<>();
+        filterGenre.getStyleClass().add("combo-box");
+        filterGenre.setVisible(false);
+        filterGenre.setManaged(false);
+        filterGenre.setPrefHeight(35);
+
+        filter.setOnAction(e -> {
+            String type = filter.getValue();
+            if (type == null || type.equals("All")) {
+                filterGenre.setVisible(false);
+                filterGenre.setManaged(false);
+                filterGenre.getItems().clear();
+            } else {
+                filterGenre.getItems().setAll(getGenreList(type));
+                filterGenre.setValue("All");
+                filterGenre.setVisible(true);
+                filterGenre.setManaged(true);
+            }
+
+            handleSearch();
+        });
+
+        filterGenre.setOnAction(e -> {
+            if(filterGenre.getValue() != null){
+                handleSearch();
+            }
+        });
+
         searchField = new TextField();
         searchField.setFont(FontLoader.regular(18));
         searchField.setPromptText("Enter to Search");
@@ -53,27 +111,24 @@ public class SearchView extends BaseView{
         searchField.setPrefHeight(40);
         searchField.setPrefWidth(520);
 
-        Button btn = new Button();
-        btn.getStyleClass().add("image-button");
-        Image img = new Image(ImportDialog.class.getResourceAsStream(
-                "/edu/tangingina/thebackroom/assets/search.png"));
-        ImageView view = new ImageView(img);
-        view.setPreserveRatio(true);
-        view.setFitWidth(125);
-
-        btn.setGraphic(view);
-
-        btn.setOnAction(e -> {
-            System.out.println("Search button clicked");
-            if (searchField.getText().trim().isEmpty()) {
-                searchField.getStyleClass().add("input-field-error");
-            } else {
-                searchField.getStyleClass().remove("input-field-error");
-                handleSearch();
+        searchField.textProperty().addListener(((observableValue, oldValue, newValue) -> {
+            //this is the timer listening if the user stopped typing, if yes then we show search results
+            if(timeCounter != null){
+                timeCounter.stop();
             }
-        });
 
-        HBox searchBar = new HBox(12, filter, searchField, btn);
+            timeCounter = new Timeline(
+                    new KeyFrame(
+                        Duration.millis(200), event ->{
+                            handleSearch();
+                        }
+                    )
+            );
+
+            timeCounter.play();
+        }));
+
+        HBox searchBar = new HBox(12, filter, filterGenre, searchField);
         searchBar.setAlignment(Pos.CENTER);
         return searchBar;
     }
@@ -99,78 +154,86 @@ public class SearchView extends BaseView{
 
     //search logic
     private void handleSearch() {
-        //TEMPORARY CHANGE IN FINAL
         results.getChildren().clear();
+        results.setVisible(true);
+        results.setManaged(true);
 
         header.setVisible(true);
         header.setManaged(true);
 
-        String[] mockTitles = {
-                "The Invisible Life of Addie LaRue",
-                "No Longer Human",
-                "Lord of the Flies",
-                "The Hobbit",
-                "Dune",
-                "1984"
-        };
+        ArrayList<Integer> searchResult = new ArrayList<>();
+        String name = searchField.getText().trim();
+        String selectedGenre = filterGenre.getValue();
 
-        for (String mockTitle : mockTitles) {
-            results.getChildren().add(buildMockCard(mockTitle, mockTitle));
+        MediaType mediaType = null;
+
+        switch (filter.getValue()){
+            case "Book":
+                mediaType = MediaType.Book;
+                break;
+
+            case "Film":
+                mediaType = MediaType.Movie;
+                break;
+
+            case "TV Show":
+                mediaType = MediaType.TvShow;
+                break;
+
+            case "Game":
+                mediaType = MediaType.Game;
+                break;
         }
-    }
 
-    //TEMPORARY CHANGE AND DELETE DO NOT COPY FORMAT, STICK TO OG
-    private CardLayout buildMockCard(String title, String imagePath) {
-        CardLayout card = new CardLayout(title, imagePath);
-        return card;
-    }
+        for(Media m : TheBackroom.mediaList.values()){
+            boolean nameMatch = (name == null ||
+                    m.getMediaName().toLowerCase().contains(name.toLowerCase()));
 
-    /*private boolean matchesFilter(MediaType type, String filter) {
-        return switch (filter) {
-            case "All" -> true;
-            case "Book" -> type == MediaType.Book;
-            case "Game" -> type == MediaType.Game;
-            case "Film" -> type == MediaType.Movie;
-            case "TV Show" -> type == MediaType.TvShow;
-        };
-    }*/
+            boolean typeMatch = (mediaType == null) ||
+                    m.getMediaType() == mediaType;
 
-    //empty state when search is not clicked
-    private void showEmpty(String query) {
-        results.setVisible(true);
-        results.setManaged(true);
+            boolean genreMatch = (selectedGenre == null || selectedGenre.equalsIgnoreCase("All")) ||
+                    (m.getMediaGenres() != null && m.getMediaGenres().stream()
+                            .anyMatch(cat -> cat.getCategoryName().equalsIgnoreCase(selectedGenre)));
 
-        Label empty = new Label ("No results found for \"" + query + "\"");
-        empty.setFont(FontLoader.bold(16));
-        empty.getStyleClass().add("header-text");
-        empty.setPadding(new Insets(20, 0,0,0));
-        results.getChildren().add(empty);
-    }
-
-    private VBox buildMediaCard(Media media) {
-        card = new VBox(8);
-        card.getStyleClass().add("media-card-holder");
-        card.setAlignment(Pos.TOP_CENTER);
-        card.setPrefWidth(160);
-        card.setMaxWidth(160);
-
-        ImageView cover = new ImageView();
-        cover.setFitWidth(150);
-        cover.setFitHeight(210);
-        cover.setPreserveRatio(true);
-        cover.getStyleClass().add("cards");
-
-        try {
-            if (media.getMediaIcon() != null && !media.getMediaIcon().isEmpty()) {
-                cover.setImage(new Image("file: " + media.getMediaIcon(), true));
+            if(nameMatch && typeMatch && genreMatch){
+                searchResult.add(m.getID());
+                results.getChildren().add(buildCard(m));
             }
-        } catch (Exception e) {
-            System.out.println("Cannot access image");
         }
 
-        card.getChildren().add(cover);
-        card.setOnMouseClicked(e -> onMediaSelected.accept(media.getID()));
+    }
+
+    private CardLayout buildCard(Media m) {
+        CardLayout card = new CardLayout(m.getMediaName(), m.getIconPath());
+
+        card.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.PRIMARY) {
+
+                if (onMediaSelected != null) {
+                    onMediaSelected.accept(m.getID());
+                }
+                //We switch scenes here
+            }
+        });
         return card;
+    }
+
+    private ArrayList<String> getGenreList(String type){
+        switch (type){
+            case "Book":
+                return bookGenre;
+
+            case "Film":
+                return movieGenre;
+
+            case "TV Show":
+                return tvShowGenre;
+
+            case "Game":
+                return gameGenre;
+        }
+        return null;
     }
 
 }
