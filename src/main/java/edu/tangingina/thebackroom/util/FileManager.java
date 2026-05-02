@@ -633,74 +633,124 @@ public class FileManager {
 
     public static void exportData (DatabaseManager dm, String filePath, String selectedType) {
         System.out.println("Preparing to save data");
-        String baseCols = "media_id, name, release_year, synopsis";
-        String specificCols = "";
-        String query;
 
         try {
             dm.getConnection();
             Connection conn = dm.conn;
 
-            if (selectedType != null) {
-                switch (selectedType) {
-                    case "Book":
-                        specificCols = ", isbn, page_count, edition, language";
-                        break;
-                    case "Film":
-                        specificCols = ", duration, language";
-                        break;
-                    case "TV Show":
-                        specificCols = ", season_count, episode_count, status, language";
-                        break;
-                    case "Game":
-                        specificCols = ", game_engine, system_requirements, status";
-                        break;
-                    default:
-                        baseCols = "*";
-                        break;
-                }
+            String mediaQuery;
+            boolean filter = selectedType != null && !selectedType.equals("All Media");
+
+            switch (selectedType != null ? selectedType : "All Media") {
+                case "Book" :
+                    mediaQuery = "select media_id, name, release_year, synopsis, icon_path, isbn, page_count, " +
+                            "edition from media where media_type = ?";
+                    break;
+                case "Movie" :
+                    mediaQuery = "select media_id, name, release_year, synopsis, icon_path, duration, language " +
+                            "from media where media_type = ?";
+                    break;
+                case "TvShow" :
+                    mediaQuery = "select media_id, name, release_year, synopsis, icon_path, season_count, episode_count " +
+                            "status from media where media_type = ?";
+                    break;
+                case "Game" :
+                    mediaQuery = "select m.media_id, m.name, m.release_year, m.synopsis, m.icon_path, m.game_engine, " +
+                            "m.system_requirements, group_concat(mo.name order by mo.name separator ';') " +
+                            "as modes from media m left join media_game_mode mgm on m.media_id = mgm.media_id " +
+                            "left join mode mo on mgm.mode_id = mo.mode_id where m.media_type = ? group by m.media_id";
+                    break;
+                default:
+                    mediaQuery = "select media_id, name, release_year, synopsis, media_type, icon_path from media";
+                    break;
             }
 
-            query = "Select " + baseCols + specificCols + " from media";
+            //exporting personnel information
+            String personnelExport = "select mp.media_id, p.name as person_name, r.name as role_name from " + "" +
+                    "media_personnel mp join person p on mp.person_id = p.person_id join role r on mp.role_id = r.role_id " +
+                    (filter ? "where mp.media_id in (select media_id from media where media_type = ?) " : "") +
+                    "order by mp.media_id";
 
-            if (selectedType != null && !selectedType.equals("All Media")) {
-                query += " where media_type = ?";
-            }
+            //exporting company informatino
+            String companyExport = "select mc.media_id, c.name as company_name, r.name as role_name from media_company mc " +
+                    "join company c on mc.company_id = c.company_id join role r on mc.role_id = r.role_id " +
+                    (filter ? "where mc.media_id in (select  media_id from media where media_type = ?) " : "") +
+                    "order by mc.media_id";
 
-            try (PreparedStatement pstmt = conn.prepareStatement(query);
-                 PrintWriter out = new PrintWriter(new File(filePath))) {
+            try (PrintWriter out = new PrintWriter(new File(filePath))) {
 
-                if (selectedType != null && !selectedType.equals("All Media")) {
-                    pstmt.setString(1, selectedType);
-                }
+                out.println("=========== MEDIA ===========");
+                    try (PreparedStatement pstmt = conn.prepareStatement(mediaQuery)) {
+                        if (filter) {
+                            pstmt.setString(1, selectedType);
+                        }
 
-                ResultSet rs = pstmt.executeQuery();
-                ResultSetMetaData rsmd = rs.getMetaData();
-                int columns = rsmd.getColumnCount();
+                        ResultSet rs = pstmt.executeQuery();
+                        ResultSetMetaData rsmd = rs.getMetaData();
+                        int columns = rsmd.getColumnCount();
 
-                for (int i = 1; i <= columns; i++) {
-                    out.print(rsmd.getColumnName(i) + (i < columns ? ", " : ""));
-                }
-                out.println();
+                        //for header
+                        for (int i = 1; i <= columns; i++) {
+                            out.print(rsmd.getColumnName(i) + (i < columns ? "," : ""));
+                        }
+                        out.println();
 
-                while (rs.next()) {
-                    for (int i = 1; i <= columns; i++) {
-                        String colName = rsmd.getColumnName(i);
-                        String val = rs.getString(i);
-
-                        if (val == null) {
-                            out.print("" + (i < columns ? "," : ""));
-                        } else {
-                            if (colName.equalsIgnoreCase("isbn")) {
-                                out.print("=\"" + val + "\"");
-                            } else {
-                                out.print(val.replace(",", ";"));
+                        //for the rows
+                        while (rs.next()) {
+                            for (int i = 1; i <= columns; i++) {
+                                String colName = rsmd.getColumnName(i);
+                                String val = rs.getString(i);
+                                if (val == null) {
+                                    out.print(i < columns ? "," : "");
+                                } else {
+                                    if (colName.equalsIgnoreCase("isbn")) {
+                                        out.print("=\"" + val + "\"");
+                                    } else {
+                                        out.print(val.replace(",", ";"));
+                                    }
+                                    out.print(i < columns ? "," : "");
+                                }
                             }
-                            out.print(i < columns ? "," : "");
+                            out.println();
                         }
                     }
-                    out.println();
+
+                out.println();
+                out.println("=========== PERSONNEL ===========");
+                out.println("media_id,person_name,role_name");
+
+                try (PreparedStatement pstmt = conn.prepareStatement(personnelExport)) {
+                    if (filter) {
+                        pstmt.setString(1, selectedType);
+                    }
+
+                    ResultSet rs = pstmt.executeQuery();
+
+                    while (rs.next()) {
+                        out.print(rs.getString("media_id") + ",");
+                        out.print(rs.getString("person_name").replace(",", ";") + ",");
+                        out.println(rs.getString("role_name").replace(",", ";"));
+                    }
                 }
+
+                out.println();
+                out.println("=========== COMPANIES ===========");
+                out.println("media_id,company_name,role_name");
+
+                try (PreparedStatement pstmt = conn.prepareStatement(companyExport)) {
+                    if (filter) {
+                        pstmt.setString(1, selectedType);
+                    }
+
+                    ResultSet rs = pstmt.executeQuery();
+
+                    while (rs.next()) {
+                        out.print(rs.getString("media_id") + ",");
+                        out.print(rs.getString("company_name").replace(",", ";") + ",");
+                        out.println(rs.getString("role_name").replace(",", ";"));
+                    }
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
