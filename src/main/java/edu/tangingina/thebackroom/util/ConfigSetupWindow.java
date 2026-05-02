@@ -139,7 +139,7 @@ public class ConfigSetupWindow extends Application {
         userPass.getStyleClass().add("setup-field");
 
         Label status = new Label();
-        status.setFont(FontLoader.bold(17)); // BUMPED UP: Larger error/status text
+        status.setFont(FontLoader.bold(17));
         status.getStyleClass().add("setup-status");
 
         Button finishBtn = new Button("Finish Setup");

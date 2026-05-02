@@ -6,19 +6,20 @@ import edu.tangingina.thebackroom.model.*;
 import edu.tangingina.thebackroom.util.FileManager;
 import edu.tangingina.thebackroom.util.FontLoader;
 import edu.tangingina.thebackroom.util.Utility;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static edu.tangingina.thebackroom.TheBackroom.mediaList;
 import static edu.tangingina.thebackroom.TheBackroom.mediaUniqID;
@@ -78,6 +79,8 @@ public class GameDetailsForm extends BaseMediaForm{
 
         Node lastNode = formColumn().getChildren().get(formColumn().getChildren().size() - 1);
         VBox.setMargin(lastNode, new javafx.geometry.Insets(0, 0, 0, 0));
+
+        addWindowListener();
     }
 
     private Node addButton(){
@@ -85,6 +88,7 @@ public class GameDetailsForm extends BaseMediaForm{
         btn.getStyleClass().add("image-button");
 
         errorLabel = new Label("An error occurred, please try again");
+        errorLabel.setPadding(new Insets(5, 0, 10, 10));
         errorLabel.setFont(FontLoader.bold(20));
         errorLabel.getStyleClass().add("error-label");
         errorLabel.setVisible(false);
@@ -99,13 +103,17 @@ public class GameDetailsForm extends BaseMediaForm{
                 } else {
                     handleAdd();
                 }
+            }else{
+                errorLabel.setText("Please fill in all required fields.");
+                errorLabel.setVisible(true);
+                errorLabel.setManaged(true);
             }
         });
 
         HBox btnContainer = new HBox(btn);
         btnContainer.setAlignment(Pos.CENTER);
 
-        VBox container = new VBox(8, btnContainer, errorLabel);
+        VBox container = new VBox(8,errorLabel, btnContainer);
         container.setAlignment(Pos.CENTER);
         container.setPrefWidth(520);
 
@@ -125,44 +133,40 @@ public class GameDetailsForm extends BaseMediaForm{
         systemReqsField.clearError();
         synopsisField.clearError();
 
-        if (titleField.isEmpty()) {
+        String errorMessage = "";
+
+        // //high priority this before we check if empty fields
+        if (titleField.getUserInput().length() > 255) {
             titleField.showError();
+            errorMessage = "Title is too long (Max 255 characters).";
             isValid = false;
         }
-
-        if (engineField.isEmpty()) {
+        else if (engineField.getUserInput().length() > 100) {
             engineField.showError();
+            errorMessage = "Engine name is too long (Max 100 characters).";
             isValid = false;
         }
 
-        if (linkField.isEmpty()) {
-            linkField.showError();
-            isValid = false;
-        }
+            if (titleField.isEmpty() || gameDevField.isEmpty() || gameStudioField.isEmpty() ||
+                    genreField.isEmpty() || synopsisField.isEmpty() || linkField.isEmpty()) {
 
-        if (synopsisField.isEmpty()) {
-            synopsisField.showError();
-            isValid = false;
-        }
+                //This highlights all empty Fields
+                if (titleField.isEmpty()) titleField.showError();
+                if (gameDevField.isEmpty()) gameDevField.showError();
+                if (gameStudioField.isEmpty()) gameStudioField.showError();
+                if (genreField.isEmpty()) genreField.showError();
+                if (synopsisField.isEmpty()) synopsisField.showError();
+                if (linkField.isEmpty()) linkField.showError();
 
-        if (systemReqsField.isEmpty()) {
-            systemReqsField.showError();
-            isValid = false;
-        }
+                if(errorMessage.isEmpty()) errorMessage = "Please fill in all required fields.";
+                isValid = false;
+            }
 
-        if (gameDevField.isEmpty()) {
-            gameDevField.showError();
-            isValid = false;
-        }
 
-        if (gameStudioField.isEmpty()) {
-            gameStudioField.showError();
-            isValid = false;
-        }
-
-        if (genreField.isEmpty()) {
-            genreField.showError();
-            isValid = false;
+        if (!isValid) {
+            errorLabel.setText(errorMessage);
+            errorLabel.setVisible(true);
+            errorLabel.setManaged(true);
         }
 
         return isValid;
@@ -189,6 +193,9 @@ public class GameDetailsForm extends BaseMediaForm{
         TheBackroom.util.setIfNotNull(platformField, game_platform);
         TheBackroom.util.setIfNotNull(linkField, links);
         TheBackroom.util.setIfNotNull(widgetField, path);
+
+        setOldMedia(media);
+        addWindowListener();
     }
 
     private void refreshButton() {
@@ -252,6 +259,9 @@ public class GameDetailsForm extends BaseMediaForm{
             AddArchive_v2.closeWindow();
 
         }catch (Exception e1){
+            errorLabel.setText("An error occured. Please try again later");
+            errorLabel.setVisible(true);
+            errorLabel.setManaged(true);
             e1.getMessage();
         }
     }
@@ -282,33 +292,125 @@ public class GameDetailsForm extends BaseMediaForm{
                 : widgetField.getCurrentPath();
         List<String> genre = genreField.getValues();
         List<AccessLinkField.AccessLink> onlineAccess = linkField.getValues();
-        String engine = engineField.getUserInput();
-        String requirements = systemReqsField.getUserInput();
-        List<String> developer = gameDevField.getValues();
-        List<String> studio = gameStudioField.getValues();
-        List<String> platforms = platformField.getValues();
-        List<String> modes = modeField.getValues();
+
+        String gameEngine = engineField.getUserInput();
+        String systemRequirements = systemReqsField.getUserInput();
+        List<String> mode = modeField.getValues();
+        List<String> platform = platformField.getValues();
+        List<String> gameDev = gameDevField.getValues();
+        List<String> gameStudio = gameStudioField.getValues();
+        List<String> gamePublisher = gamePublisherField.getValues();
 
         ArrayList<Category> mediaGenre = util.ensureCategoryExist(genre);
         ArrayList<Website> mediaWebsite = util.ensureWebsiteExists(onlineAccess);
-        ArrayList<Person> gameDev = util.ensurePersonExist(developer, "Game Developer");
-        ArrayList<Company> gameStudio = util.ensureCompanyExists(studio, "Game Studio");
-        ArrayList<Platform> gamePlatforms = util.ensureGamePlatformExists(platforms);
-        ArrayList<GameMode> gameModes = util.ensureGameModeExists(modes);
+        ArrayList<Person> mediaGameDev = util.ensurePersonExist(gameDev, "Game Developer");
+        ArrayList<Company> mediaGameStudio = util.ensureCompanyExists(gameStudio, "Game Studio");
+        ArrayList<Company> mediaGamePublisher = util.ensureCompanyExists(gamePublisher, "Publisher");
+        ArrayList<GameMode> mediaGameMode = util.ensureGameModeExists(mode);
+        ArrayList<Platform> mediaGamePlatform = util.ensureGamePlatformExists(platform);
+
+        ArrayList<Company> mediaGameCompany = new ArrayList<>();
+        mediaGameCompany.addAll(mediaGamePublisher);
+        mediaGameCompany.addAll(mediaGameStudio);
 
         Media media = new Media(mediaId, title, mediaType, year, synopsis, imgIcon, mediaWebsite, mediaGenre);
-        media.setGameDetails(engine, requirements, gameDev, gameStudio, gamePlatforms, gameModes);
+        media.setGameDetails(gameEngine, systemRequirements, mediaGameDev, mediaGameCompany, mediaGamePlatform, mediaGameMode);
 
-        try {
-            //FileManager.updateMedia(media);  connect to back end here
+        try{
+            //if the name was updated, then we update our cache
+            if(!media.getMediaName().equals(oldMedia.getMediaName())){
+                TheBackroom.mediaUniqID.remove(TheBackroom.util.getMediaKey(oldMedia.getMediaName(), oldMedia.getMediaType().name(), oldMedia.getReleaseYear()));
+                TheBackroom.mediaUniqID.put(TheBackroom.util.getMediaKey(media.getMediaName(), media.getMediaType().name(), media.getReleaseYear()), media.getID());
+            }
+
+            mediaDao.updateMedia(media, oldMedia);
             mediaList.put(mediaId, media);
-            mediaUniqID.put(util.getMediaKey(title, mediaType.name(), year), mediaId);
             UpdateArchive.closeWindow();
-        } catch (Exception e) {
-            System.err.println("Update failed: " + e.getMessage());
+        }catch (Exception e){
+            errorLabel.setText("An error occured. Please try again later");
             errorLabel.setVisible(true);
             errorLabel.setManaged(true);
-            e.printStackTrace();
+        }
+    }
+
+    private void setOldMedia(Media media){
+        this.oldMedia = media;
+    }
+
+    private boolean checkEmptyField(){
+        return titleField.isEmpty() &&
+                synopsisField.isEmpty() &&
+                (yearField == null || yearField.getUserInput() == null || yearField.getUserInput().trim().isEmpty()) &&
+                (widgetField == null || widgetField.getSelectedFile() == null) &&
+                (genreField == null || genreField.isEmpty()) &&
+                (linkField == null || linkField.isEmpty()) &&
+                engineField.isEmpty() &&
+                systemReqsField.isEmpty() &&
+                (gameDevField == null || gameDevField.isEmpty()) &&
+                (gameStudioField == null || gameStudioField.isEmpty()) &&
+                (gamePublisherField == null || gamePublisherField.isEmpty()) &&
+                (modeField == null || modeField.isEmpty()) &&
+                (platformField == null || platformField.isEmpty());
+    }
+
+    private void addWindowListener(){
+        javafx.application.Platform.runLater(() -> {
+            Stage stage = null;
+
+            if (isUpdateMode) {
+                stage = UpdateArchive.window;
+            } else {
+                stage = AddArchive_v2.window;
+            }
+
+            if (stage != null) {
+                stage.setOnCloseRequest(event -> {
+                    event.consume();
+                    handleExitAttempt();
+                });
+            }
+        });
+    }
+
+    private void handleExitAttempt(){
+        if(!checkEmptyField()){
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Unsaved Changes");
+            alert.setHeaderText("Wait a minute!");
+            alert.setContentText("You have unsaved inputs on this form. Do you wish to cancel and lose your progress?");
+
+            DialogPane dialogPane = alert.getDialogPane();
+            try {
+                Image logo = new Image(getClass().getResourceAsStream("/edu/tangingina/thebackroom/assets/tbr.png"));
+                ImageView icon = new ImageView(logo);
+                icon.setFitHeight(50);
+                icon.setFitWidth(50);
+                icon.setPreserveRatio(true);
+                alert.setGraphic(icon);
+
+                String cssPath = getClass().getResource("/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm();
+                dialogPane.getStylesheets().add(cssPath);
+                dialogPane.getStyleClass().add("custom-dialog");
+            } catch (Exception e) {
+                System.out.println("Could not load CSS for dialog: " + e.getMessage());
+            }
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                if(isUpdateMode){
+                    UpdateArchive.closeWindow();
+                }else{
+                    AddArchive_v2.exitWindow();
+                }
+            } else {
+                System.out.println("User chose to stay.");
+            }
+        }else{
+            if(isUpdateMode){
+                UpdateArchive.closeWindow();
+            }else{
+                AddArchive_v2.exitWindow();
+            }
         }
     }
 }

@@ -103,6 +103,7 @@ public class MultiValueField {
         chip.getStyleClass().add("input-chip");
 
         chip.setOnAction(e -> {
+            inputField.requestFocus();
             values.remove(value);
             valuesPane.getChildren().remove(chip);
         });

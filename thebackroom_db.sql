@@ -444,6 +444,8 @@ INSERT INTO `website` VALUES (16,'_Bakla'),(29,'190'),(2,'Bloomsbury'),(14,'Crun
 /*!40000 ALTER TABLE `website` ENABLE KEYS */;
 UNLOCK TABLES;
 
+INSERT INTO  users values(34, 'moderator', '$argon2i$v=19$m=65536,t=10,p=1$119AujK0R6wDnNUQ5XVVSg$LIr1dJbDptlQxr2S9r4utFbyx3X/NwP0GCuhsY2nQr0', 'MODERATOR');
+
 --
 -- Final view structure for view `login_view`
 --

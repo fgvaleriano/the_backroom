@@ -4,6 +4,12 @@ import com.google.gson.Gson;
 import edu.tangingina.thebackroom.TheBackroom;
 import edu.tangingina.thebackroom.dao.impl.*;
 import edu.tangingina.thebackroom.model.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -19,6 +25,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.*;
+
+import static edu.tangingina.thebackroom.TheBackroom.mediaUniqID;
+import static edu.tangingina.thebackroom.TheBackroom.util;
 
 public class FileManager {
     private CategoryDaoImpl categoryDao =  TheBackroom.categoryDao;
@@ -40,6 +49,8 @@ public class FileManager {
     private HashMap<String, GameMode> gameModeList = TheBackroom.gameModeList;
     private HashMap<Integer, Media> mediaList = TheBackroom.mediaList;
 
+    private ImportUtility iu = new ImportUtility();
+
     public File openFile(Stage stage, String description, String fileType){
         FileChooser selectFile = new FileChooser();
 
@@ -53,20 +64,19 @@ public class FileManager {
 
     }
 
-    public void importCSV(Stage stage) throws Exception{
+    public void importCSV(String path) throws Exception{
 
-        File file = openFile(stage, "CSV Files (*.csv)", "*.csv");
+        File file = new File(path);
 
         if(file != null){
+            int successCount = 0;
+            int errorCount = 0;
+            int totalCount = 0;
+            ArrayList<Media> duplicateMedia = new ArrayList<>();
+
             try{
                 BufferedReader br = new BufferedReader(new FileReader(file));
                 String currLine;
-                ArrayList<Media> duplicateMedia = new ArrayList<>();
-
-                int successCount = 0;
-                int errorCount = 0;
-                int totalCount = 0;
-
 
                 while((currLine = br.readLine()) != null){
                     if (currLine.trim().isEmpty()) continue;
@@ -114,6 +124,28 @@ public class FileManager {
                             icon = saveIMGRelative(icon);
                         }
 
+                        if(mediaType == MediaType.Book){
+                            if(line.length < 12) {
+                                errorCount++;
+                                continue;
+                            }
+                        }else if(mediaType == MediaType.Movie){
+                            if(line.length < 11) {
+                                errorCount++;
+                                continue;
+                            }
+                        }else if(mediaType == MediaType.TvShow){
+                            if(line.length < 12) {
+                                errorCount++;
+                                continue;
+                            }
+                        }else if(mediaType == MediaType.Game){
+                            if(line.length < 14) {
+                                errorCount++;
+                                continue;
+                            }
+                        }
+
 
                         ArrayList<Website> onlineAccess = new ArrayList<>();
                         ArrayList<Category> genre = new ArrayList<>();
@@ -121,7 +153,12 @@ public class FileManager {
 
                         if(website != null){
                             for (String websiteName : website) {
+                                if (websiteName.trim().isEmpty()) continue;
+
                                 String[] parts = websiteName.trim().split(":", 2);
+
+                                if (parts.length < 2) continue; //safety check
+
                                 int id  = 0;
 
                                 if (!websiteList.containsKey(parts[0].trim())) {
@@ -137,6 +174,8 @@ public class FileManager {
 
                         if(category != null){
                             for (String categoryName : category) {
+
+                                if(categoryName.trim().isEmpty()) continue;
                                 int id = 0;
 
                                 if (!categoryList.containsKey(categoryName)) {
@@ -153,241 +192,41 @@ public class FileManager {
 
                         Media media = new Media(0, name, mediaType, releaseYear, synopsis, icon, onlineAccess, genre);
 
+                        //we populate the information here
                         if(mediaType == MediaType.Book){
                             //format(isbn, edition, pageCount, author, publisher)
-                            String isbn = line[7];
-                            String edition = line[8];
-                            String pageCount = line[9];
-                            String[] author = line[10].split(";");
-                            String[] publisher = line[11].split(";");
-
-                            ArrayList<Person> bookAuthor = new ArrayList<>();
-                            ArrayList<Company> bookCompany = new ArrayList<>();
-
-                            if(author != null){
-                                for (String authorName : author) {
-                                    int id = 0;
-                                    if (!personList.containsKey(authorName)) {
-                                        //the index here is temporary since the id value is put in the table itself
-                                        id = personDao.addPerson(new Person(0, authorName, null, 0));
-                                        personList.put(authorName, new Person(id, authorName, null, 0));
-                                    }else{
-                                        id = personList.get(authorName).getPersonID();
-                                    }
-
-                                    bookAuthor.add(new Person(id, authorName, "Author", roleList.get("Author").getRoleID()));
-                                }
-                            }
-
-                            if(publisher != null){
-                                for (String publisherName : publisher) {
-                                    int id = 0;
-
-                                    if (!companyList.containsKey(publisherName)) {
-                                        //the index here is temporary since the id value is put in the table itself
-                                        id = companyDao.addCompany(new Company(0, publisherName, null, 0));
-                                        companyList.put(publisherName, new Company(id, publisherName, null, 0));
-                                    }else{
-                                        id = companyList.get(publisherName).getCompanyID();
-                                    }
-                                    bookCompany.add(new Company(id, publisherName, "Publisher", roleList.get("Publisher").getRoleID()));
-                                }
-                            }
-                            media.setBookDetails(isbn, pageCount, edition, bookAuthor, bookCompany);
-
+                            iu.handleBookCSV(line, media);
                         }else if(mediaType == MediaType.Movie){
-
                             //format(duration, language, director, studio)
-                            String duration = line[7];
-                            String language = line[8];
-                            String[] director = line[9].split(";");
-                            String[] studio = line[10].split(";");
-
-                            ArrayList<Person> movieDirector = new ArrayList<>();
-                            ArrayList<Company> movieStudio = new ArrayList<>();
-
-                            if(director != null){
-                                for (String directorName : director) {
-                                    int id = 0;
-                                    if (!personList.containsKey(directorName)) {
-                                        //the index here is temporary since the id value is put in the table itself
-                                        id = personDao.addPerson(new Person(0, directorName, null, 0));
-                                        personList.put(directorName, new Person(id, directorName, null, 0));
-                                    }else{
-                                        id = personList.get(directorName).getPersonID();
-                                    }
-
-                                    movieDirector.add(new Person(id, directorName, "Director", roleList.get("Director").getRoleID()));
-                                }
-                            }
-
-                            if(studio != null){
-                                for (String studioName : studio) {
-                                    int id = 0;
-
-                                    if (!companyList.containsKey(studioName)) {
-                                        //the index here is temporary since the id value is put in the table itself
-                                        id = companyDao.addCompany(new Company(0, studioName, null, 0));
-                                        companyList.put(studioName, new Company(id, studioName, null, 0));
-                                    }else{
-                                        id = companyList.get(studioName).getCompanyID();
-                                    }
-                                    movieStudio.add(new Company(id, studioName, "Production Studio", roleList.get("Production Studio").getRoleID()));
-                                }
-                            }
-                            media.setMovieDetails(duration, language, movieDirector, movieStudio);
-
-
+                            iu.handleCSVMovie(line, media);
                         }else if(mediaType == MediaType.TvShow){
-
                             //format(seasonCount, episodeCount, status, director, studio)
-                            String seasonCount = line[7];
-                            String episodeCount = line[8];
-                            String status = line[9];
-                            String[] director = line[10].split(";");
-                            String[] studio = line[11].split(";");
-
-                            ArrayList<Person> showDirector = new ArrayList<>();
-                            ArrayList<Company> showStudio = new ArrayList<>();
-
-                            if(director != null){
-                                for (String directorName : director) {
-                                    int id = 0;
-                                    if (!personList.containsKey(directorName)) {
-                                        //the index here is temporary since the id value is put in the table itself
-                                        id = personDao.addPerson(new Person(0, directorName, null, 0));
-                                        personList.put(directorName, new Person(id, directorName, null, 0));
-                                    }else{
-                                        id = personList.get(directorName).getPersonID();
-                                    }
-
-                                    showDirector.add(new Person(id, directorName, "Director", roleList.get("Director").getRoleID()));
-                                }
-                            }
-
-                            if(studio != null){
-                                for (String studioName : studio) {
-                                    int id = 0;
-
-                                    if (!companyList.containsKey(studioName)) {
-                                        //the index here is temporary since the id value is put in the table itself
-                                        id = companyDao.addCompany(new Company(0, studioName, null, 0));
-                                        companyList.put(studioName, new Company(id, studioName, null, 0));
-                                    }else{
-                                        id = companyList.get(studioName).getCompanyID();
-                                    }
-                                    showStudio.add(new Company(id, studioName, "Production Studio", roleList.get("Production Studio").getRoleID()));
-                                }
-                            }
-                            media.setTvShowDetails(seasonCount, episodeCount, status, showDirector, showStudio);
-
+                            iu.handleCSVTvShow(line, media);
                         }else if(mediaType == MediaType.Game){
-
                             //format(gameEngine, systemRequirements, gameMode, gameDev, gameStudio, publisher, platform)
-                            String gameEngine = line[7];
-                            String systemRequirements = line[8];
-                            String[] gameMode = line[9].split(";");
-                            String[] publisher = line[12].split(";");
-                            String[] gamePlatform = line[13].split(";");
-
-                            ArrayList<Person> mediaGamePersonnel = new ArrayList<>();
-                            ArrayList<Company> mediaGameCompany = new ArrayList<>();
-                            ArrayList<GameMode> mediaGameMode = new ArrayList<>();
-                            ArrayList<Platform> mediaGamePlatform = new ArrayList<>();
-
-                            //Person Game Developer
-                            if(!line[10].isEmpty()){
-                                String[] developer = line[10].split(";");
-
-                                for (String gameDevName : developer) {
-                                    int id = 0;
-                                    if (!personList.containsKey(gameDevName)) {
-                                        //the index here is temporary since the id value is put in the table itself
-                                        id = personDao.addPerson(new Person(0, gameDevName, null, 0));
-                                        personList.put(gameDevName, new Person(id, gameDevName, null, 0));
-                                    }else{
-                                        id = personList.get(gameDevName).getPersonID();
-                                    }
-
-                                    mediaGamePersonnel.add(new Person(id, gameDevName, "Game Developer", roleList.get("Game Developer").getRoleID()));
-                                }
-                            }
-
-                            if(!line[11].isEmpty()){
-                                String[] studio = line[11].split(";");
-
-                                for (String studioName : studio) {
-                                    int id = 0;
-
-                                    if (!companyList.containsKey(studioName)) {
-                                        //the index here is temporary since the id value is put in the table itself
-                                        id = companyDao.addCompany(new Company(0, studioName, null, 0));
-                                        companyList.put(studioName, new Company(id, studioName, null, 0));
-                                    }else{
-                                        id = companyList.get(studioName).getCompanyID();
-                                    }
-                                    mediaGameCompany.add(new Company(id, studioName, "Game Studio", roleList.get("Game Studio").getRoleID()));
-                                }
-                            }
-                            //Company Game Publisher
-                            if(publisher != null){
-                                for (String publisherName : publisher) {
-                                    int id = 0;
-
-                                    if (!companyList.containsKey(publisherName)) {
-                                        //the index here is temporary since the id value is put in the table itself
-                                        id = companyDao.addCompany(new Company(0, publisherName, null, 0));
-                                        companyList.put(publisherName, new Company(id, publisherName, null, 0));
-                                    }else{
-                                        id = companyList.get(publisherName).getCompanyID();
-                                    }
-                                    mediaGameCompany.add(new Company(id, publisherName, "Publisher", roleList.get("Publisher").getRoleID()));
-                                }
-                            }
-
-                            if(gameMode != null){
-                                //Game Mode
-                                for (String modeName : gameMode) {
-                                    int id = 0;
-
-                                    if (!gameModeList.containsKey(modeName)) {
-                                        //the index here is temporary since the id value is put in the table itself
-                                        id = gameModeDao.addGameMode(new GameMode(0, modeName));
-                                        gameModeList.put(modeName, new GameMode(id, modeName));
-                                    }else{
-                                        id = gameModeList.get(modeName).getGameModeID();
-                                    }
-
-                                    mediaGameMode.add(new GameMode(id, modeName));
-                                }
-                            }
-
-                            if(gamePlatform != null){
-                                //Game Platform
-                                for (String platformName : gamePlatform) {
-                                    int id = 0;
-
-                                    if (!platformList.containsKey(platformName)) {
-                                        //the index here is temporary since the id value is put in the table itself
-                                        id = platformDao.addPlatform(new Platform(0, platformName));
-                                        platformList.put(platformName, new Platform(id, platformName));
-                                    }else{
-                                        id = platformList.get(platformName).getPlatformID();
-                                    }
-
-                                    mediaGamePlatform.add(new Platform(id, platformName));
-                                }
-                            }
-                            media.setGameDetails(gameEngine, systemRequirements, mediaGamePersonnel, mediaGameCompany, mediaGamePlatform, mediaGameMode);
+                            iu.handleCSVGame(line, media);
                         }
 
-                        if(TheBackroom.util.checkDuplicate(media)){
+                        if(util.checkDuplicate(media)){
                             duplicateMedia.add(media);
                             continue;
                         }
 
                         mediaDao.addMedia(media);
                         mediaList.put(media.getID(), media);
+                        mediaUniqID.put(util.getMediaKey(media.getMediaName(), media.getMediaType().name(), media.getReleaseYear()), media.getID());
+
+                        //this is for populaing our cache
+                        if(mediaType == MediaType.Book){
+                            TheBackroom.bookMedia.add(media.getID());
+                        }else if(mediaType == MediaType.Movie){
+                            TheBackroom.videoMedia.add(media.getID());
+                        }else if(mediaType == MediaType.TvShow){
+                            TheBackroom.videoMedia.add(media.getID());
+                        }else if(mediaType == MediaType.Game){
+                            TheBackroom.gameMedia.add(media.getID());
+                        }
+
                         successCount++;
                     } catch (Exception e) {
                         errorCount++;
@@ -396,48 +235,68 @@ public class FileManager {
                 }
 
                 if(!duplicateMedia.isEmpty()){
-                    Scanner scan = new Scanner(System.in);
-                    System.out.print(duplicateMedia.size() + " found. Update Existing Files [Y/N]: ");
-                    String choice = scan.nextLine().trim().toUpperCase();
+                    boolean willUpdate = askToUpdateDuplicates();
 
-                    switch (choice) {
-                        case "Y":
-                            try{
-                                for(Media m : duplicateMedia){
-                                    int mediaId = TheBackroom.mediaUniqID.get(TheBackroom.util.getMediaKey(m.getMediaName(), m.getMediaType().name(), m.getReleaseYear()));
-                                    m.setID(mediaId);
-                                    mediaDao.updateMedia(m, TheBackroom.mediaList.get(mediaId));
-                                    TheBackroom.mediaList.put(m.getID(), m);
-                                    successCount++;
+                    if(willUpdate){
+                        try {
+                            for(Media m : duplicateMedia) {
+
+                                String key = util.getMediaKey(m.getMediaName(), m.getMediaType().name(), m.getReleaseYear());
+                                Integer mediaId = TheBackroom.mediaUniqID.get(key);
+
+                                System.out.println("[DEBUG] Processing update for: " + m.getMediaName());
+                                System.out.println("[DEBUG] Found existing ID: " + mediaId);
+
+                                if (mediaId == null) {
+                                    System.out.println("[DEBUG] WARNING: No ID found for key: " + key + ". Skipping update.");
+                                    continue;
                                 }
 
-                                duplicateMedia.clear();
-                            }catch (Exception e){
-                                errorCount++;
+                                m.setID(mediaId);
+
+                                mediaDao.updateMedia(m, TheBackroom.mediaList.get(mediaId));
+                                TheBackroom.mediaList.put(m.getID(), m);
+                                System.out.println("[DEBUG] mediaDao.updateMedia called successfully.");
+
+                                if(m.getMediaType() == MediaType.Book){
+                                    if(!TheBackroom.bookMedia.contains(m.getID())) {
+                                        TheBackroom.bookMedia.add(m.getID());
+                                    } else {
+                                        System.out.println("[DEBUG] ID already in bookMedia, skipping list add.");
+                                    }
+                                } else if(m.getMediaType() == MediaType.Movie || m.getMediaType() == MediaType.TvShow){
+                                    if(!TheBackroom.videoMedia.contains(m.getID())) {
+                                        TheBackroom.videoMedia.add(m.getID());
+                                    }
+                                } else if(m.getMediaType() == MediaType.Game){
+                                    if(!TheBackroom.gameMedia.contains(m.getID())) {
+                                        TheBackroom.gameMedia.add(m.getID());
+                                    }
+                                }
+
+                                successCount++;
                             }
-                            break;
-                            default: System.out.println("Invalid input. Please enter Y or N.");
-                            break;
+                            duplicateMedia.clear();
+                        } catch (Exception e) {
+                            System.out.println("[ERROR] Update failed: " + e.getMessage());
+                            e.printStackTrace();
+                            errorCount++;
                         }
                     }
-                System.out.println("\n========== IMPORT SUMMARY ==========");
-                System.out.println("Total Processed : " + totalCount);
-                System.out.println("Successfully Added : " + successCount);
-                System.out.println("Duplicates Found : " + duplicateMedia.size());
-                System.out.println("Errors : " + errorCount);
-                System.out.println("====================================\n");
-
-
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 throw e;
             }
+            showImportSummary(totalCount, successCount, duplicateMedia.size(), errorCount);
+
         }
+
     }
 
-    public void importJSON(Stage stage) throws Exception{
+    public void importJSON(String path) throws Exception{
         Gson gson = new Gson();
-        File file = openFile(stage, "JSON Files (*.json)", "*.json");
+        File file = new File(path);
 
         ArrayList<Media> duplicateMedia = new ArrayList<>();
 
@@ -445,6 +304,7 @@ public class FileManager {
             int successCount = 0;
             int errorCount = 0;
             int totalCount = 0;
+
             try(FileReader read = new FileReader(file)){
                 Media[] media = gson.fromJson(read, Media[].class);
                 totalCount = media.length;
@@ -456,7 +316,7 @@ public class FileManager {
                             continue;
                         }
 
-                        if(TheBackroom.util.checkDuplicate(m)){
+                        if(util.checkDuplicate(m)){
                             duplicateMedia.add(m);
                             continue;
                         }
@@ -531,8 +391,7 @@ public class FileManager {
                             if(mediaGameMode != null){
                                 for(GameMode gm : mediaGameMode){
                                     if (gm.getGameModeName() == null || gm.getGameModeName().isEmpty()) {
-                                        System.out.println("Warning: GameMode name is null!");
-                                        continue; // Skip this broken item!
+                                        continue;
                                     }
                                     if(!gameModeList.containsKey(gm.getGameModeName())){
                                         id = gameModeDao.addGameMode(gm);
@@ -559,12 +418,20 @@ public class FileManager {
                         }
 
                         mediaDao.addMedia(m);
-                        TheBackroom.mediaUniqID.put(TheBackroom.util.getMediaKey(m.getMediaName(), m.getMediaType().name(), m.getReleaseYear()), m.getID());
+                        TheBackroom.mediaUniqID.put(util.getMediaKey(m.getMediaName(), m.getMediaType().name(), m.getReleaseYear()), m.getID());
                         TheBackroom.mediaList.put(m.getID(), m);
+
+                        if(m.getMediaType() == MediaType.Book){
+                            TheBackroom.bookMedia.add(m.getID());
+                        }else if(m.getMediaType() == MediaType.Movie){
+                            TheBackroom.videoMedia.add(m.getID());
+                        }else if(m.getMediaType() == MediaType.TvShow){
+                            TheBackroom.videoMedia.add(m.getID());
+                        }else if(m.getMediaType() == MediaType.Game){
+                            TheBackroom.gameMedia.add(m.getID());
+                        }
+
                         successCount++;
-                        System.out.println("Press enter to Continue");
-                        Scanner scan = new Scanner(System.in);
-                        scan.nextLine();
                     } catch (Exception e) {
                         //e.printStackTrace();
                         errorCount++;
@@ -573,48 +440,65 @@ public class FileManager {
 
 
                 if(!duplicateMedia.isEmpty()){
-                    Scanner scan = new Scanner(System.in);
-                    System.out.print(duplicateMedia.size() + " found. Update Existing Files [Y/N]: ");
-                    String choice = scan.nextLine().trim().toUpperCase();
+                    boolean willUpdate = askToUpdateDuplicates();
 
-                    switch (choice) {
-                        case "Y":
-                            try{
-                                for(Media m : duplicateMedia){
-                                    int mediaId = TheBackroom.mediaUniqID.get(TheBackroom.util.getMediaKey(m.getMediaName(), m.getMediaType().name(), m.getReleaseYear()));
-                                    m.setID(mediaId);
-                                    mediaDao.updateMedia(m, TheBackroom.mediaList.get(mediaId));
-                                    TheBackroom.mediaList.put(m.getID(), m);
-                                    successCount++;
+                    if(willUpdate) {
+                        try {
+                            for (Media m : duplicateMedia) {
+
+                                String key = util.getMediaKey(m.getMediaName(), m.getMediaType().name(), m.getReleaseYear());
+                                Integer mediaId = TheBackroom.mediaUniqID.get(key);
+
+                                System.out.println("[DEBUG] Processing update for: " + m.getMediaName());
+                                System.out.println("[DEBUG] Found existing ID: " + mediaId);
+
+                                if (mediaId == null) {
+                                    System.out.println("[DEBUG] WARNING: No ID found for key: " + key + ". Skipping update.");
+                                    continue;
                                 }
 
-                                duplicateMedia.clear();
-                            }catch (Exception e){
-                                errorCount++;
-                            }
-                            break;
+                                m.setID(mediaId);
 
-                        default:
-                            System.out.println("Invalid input. Please enter Y or N.");
-                            break;
+                                mediaDao.updateMedia(m, TheBackroom.mediaList.get(mediaId));
+                                TheBackroom.mediaList.put(m.getID(), m);
+                                System.out.println("[DEBUG] mediaDao.updateMedia called successfully.");
+
+                                if (m.getMediaType() == MediaType.Book) {
+                                    if (!TheBackroom.bookMedia.contains(m.getID())) {
+                                        TheBackroom.bookMedia.add(m.getID());
+                                    } else {
+                                        System.out.println("[DEBUG] ID already in bookMedia, skipping list add.");
+                                    }
+                                } else if (m.getMediaType() == MediaType.Movie || m.getMediaType() == MediaType.TvShow) {
+                                    if (!TheBackroom.videoMedia.contains(m.getID())) {
+                                        TheBackroom.videoMedia.add(m.getID());
+                                    }
+                                } else if (m.getMediaType() == MediaType.Game) {
+                                    if (!TheBackroom.gameMedia.contains(m.getID())) {
+                                        TheBackroom.gameMedia.add(m.getID());
+                                    }
+                                }
+
+                                successCount++;
+                            }
+                            duplicateMedia.clear();
+                        } catch (Exception e) {
+                            System.out.println("[ERROR] Update failed: " + e.getMessage());
+                            e.printStackTrace();
+                            errorCount++;
+                        }
                     }
                 }
 
-
-                System.out.println("\n========== IMPORT SUMMARY ==========");
-                System.out.println("Total Processed : " + totalCount);
-                System.out.println("Successfully Added : " + successCount);
-                System.out.println("Duplicates Found : " + duplicateMedia);
-                System.out.println("Errors : " + errorCount);
-                System.out.println("====================================\n");
+                showImportSummary(totalCount, successCount, duplicateMedia.size(), errorCount);
             } catch (Exception e) {
                 throw e;
             }
         }
     }
 
-    public void importSQL(Stage stage) throws Exception {
-        File file = openFile(stage, "SQL Files (*.sql)", "*.sql");
+    public void importSQL(String path) throws Exception {
+        File file = new File(path);
 
         if (file != null) {
             int successCount = 0;
@@ -654,10 +538,10 @@ public class FileManager {
                         }
                     }
                 }
-                System.out.println("\n========== SQL IMPORT SUMMARY ==========");
-                System.out.println("Successfully Executed : " + successCount);
-                System.out.println("Errors/Duplicates Skipped : " + errorCount);
-                System.out.println("========================================\n");
+                showImportSummary(successCount, errorCount);
+
+                TheBackroom.resetCache();
+                TheBackroom.reloadCache();
 
             } catch (Exception e) {
                 System.out.println("A FATAL ERROR KILLED THE SQL IMPORT!");
@@ -825,160 +709,6 @@ public class FileManager {
         }
     }
 
-    public static ResultSet getMediaData (int mediaId) {
-        String sql = "select * from media where media_id = ?";
-
-        try {
-            DatabaseManager dm = new DatabaseManager();
-            dm.getConnection();
-
-            PreparedStatement pstmt = dm.conn.prepareStatement(sql);
-            pstmt.setInt(1, mediaId);
-
-            return pstmt.executeQuery();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public static String getPersonnelName (int mediaId, String role) {
-        try {
-            DatabaseManager dm = new DatabaseManager();
-            dm.getConnection();
-
-            PreparedStatement pstmt = dm.conn.prepareStatement(UpdateArchiveQueries.fetch_person_by_role);
-
-            pstmt.setInt(1, mediaId);
-            pstmt.setString(2, role);
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                String personnel = rs.getString("all_personnel");
-                return (personnel != null) ? personnel : "";
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-
-        return "";
-    }
-
-    public static String getCompanyName (int mediaId, String role) {
-        try {
-            DatabaseManager dm = new DatabaseManager();
-            dm.getConnection();
-
-            PreparedStatement pstmt = dm.conn.prepareStatement(UpdateArchiveQueries.fetch_company_by_role);
-
-            pstmt.setInt(1, mediaId);
-            pstmt.setString(2, role);
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                String company = rs.getString("all_company");
-                return (company != null) ? company : "";
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-
-        return "";
-    }
-
-    public static String getCategory (int mediaId) {
-        try {
-            DatabaseManager dm = new DatabaseManager();
-            dm.getConnection();
-
-            PreparedStatement pstmt = dm.conn.prepareStatement(UpdateArchiveQueries.fetch_category);
-
-            pstmt.setInt(1, mediaId);
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                String category = rs.getString("all_category");
-                return (category != null) ? category : "";
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-
-        return "Uncategorized";
-    }
-
-    public static String getMode (int mediaId) {
-        try {
-            DatabaseManager dm = new DatabaseManager();
-            dm.getConnection();
-
-            PreparedStatement pstmt = dm.conn.prepareStatement(UpdateArchiveQueries.fetch_game_mode);
-
-            pstmt.setInt(1, mediaId);
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                String mode = rs.getString("all_mode");
-                return (mode != null) ? mode : "";
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-
-        return "Uncategorized";
-    }
-
-    public static String getTvShowStatus (int mediaId) {
-        try {
-            DatabaseManager dm = new DatabaseManager();
-            dm.getConnection();
-
-            PreparedStatement pstmt = dm.conn.prepareStatement(UpdateArchiveQueries.fetch_tv_show_status);
-
-            pstmt.setInt(1, mediaId);
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                return rs.getString("status");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return "";
-    }
-
-    public static String getPlatform (int mediaId) {
-        try {
-            DatabaseManager dm = new DatabaseManager();
-            dm.getConnection();
-
-            PreparedStatement pstmt = dm.conn.prepareStatement(UpdateArchiveQueries.fetch_game_platform);
-
-            pstmt.setInt(1, mediaId);
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                String platform = rs.getString("all_platform");
-                return (platform != null) ? platform : "";
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-
-        return "Uncategorized";
-    }
 
     public static String getString (int mediaId) {
         try {
@@ -998,6 +728,94 @@ public class FileManager {
         }
 
         return "";
+    }
+
+    private boolean askToUpdateDuplicates() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Duplicates Detected");
+        alert.setHeaderText("We found duplicates on your file!");
+        alert.setContentText("Do you wish to update the existing entries with the new data from this file, or skip them?");
+
+        try {
+            Image logo = new Image(getClass().getResourceAsStream("/edu/tangingina/thebackroom/assets/tbr.png"));
+            ImageView icon = new ImageView(logo);
+            icon.setFitHeight(50);
+            icon.setFitWidth(50);
+            icon.setPreserveRatio(true);
+            alert.setGraphic(icon);
+
+            DialogPane dialogPane = alert.getDialogPane();
+            String cssPath = getClass().getResource("/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm();
+            dialogPane.getStylesheets().add(cssPath);
+            dialogPane.getStyleClass().add("custom-dialog");
+        } catch (Exception e) {
+
+        }
+
+        ButtonType updateBtn = new ButtonType("Update", ButtonBar.ButtonData.YES);
+        ButtonType skipBtn = new ButtonType("Skip", ButtonBar.ButtonData.NO);
+        alert.getButtonTypes().setAll(updateBtn, skipBtn);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        return result.isPresent() && result.get() == updateBtn;
+    }
+
+    private void showImportSummary(int totalCount, int successCount, int duplicateCount, int errorCount) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Import Complete");
+        alert.setHeaderText("Import Summary");
+
+        String summaryText = "Total Processed : " + totalCount + "\n" +
+                "Successfully Added : " + successCount + "\n" +
+                "Duplicates Found : " + duplicateCount + "\n" +
+                "Errors : " + errorCount;
+
+        alert.setContentText(summaryText);
+
+        try {
+            Image logoImage = new Image(getClass().getResourceAsStream("/edu/tangingina/thebackroom/assets/tbr.png"));
+            ImageView customIcon = new ImageView(logoImage);
+            customIcon.setFitHeight(50);
+            customIcon.setFitWidth(50);
+            customIcon.setPreserveRatio(true);
+            alert.setGraphic(customIcon);
+
+            DialogPane dialogPane = alert.getDialogPane();
+            String cssPath = getClass().getResource("/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm();
+            dialogPane.getStylesheets().add(cssPath);
+            dialogPane.getStyleClass().add("custom-dialog");
+        } catch (Exception e) {
+            System.out.println("Could not load custom icon: " + e.getMessage());
+        }
+        alert.showAndWait();
+    }
+
+    private void showImportSummary(int successCount, int errorCount) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Import Complete");
+        alert.setHeaderText("Import Summary");
+
+        String summaryText = "Successfully Added : " + successCount + "\n" +
+                "Duplicates/Error Found : " + errorCount;
+
+        alert.setContentText(summaryText);
+
+        try {
+            Image logoImage = new Image(getClass().getResourceAsStream("/edu/tangingina/thebackroom/assets/tbr.png"));
+            ImageView customIcon = new ImageView(logoImage);
+            customIcon.setFitHeight(50);
+            customIcon.setFitWidth(50);
+            customIcon.setPreserveRatio(true);
+            alert.setGraphic(customIcon);
+
+            DialogPane dialogPane = alert.getDialogPane();
+            String cssPath = getClass().getResource("/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm();
+            dialogPane.getStylesheets().add(cssPath);
+            dialogPane.getStyleClass().add("custom-dialog");
+        } catch (Exception e) {
+            System.out.println("Could not load custom icon: " + e.getMessage());
+        }
+        alert.showAndWait();
     }
 
 }

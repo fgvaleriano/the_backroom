@@ -23,7 +23,7 @@ public class LoginController {
     VBox form, btn_holder;
     Image img, bkgImage;
     ImageView view;
-    Label userLabel, pwLabel;
+    Label userLabel, pwLabel, status;
     TextField userTxt;
     CheckBox rememberMe_checkBox;
     PasswordField pwTxt;
@@ -94,8 +94,15 @@ public class LoginController {
         signUp = signUp();
         guest = guest(stage);
 
-        VBox.setMargin(rememberMe_checkBox, new Insets(0, 0, 30, 0));
-        holder.getChildren().addAll(rememberMe_checkBox, login, signUp, guest);
+        status = new Label();
+        status.setFont(FontLoader.bold(17));
+        status.getStyleClass().add("setup-status");
+        status.setStyle("-fx-text-fill: #8B2E2E; -fx-background-color: rgba(139, 46, 46, 0.15); -fx-padding: 8 15 8 15; -fx-background-radius: 5;");
+        status.setManaged(false);
+        status.setVisible(false);
+
+        VBox.setMargin(rememberMe_checkBox, new Insets(0, 0, 10, 0));
+        holder.getChildren().addAll(rememberMe_checkBox, status, login, signUp, guest);
 
         return holder;
     }
@@ -115,7 +122,7 @@ public class LoginController {
             String username = userTxt.getText().trim();
             String password = pwTxt.getText().trim();
 
-            if (username.isEmpty()) {
+            if (username.isEmpty() || username.length() > 50) {
                 //to avoid adding the same style we check it first muna
                 if (!userTxt.getStyleClass().contains("login-input-error")) {
                     userTxt.getStyleClass().add("login-input-error");
@@ -142,7 +149,9 @@ public class LoginController {
                         TheBackroom.util.saveCredentials(username);
                     }
                 } catch (Exception ex) {
-                    System.out.println(ex.getMessage());
+                    status.setText("Invalid credentials. Please try again.");
+                    status.setVisible(true);
+                    status.setManaged(true);
                 }
             }
 

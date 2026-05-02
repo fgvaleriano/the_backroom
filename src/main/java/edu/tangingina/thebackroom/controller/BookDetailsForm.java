@@ -8,21 +8,22 @@ import edu.tangingina.thebackroom.model.*;
 import edu.tangingina.thebackroom.util.FileManager;
 import edu.tangingina.thebackroom.util.FontLoader;
 import edu.tangingina.thebackroom.util.Utility;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import javax.swing.text.Element;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static edu.tangingina.thebackroom.TheBackroom.mediaList;
 import static edu.tangingina.thebackroom.TheBackroom.mediaUniqID;
@@ -79,6 +80,7 @@ public class BookDetailsForm extends BaseMediaForm {
 
         Node lastNode = formColumn().getChildren().get(formColumn().getChildren().size() - 1);
         VBox.setMargin(lastNode, new javafx.geometry.Insets(0, 0, 0, 0));
+        addWindowListener();
     }
 
     private Node addButton(){
@@ -86,6 +88,7 @@ public class BookDetailsForm extends BaseMediaForm {
         btn.getStyleClass().add("image-button");
 
         errorLabel = new Label("An error occurred, please try again");
+        errorLabel.setPadding(new Insets(5, 0, 10, 10));
         errorLabel.setFont(FontLoader.bold(20));
         errorLabel.getStyleClass().add("error-label");
         errorLabel.setVisible(false);
@@ -106,7 +109,7 @@ public class BookDetailsForm extends BaseMediaForm {
         HBox btnContainer = new HBox(btn);
         btnContainer.setAlignment(Pos.CENTER);
 
-        VBox container = new VBox(8, btnContainer, errorLabel);
+        VBox container = new VBox(8, errorLabel, btnContainer);
         container.setAlignment(Pos.CENTER);
         container.setPrefWidth(520);
 
@@ -126,44 +129,51 @@ public class BookDetailsForm extends BaseMediaForm {
         authorField.clearError();
         synopsisField.clearError();
 
-        if (titleField.isEmpty()) {
+        String errorMessage = "";
+
+        //high priority this before we check if empty fields
+        if (titleField.getUserInput().length() > 255) {
             titleField.showError();
+            errorMessage = "Title is too long (Max 255 characters).";
             isValid = false;
         }
-
-        if (authorField.isEmpty()) {
-            authorField.showError();
-            isValid = false;
-        }
-
-        if (publisherField.isEmpty()) {
-            publisherField.showError();
-            isValid = false;
-        }
-
-        if (ISBNfield.isEmpty()) {
+        else if (ISBNfield.getUserInput().length() > 20) {
             ISBNfield.showError();
+            errorMessage = "ISBN is too long (Max 20 characters).";
             isValid = false;
         }
-
-        if (genreField.isEmpty()) {
-            genreField.showError();
+        else if (editionField.getUserInput().length() > 50) {
+            editionField.showError();
+            errorMessage = "Edition text is too long (Max 50 characters).";
             isValid = false;
         }
-
-        if (pageField.isEmpty()) {
+        else if (pageField.getUserInput().length() > 10) {
             pageField.showError();
+            errorMessage = "Page count is too long (Max 10 characters).";
             isValid = false;
         }
 
-        if (synopsisField.isEmpty()) {
-            synopsisField.showError();
-            isValid = false;
-        }
+            if (titleField.isEmpty() || authorField.isEmpty() || publisherField.isEmpty() ||
+                    ISBNfield.isEmpty() || genreField.isEmpty() || synopsisField.isEmpty() || linkField.isEmpty()) {
 
-        if (linkField.isEmpty()) {
-            linkField.showError();
-            isValid = false;
+                //This highlights all empty Fields
+                if (titleField.isEmpty()) titleField.showError();
+                if (authorField.isEmpty()) authorField.showError();
+                if (publisherField.isEmpty()) publisherField.showError();
+                if (ISBNfield.isEmpty()) ISBNfield.showError();
+                if (genreField.isEmpty()) genreField.showError();
+                if (synopsisField.isEmpty()) synopsisField.showError();
+                if (linkField.isEmpty()) linkField.showError();
+
+                if(errorMessage.isEmpty()) errorMessage = "Please fill in all required fields.";
+                isValid = false;
+            }
+
+
+        if (!isValid) {
+            errorLabel.setText(errorMessage);
+            errorLabel.setVisible(true);
+            errorLabel.setManaged(true);
         }
 
         return isValid;
@@ -190,6 +200,7 @@ public class BookDetailsForm extends BaseMediaForm {
         TheBackroom.util.setIfNotNull(widgetField, path);
 
         setOldMedia(media);
+        addWindowListener();
     }
 
     //call beofre showing update form
@@ -213,9 +224,9 @@ public class BookDetailsForm extends BaseMediaForm {
         Utility util = TheBackroom.util;
         FileManager fm = TheBackroom.fm;
 
-        String title = titleField.getUserInput();
+        String title = titleField.getUserInput().trim();
         MediaType mediaType = MediaType.Book;
-        String synopsis = synopsisField.getUserInput();
+        String synopsis = synopsisField.getUserInput().trim();
 
         ComboBox<Integer> yearPicker = (ComboBox<Integer>) yearField.getInputs();
 
@@ -227,9 +238,9 @@ public class BookDetailsForm extends BaseMediaForm {
         String imgIcon = fm.saveIMGRelative(widgetField.getSelectedFile());
         List<String> genre = genreField.getValues();
         List<AccessLinkField.AccessLink> onlineAccess = linkField.getValues();
-        String isbn = ISBNfield.getUserInput();
-        String edition = editionField.getUserInput();
-        String pageCount = pageField.getUserInput();
+        String isbn = ISBNfield.getUserInput().trim();
+        String edition = editionField.getUserInput().trim();
+        String pageCount = pageField.getUserInput().trim();
         List<String> author = authorField.getValues();
         List<String> publisher = publisherField.getValues();
 
@@ -251,6 +262,9 @@ public class BookDetailsForm extends BaseMediaForm {
             AddArchive_v2.closeWindow();
 
         }catch (Exception e1){
+            errorLabel.setText("An error occured. Please try again later");
+            errorLabel.setVisible(true);
+            errorLabel.setManaged(true);
             e1.getMessage();
         }
     }
@@ -262,9 +276,9 @@ public class BookDetailsForm extends BaseMediaForm {
         Utility util = TheBackroom.util;
         FileManager fm = TheBackroom.fm;
 
-        String title = titleField.getUserInput();
+        String title = titleField.getUserInput().trim();
         MediaType mediaType = MediaType.Book;
-        String synopsis = synopsisField.getUserInput();
+        String synopsis = synopsisField.getUserInput().trim();
 
         ComboBox<Integer> yearPicker = (ComboBox<Integer>) yearField.getInputs();
         String year = "2024";
@@ -277,9 +291,9 @@ public class BookDetailsForm extends BaseMediaForm {
 
         List<String> genre = genreField.getValues();
         List<AccessLinkField.AccessLink> onlineAccess = linkField.getValues();
-        String isbn = ISBNfield.getUserInput();
-        String edition = editionField.getUserInput();
-        String pageCount = pageField.getUserInput();
+        String isbn = ISBNfield.getUserInput().trim();
+        String edition = editionField.getUserInput().trim();
+        String pageCount = pageField.getUserInput().trim();
         List<String> author = authorField.getValues();
         List<String> publisher = publisherField.getValues();
 
@@ -302,6 +316,7 @@ public class BookDetailsForm extends BaseMediaForm {
             mediaList.put(mediaId, media);
             UpdateArchive.closeWindow();
         }catch (Exception e){
+            errorLabel.setText("An error occured. Please try again later");
             errorLabel.setVisible(true);
             errorLabel.setManaged(true);
         }
@@ -309,6 +324,81 @@ public class BookDetailsForm extends BaseMediaForm {
 
     private void setOldMedia(Media media){
         this.oldMedia = media;
+    }
+
+    private boolean checkEmptyField(){
+        return titleField.isEmpty() &&
+                synopsisField.isEmpty() &&
+                (yearField == null || yearField.getUserInput() == null || yearField.getUserInput().trim().isEmpty()) &&
+                (widgetField == null || widgetField.getSelectedFile() == null) &&
+                (genreField == null || genreField.isEmpty()) &&
+                (linkField == null || linkField.isEmpty()) &&
+                ISBNfield.isEmpty() &&
+                editionField.isEmpty() &&
+                pageField.isEmpty() &&
+                (authorField == null || authorField.isEmpty()) &&
+                (publisherField == null || publisherField.isEmpty());
+    }
+
+    private void addWindowListener(){
+        javafx.application.Platform.runLater(() -> {
+            Stage stage = null;
+
+            if (isUpdateMode) {
+                stage = UpdateArchive.window;
+            } else {
+                stage = AddArchive_v2.window;
+            }
+
+            if (stage != null) {
+                stage.setOnCloseRequest(event -> {
+                    event.consume();
+                    handleExitAttempt();
+                });
+            }
+        });
+    }
+
+    private void handleExitAttempt(){
+        if(!checkEmptyField()){
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Unsaved Changes");
+            alert.setHeaderText("Wait a minute!");
+            alert.setContentText("You have unsaved inputs on this form. Do you wish to cancel and lose your progress?");
+
+            DialogPane dialogPane = alert.getDialogPane();
+            try {
+                Image logo = new Image(getClass().getResourceAsStream("/edu/tangingina/thebackroom/assets/tbr.png"));
+                ImageView icon = new ImageView(logo);
+                icon.setFitHeight(50);
+                icon.setFitWidth(50);
+                icon.setPreserveRatio(true);
+                alert.setGraphic(icon);
+
+                String cssPath = getClass().getResource("/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm();
+                dialogPane.getStylesheets().add(cssPath);
+                dialogPane.getStyleClass().add("custom-dialog");
+            } catch (Exception e) {
+                System.out.println("Could not load CSS for dialog: " + e.getMessage());
+            }
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                if(isUpdateMode){
+                    UpdateArchive.closeWindow();
+                }else{
+                    AddArchive_v2.exitWindow();
+                }
+            } else {
+                System.out.println("User chose to stay.");
+            }
+        }else{
+            if(isUpdateMode){
+                UpdateArchive.closeWindow();
+            }else{
+                AddArchive_v2.exitWindow();
+            }
+        }
     }
 
 

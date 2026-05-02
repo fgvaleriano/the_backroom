@@ -18,7 +18,7 @@ public class  AddArchive_v2 {
     private static Scene scene;
     private static ComboBox<String> mediaTypeSelector;
     private static StackPane bkgCard;
-    private static Stage window;
+    public static Stage window;
     private static VBox innerCard, formContent, dynamicForm;
     private static ScrollPane inputHolder, sp;
     private static Label header, mediaTypeLabel, inputLabel, label;
@@ -83,6 +83,11 @@ public class  AddArchive_v2 {
             shell.refreshCurrentView();
 
         }
+    }
+
+    //this is for if user try to exit the add detail pane, we ask user if wish to continue or lose progress
+    public static void exitWindow(){
+        window.close();
     }
 
     //dark background

@@ -69,6 +69,8 @@ public class TheBackroom extends Application {
         initialize();
         openDB();
         loadCache();
+
+        fm = new FileManager();
         sm = new SceneManager(primaryStage);
 
     }
@@ -89,7 +91,6 @@ public class TheBackroom extends Application {
     public void initialize(){
         dm = new DatabaseManager();
         util = new Utility();
-        fm = new FileManager();
     }
 
 
@@ -123,7 +124,7 @@ public class TheBackroom extends Application {
         }
     }
 
-    public void clearCache(){
+    public static void resetCache(){
         categoryList.clear();
         websiteList.clear();
         personList.clear();
@@ -133,6 +134,43 @@ public class TheBackroom extends Application {
         gameModeList.clear();
         mediaList.clear();
         mediaUniqID.clear();
+        bookMedia.clear();
+        videoMedia.clear();
+        gameMedia.clear();
+        top6BookGenre.clear();
+        top6GameGenre.clear();
+        top6VidGenre.clear();
+
+    }
+
+    public static void reloadCache(){
+        mediaUniqID = new HashMap<>();
+
+        categoryList = categoryDao.getAllCategory();
+        websiteList = websiteDao.getAllWebsite();
+        personList = personDao.getAllPersons();
+        companyList = companyDao.getAllCompany();
+        roleList = roleDao.getAllRole();
+        platformList = platformDao.getAllPlatform();
+        gameModeList = gameModeDao.getAllGameMode();
+        try{
+            mediaList = mediaDao.getAllMedia();
+            bookMedia = mediaDao.getMediaByCategory("Book");
+            videoMedia = mediaDao.getMediaByCategory("Movie", "TvShow");
+            gameMedia = mediaDao.getMediaByCategory("Game");
+
+            top6BookGenre = mediaDao.getTopMediaCategory("Book");
+            top6GameGenre = mediaDao.getTopMediaCategory("Game");
+            top6VidGenre = mediaDao.getTopMediaCategory("Movie", "TvShow");
+
+            if(!mediaList.isEmpty()){
+                for(Media m : mediaList.values()){
+                    mediaUniqID.put(util.getMediaKey(m.getMediaName(), m.getMediaType().name(), m.getReleaseYear()), m.getID());
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 }
