@@ -11,6 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
 import java.util.function.Consumer;
+import java.util.*;
 
 public class SearchView extends BaseView{
     /*
@@ -20,7 +21,7 @@ public class SearchView extends BaseView{
 
     private VBox resultSection, card;
     private TextField searchField;
-    private ComboBox<String> filter;
+    private ComboBox<String> filter, filterGenre;
     private FlowPane results;
     private Label header;
     private final Consumer<Integer> onMediaSelected;
@@ -44,6 +45,26 @@ public class SearchView extends BaseView{
         filter.setValue("All");
         filter.getStyleClass().add("combo-box");
         filter.setPrefHeight(35);
+
+        filterGenre = new ComboBox<>();
+        filterGenre.getStyleClass().add("combo-box");
+        filterGenre.setVisible(false);
+        filterGenre.setManaged(false);
+        filterGenre.setPrefHeight(35);
+
+        filter.setOnAction(e -> {
+            String type = filter.getValue();
+            if (type == null || type.equals("All")) {
+                filterGenre.setVisible(false);
+                filterGenre.setManaged(false);
+                filterGenre.getItems().clear();
+            } else {
+                filterGenre.getItems().setAll(genre_map.get(type));
+                filterGenre.setValue("All");
+                filterGenre.setVisible(true);
+                filterGenre.setManaged(true);
+            }
+        });
 
         searchField = new TextField();
         searchField.setFont(FontLoader.regular(18));
@@ -72,7 +93,7 @@ public class SearchView extends BaseView{
             }
         });
 
-        HBox searchBar = new HBox(12, filter, searchField, btn);
+        HBox searchBar = new HBox(12, filter, filterGenre, searchField, btn);
         searchBar.setAlignment(Pos.CENTER);
         return searchBar;
     }
@@ -171,5 +192,13 @@ public class SearchView extends BaseView{
         card.setOnMouseClicked(e -> onMediaSelected.accept(media.getID()));
         return card;
     }
+
+    private static final Map<String, List<String>> genre_map = Map.of (
+            "Book", List.of("All", "Fantasy", "Boy Love", "Classics", "Academics", "Romance", "Action"),
+            "Game", List.of("All", "Adventure", "RPG", "Strategy", "Sci-Fi", "Survival"),
+            "Film", List.of("All", "Comedy", "Drama", "LGBTQ+","Romance"),
+            "TV Show", List.of("All", "Comedy", "Drama", "LGBTQ+","Romance")
+
+    );
 
 }
