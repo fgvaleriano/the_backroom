@@ -640,6 +640,7 @@ public class FileManager {
 
             String mediaQuery;
             boolean filter = selectedType != null && !selectedType.equals("All Media");
+            int mediaCount = 0, personnelCount = 0, companyCount = 0;
 
             switch (selectedType != null ? selectedType : "All Media") {
                 case "Book" :
@@ -712,6 +713,7 @@ public class FileManager {
                                 }
                             }
                             out.println();
+                            mediaCount++;
                         }
                     }
 
@@ -730,6 +732,7 @@ public class FileManager {
                         out.print(rs.getString("media_id") + ",");
                         out.print(rs.getString("person_name").replace(",", ";") + ",");
                         out.println(rs.getString("role_name").replace(",", ";"));
+                        personnelCount++;
                     }
                 }
 
@@ -748,8 +751,11 @@ public class FileManager {
                         out.print(rs.getString("media_id") + ",");
                         out.print(rs.getString("company_name").replace(",", ";") + ",");
                         out.println(rs.getString("role_name").replace(",", ";"));
+                        companyCount++;
                     }
                 }
+
+                showExportSummary(selectedType, mediaCount, personnelCount, companyCount, filePath);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -860,6 +866,40 @@ public class FileManager {
 
             DialogPane dialogPane = alert.getDialogPane();
             String cssPath = getClass().getResource("/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm();
+            dialogPane.getStylesheets().add(cssPath);
+            dialogPane.getStyleClass().add("custom-dialog");
+        } catch (Exception e) {
+            System.out.println("Could not load custom icon: " + e.getMessage());
+        }
+        alert.showAndWait();
+    }
+
+    private static void showExportSummary(String selectedType, int mediaCount, int personnelCount,
+                                          int companyCount, String filePath) {
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Export Complete");
+        alert.setHeaderText("Export Summary");
+
+        String type = (selectedType == null || selectedType.equals("All Media")) ? "All Media" : selectedType;
+        String summaryText = "Type Exported : " + type + "\n" +
+                "Media Rows Exported : " + mediaCount + "\n" +
+                "Personnel Rows Exported : " + personnelCount + "\n" +
+                "Company Rows Exported : " + companyCount + "\n" +
+                "Saved To : " + filePath;
+
+        alert.setContentText(summaryText);
+
+        try {
+            Image logoImage = new Image(FileManager.class.getResourceAsStream("/edu/tangingina/thebackroom/assets/tbr.png"));
+            ImageView customIcon = new ImageView(logoImage);
+            customIcon.setFitHeight(50);
+            customIcon.setFitWidth(50);
+            customIcon.setPreserveRatio(true);
+            alert.setGraphic(customIcon);
+
+            DialogPane dialogPane = alert.getDialogPane();
+            String cssPath = FileManager.class.getResource("/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm();
             dialogPane.getStylesheets().add(cssPath);
             dialogPane.getStyleClass().add("custom-dialog");
         } catch (Exception e) {
