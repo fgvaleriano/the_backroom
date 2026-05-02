@@ -6,19 +6,20 @@ import edu.tangingina.thebackroom.model.*;
 import edu.tangingina.thebackroom.util.FileManager;
 import edu.tangingina.thebackroom.util.FontLoader;
 import edu.tangingina.thebackroom.util.Utility;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static edu.tangingina.thebackroom.TheBackroom.mediaList;
 import static edu.tangingina.thebackroom.TheBackroom.mediaUniqID;
@@ -40,6 +41,8 @@ public class TVShowDetailsForm extends BaseMediaForm{
     private boolean isUpdateMode = false;
     private Button btn;
     private Label errorLabel;
+
+    private Media oldMedia;
 
 
     public TVShowDetailsForm() {
@@ -75,6 +78,8 @@ public class TVShowDetailsForm extends BaseMediaForm{
 
         Node lastNode = formColumn().getChildren().get(formColumn().getChildren().size() - 1);
         VBox.setMargin(lastNode, new javafx.geometry.Insets(0, 0, 0, 0));
+
+        addWindowListener();
     }
 
     private Node addButton(){
@@ -82,6 +87,7 @@ public class TVShowDetailsForm extends BaseMediaForm{
         btn.getStyleClass().add("image-button");
 
         errorLabel = new Label("An error occurred, please try again");
+        errorLabel.setPadding(new Insets(5, 0, 10, 10));
         errorLabel.setFont(FontLoader.bold(20));
         errorLabel.getStyleClass().add("error-label");
         errorLabel.setVisible(false);
@@ -96,13 +102,17 @@ public class TVShowDetailsForm extends BaseMediaForm{
                 } else {
                     handleAdd();
                 }
+            }else{
+                errorLabel.setText("Please fill in all required fields.");
+                errorLabel.setVisible(true);
+                errorLabel.setManaged(true);
             }
         });
 
         HBox btnContainer = new HBox(btn);
         btnContainer.setAlignment(Pos.CENTER);
 
-        VBox container = new VBox(8, btnContainer, errorLabel);
+        VBox container = new VBox(8,errorLabel, btnContainer);
         container.setAlignment(Pos.CENTER);
         container.setPrefWidth(520);
 
@@ -118,59 +128,54 @@ public class TVShowDetailsForm extends BaseMediaForm{
         episodeField.clearError();
         statusField.clearError();
         genreField.clearError();
+        directorField.clearError();
         studioField.clearError();
         synopsisField.clearError();
         linkField.clearError();
 
-        if (titleField.isEmpty()) {
+        String errorMessage = "";
+
+        //high priority this before we check if empty fields
+        if (titleField.getUserInput().length() > 255) {
             titleField.showError();
+            errorMessage = "Title is too long (Max 255 characters).";
             isValid = false;
         }
-
-        if (seasonField.isEmpty()) {
+        else if (seasonField.getUserInput().length() > 10) {
             seasonField.showError();
+            errorMessage = "Season count is too long (Max 10 characters).";
             isValid = false;
         }
-
-        if (episodeField.isEmpty()) {
+        else if (episodeField.getUserInput().length() > 10) {
             episodeField.showError();
+            errorMessage = "Episode count is too long (Max 10 characters).";
             isValid = false;
         }
 
-        if (statusField.isEmpty()) {
-            statusField.showError();
-            isValid = false;
-        }
 
-        if (synopsisField.isEmpty()) {
-            synopsisField.showError();
-            isValid = false;
-        }
+            if (titleField.isEmpty() || statusField.isEmpty() || synopsisField.isEmpty() ||
+                    genreField.isEmpty() || directorField.isEmpty() || linkField.isEmpty()) {
 
-        if (genreField.isEmpty()) {
-            genreField.showError();
-            isValid = false;
-        }
+                //This highlights all empty Fields
+                if (titleField.isEmpty()) titleField.showError();
+                if (statusField.isEmpty()) statusField.showError();
+                if (synopsisField.isEmpty()) synopsisField.showError();
+                if (genreField.isEmpty()) genreField.showError();
+                if (directorField.isEmpty()) directorField.showError();
+                if (linkField.isEmpty()) linkField.showError();
 
-        if (studioField.isEmpty()) {
-            studioField.showError();
-            isValid = false;
-        }
+                if(errorMessage.isEmpty()) errorMessage = "Please fill in all required fields.";
+                isValid = false;
+            }
 
-        if (linkField.isEmpty()) {
-            linkField.showError();
-            isValid = false;
+
+        if (!isValid) {
+            errorLabel.setText(errorMessage);
+            errorLabel.setVisible(true);
+            errorLabel.setManaged(true);
         }
 
         return isValid;
-    }
-
-    public MultiValueField getDirectorField() {
-        return directorField;
-    }
-
-    public MultiValueField getGenreField() {
-        return genreField;
     }
 
     public void setUpdateMode(int mediaId) {
@@ -179,32 +184,31 @@ public class TVShowDetailsForm extends BaseMediaForm{
         refreshButton();
     }
 
-    public void populateForm(ResultSet rs, String director, String studio, String category, String links, String status) {
-        try {
-            System.out.println("Reached here");
-            titleField.setValue(rs.getString("name"));
-            synopsisField.setValue(rs.getString("synopsis"));
-            seasonField.setValue(rs.getString("season_count"));
-            episodeField.setValue(rs.getString("episode_count"));
-            statusField.setValue(rs.getString("status"));
+    public void populateForm(String director, String studio, String category, String path, String links, Media media) {
 
-            ComboBox<Integer> yearPicker = (ComboBox<Integer>) yearField.getInputs();
-            if (yearPicker != null) {
-                yearPicker.setValue(Integer.parseInt(rs.getString("release_year")));
-            }
+        TheBackroom.util.setIfNotNull(titleField, media.getMediaName());
+        TheBackroom.util.setIfNotNull(synopsisField, media.getSynopsis());
+        TheBackroom.util.setIfNotNull(seasonField, media.getSeasonCount());
+        TheBackroom.util.setIfNotNull(episodeField, media.getEpisodeCount());
 
-            directorField.setValues(director);
-            studioField.setValues(studio);
-            genreField.setValues(category);
-            linkField.setLink(links);
-
-            String path = rs.getString("icon_path");
-            widgetField.setImage(path);
-
-        } catch (Exception ex) {
-            System.err.println("Error populating TV Show form: " + ex.getMessage());
-            ex.printStackTrace();
+        ComboBox<Integer> yearPicker = (ComboBox<Integer>) yearField.getInputs();
+        if (yearPicker != null && media.getReleaseYear() != null && !media.getReleaseYear().equals("null")) {
+            yearPicker.setValue(Integer.valueOf(media.getReleaseYear()));
         }
+
+        ComboBox<String> statusPicker = (ComboBox<String>) statusField.getInputs();
+        if(statusPicker != null && media.getStatus() != null && !media.getReleaseYear().equals("null")){
+            statusPicker.setValue(media.getStatus());
+        }
+
+        TheBackroom.util.setIfNotNull(directorField, director);
+        TheBackroom.util.setIfNotNull(studioField, studio);
+        TheBackroom.util.setIfNotNull(genreField, category);
+        TheBackroom.util.setIfNotNull(linkField, links);
+        TheBackroom.util.setIfNotNull(widgetField, path);
+        setOldMedia(media);
+
+        addWindowListener();
     }
 
     private void refreshButton() {
@@ -246,18 +250,21 @@ public class TVShowDetailsForm extends BaseMediaForm{
         ArrayList<Person> showDirector = util.ensurePersonExist(director, "Director");
         ArrayList<Company> showStudio = util.ensureCompanyExists(studio, "Production Studio");
 
-        Media media = new Media(0, title, mediaType, year, synopsis, imgIcon, mediaWebsite, mediaGenre);
+        Media media = new Media(mediaId, title, mediaType, year, synopsis, imgIcon, mediaWebsite, mediaGenre);
         media.setTvShowDetails(seasonCount, episodeCount, status, showDirector, showStudio);
 
         try{
             mediaDao.addMedia(media);
             mediaList.put(media.getID(), media);
             mediaUniqID.put(util.getMediaKey(media.getMediaName(), media.getMediaType().name(), media.getReleaseYear()), media.getID());
-            TheBackroom.bookMedia.add(media.getID());
+            TheBackroom.videoMedia.add(media.getID());
 
             AddArchive_v2.closeWindow();
 
         }catch (Exception e1){
+            errorLabel.setText("An error occured. Please try again later");
+            errorLabel.setVisible(true);
+            errorLabel.setManaged(true);
             e1.getMessage();
         }
     }
@@ -294,16 +301,100 @@ public class TVShowDetailsForm extends BaseMediaForm{
         Media media = new Media(mediaId, title, mediaType, year, synopsis, imgIcon, mediaWebsite, mediaGenre);
         media.setTvShowDetails(seasons, episodes, status, tvDirector, tvStudio);
 
-        try {
-            //connect to backend
+        try{
+            //if the name was updated, then we update our cache
+            if(!media.getMediaName().equals(oldMedia.getMediaName())){
+                TheBackroom.mediaUniqID.remove(TheBackroom.util.getMediaKey(oldMedia.getMediaName(), oldMedia.getMediaType().name(), oldMedia.getReleaseYear()));
+                TheBackroom.mediaUniqID.put(TheBackroom.util.getMediaKey(media.getMediaName(), media.getMediaType().name(), media.getReleaseYear()), media.getID());
+            }
+
+            mediaDao.updateMedia(media, oldMedia);
             mediaList.put(mediaId, media);
-            mediaUniqID.put(util.getMediaKey(title, mediaType.name(), year), mediaId);
             UpdateArchive.closeWindow();
-        } catch (Exception e) {
-            System.err.println("Update failed: " + e.getMessage());
+        }catch (Exception e){
+            errorLabel.setText("An error occured. Please try again later");
             errorLabel.setVisible(true);
             errorLabel.setManaged(true);
-            e.printStackTrace();
+        }
+    }
+
+    private void setOldMedia(Media media){
+        this.oldMedia = media;
+    }
+
+    private boolean checkEmptyField(){
+        return titleField.isEmpty() &&
+                synopsisField.isEmpty() &&
+                (yearField == null || yearField.getUserInput() == null || yearField.getUserInput().trim().isEmpty()) &&
+                (widgetField == null || widgetField.getSelectedFile() == null) &&
+                (genreField == null || genreField.isEmpty()) &&
+                (linkField == null || linkField.isEmpty()) &&
+                seasonField.isEmpty() &&
+                episodeField.isEmpty() &&
+                (directorField == null || directorField.isEmpty()) &&
+                (studioField == null || studioField.isEmpty()) &&
+                (statusField == null || statusField.getUserInput() == null || statusField.getUserInput().trim().isEmpty());
+
+    }
+
+    private void addWindowListener(){
+        javafx.application.Platform.runLater(() -> {
+            Stage stage = null;
+
+            if (isUpdateMode) {
+                stage = UpdateArchive.window;
+            } else {
+                stage = AddArchive_v2.window;
+            }
+
+            if (stage != null) {
+                stage.setOnCloseRequest(event -> {
+                    event.consume();
+                    handleExitAttempt();
+                });
+            }
+        });
+    }
+
+    private void handleExitAttempt(){
+        if(!checkEmptyField()){
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Unsaved Changes");
+            alert.setHeaderText("Wait a minute!");
+            alert.setContentText("You have unsaved inputs on this form. Do you wish to cancel and lose your progress?");
+
+            DialogPane dialogPane = alert.getDialogPane();
+            try {
+                Image logo = new Image(getClass().getResourceAsStream("/edu/tangingina/thebackroom/assets/tbr.png"));
+                ImageView icon = new ImageView(logo);
+                icon.setFitHeight(50);
+                icon.setFitWidth(50);
+                icon.setPreserveRatio(true);
+                alert.setGraphic(icon);
+
+                String cssPath = getClass().getResource("/edu/tangingina/thebackroom/the_backroom_style.css").toExternalForm();
+                dialogPane.getStylesheets().add(cssPath);
+                dialogPane.getStyleClass().add("custom-dialog");
+            } catch (Exception e) {
+                System.out.println("Could not load CSS for dialog: " + e.getMessage());
+            }
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                if(isUpdateMode){
+                    UpdateArchive.closeWindow();
+                }else{
+                    AddArchive_v2.exitWindow();
+                }
+            } else {
+                System.out.println("User chose to stay.");
+            }
+        }else{
+            if(isUpdateMode){
+                UpdateArchive.closeWindow();
+            }else{
+                AddArchive_v2.exitWindow();
+            }
         }
     }
 }

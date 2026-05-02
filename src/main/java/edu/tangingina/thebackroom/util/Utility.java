@@ -4,6 +4,9 @@ import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import edu.tangingina.thebackroom.TheBackroom;
 import edu.tangingina.thebackroom.controller.AccessLinkField;
+import edu.tangingina.thebackroom.controller.FormFieldGroup;
+import edu.tangingina.thebackroom.controller.ImageFileField;
+import edu.tangingina.thebackroom.controller.MultiValueField;
 import edu.tangingina.thebackroom.dao.WebsiteDao;
 import edu.tangingina.thebackroom.dao.impl.*;
 import edu.tangingina.thebackroom.model.*;
@@ -111,6 +114,7 @@ public class Utility {
         HashMap<String, Website> websiteList = TheBackroom.websiteList;
         int id = 0;
 
+
         for(AccessLinkField.AccessLink ac : websites){
             websiteName = ac.getWebsiteName().trim();
             url = ac.getWebsiteLink().trim();
@@ -118,6 +122,7 @@ public class Utility {
             if(!websiteList.containsKey(websiteName)){
                 Website w = new Website(0, websiteName, null);
                 id = websiteDao.addWesbite(w);
+                w.setWebsiteID(id);
                 websiteList.put(websiteName, w);
             }else{
                 id = websiteList.get(websiteName).getWebsiteID();
@@ -136,11 +141,15 @@ public class Utility {
         HashMap<String, Category> categoryList = TheBackroom.categoryList;
         int id = 0;
 
-        for(String genreName : category){
+        //here we avoid duplicates entry in sme atual  string
+        Set<String> uniqueCategory = new LinkedHashSet<>(category);
+
+        for(String genreName : uniqueCategory){
 
             if(!categoryList.containsKey(genreName.trim())){
                 Category c = new Category(0, genreName.trim());
                 id = categoryDao.addCategory(c);
+                c.setCategoryID(id);
                 categoryList.put(genreName, c);
             }else{
                 id = categoryList.get(genreName.trim()).getCategoryID();
@@ -159,15 +168,17 @@ public class Utility {
         HashMap<String, Role> roleList = TheBackroom.roleList;
         int id = 0;
 
-        for(String personName : personnel){
+        Set<String> uniquePersons = new LinkedHashSet<>(personnel);
 
-            if (!personList.containsKey(personName)) {
+        for(String personName : uniquePersons){
+            if (!personList.containsKey(personName.trim())) {
                 //the index here is temporary since the id value is put in the table itself
                 Person p = new Person(0, personName.trim(), null, 0);
                 id = personDao.addPerson(p);
+                p.setPersonID(id);
                 personList.put(personName.trim(), p);
             }else{
-                id = personList.get(personName).getPersonID();
+                id = personList.get(personName.trim()).getPersonID();
             }
 
             mediaPersonnel.add(new Person(id, personName.trim(), role, roleList.get(role).getRoleID()));
@@ -183,13 +194,17 @@ public class Utility {
         HashMap<String, Role> roleList = TheBackroom.roleList;
         int id = 0;
 
-        for(String companyName : company){
+        //here we avoid duplicates entry in sme atual  string
+        Set<String> uniqueCompany = new LinkedHashSet<>(company);
 
-            if (!companyList.containsKey(companyName)) {
+        for(String companyName : uniqueCompany){
+
+            if (!companyList.containsKey(companyName.trim())) {
                 //the index here is temporary since the id value is put in the table itself
 
                 Company c = new Company(0, companyName.trim(), null, 0);
                 id = companyDao.addCompany(c);
+                c.setCompanyID(id);
                 companyList.put(companyName.trim(), c);
             }else{
                 id = companyList.get(companyName.trim()).getCompanyID();
@@ -206,13 +221,17 @@ public class Utility {
         HashMap<String, GameMode> gameModeList = TheBackroom.gameModeList;
         int id = 0;
 
-        for(String modeName : gameMode){
+        //here we avoid duplicates entry in sme atual  string
+        Set<String> uniqueGameMode = new LinkedHashSet<>(gameMode);
 
-            if (!gameModeList.containsKey(modeName)) {
+        for(String modeName : uniqueGameMode){
+
+            if (!gameModeList.containsKey(modeName.trim())) {
                 //the index here is temporary since the id value is put in the table itself
 
                 GameMode gm = new GameMode(0, modeName.trim());
                 id = gameModeDao.addGameMode(gm);
+                gm.setGameModeID(id);
                 gameModeList.put(modeName.trim(), gm);
             }else{
                 id = gameModeList.get(modeName.trim()).getGameModeID();
@@ -229,12 +248,16 @@ public class Utility {
         HashMap<String, Platform> platformlist = TheBackroom.platformList;
         int id = 0;
 
-        for(String platformName : gamePlatform){
+        //here we avoid duplicates entry in sme atual  string
+        Set<String> uniquePlatform = new LinkedHashSet<>(gamePlatform);
+
+        for(String platformName : uniquePlatform){
 
             if (!platformlist.containsKey(platformName)) {
                 //the index here is temporary since the id value is put in the table itself
                 Platform p = new Platform(0, platformName.trim());
                 id = platformDao.addPlatform(p);
+                p.setPlatformID(id);
                 platformlist.put(platformName.trim(), p);
             }else{
                 id = platformlist.get(platformName.trim()).getPlatformID();
@@ -243,6 +266,115 @@ public class Utility {
         }
 
         return mediaGamePlatform;
+    }
+
+    public String processListGenre(ArrayList<Category> categoryList){
+        StringBuilder output = new StringBuilder();
+
+        for(int i = 0; i < categoryList.size(); i++){
+            output.append(categoryList.get(i).getCategoryName());
+
+            if(i < categoryList.size() - 1){
+                output.append(", ");
+            }
+        }
+
+        return output.toString();
+    }
+
+    public String processWebsiteList(ArrayList<Website> websiteList){
+        StringBuilder output = new StringBuilder();
+
+        for(int i = 0; i < websiteList.size(); i++){
+            output.append(websiteList.get(i).getWebisteName());
+            output.append("| ");
+            output.append(websiteList.get(i).getWebsiteURL());
+
+            if(i < websiteList.size() - 1){
+                output.append(", ");
+            }
+        }
+
+        return output.toString();
+    }
+
+    public String processPersonList(ArrayList<Person> personList){
+        StringBuilder output = new StringBuilder();
+
+        for(int i = 0; i < personList.size(); i++){
+            output.append(personList.get(i).getPersonName());
+
+            if(i < personList.size() - 1){
+                output.append(", ");
+            }
+        }
+
+        return output.toString();
+    }
+
+    public String processCompanyList(ArrayList<Company> companyList, String role){
+        StringBuilder output = new StringBuilder();
+
+        for(int i = 0; i < companyList.size(); i++){
+            if(companyList.get(i).getCompanyRole().equals(role)){
+                output.append(companyList.get(i).getCompanyName());
+
+                if(i < companyList.size() - 1){
+                    output.append(", ");
+                }
+            }
+        }
+        return output.toString();
+    }
+
+    public String processModeList(ArrayList<GameMode> modeList){
+        StringBuilder output = new StringBuilder();
+
+        for(int i = 0; i < modeList.size(); i++){
+            output.append(modeList.get(i).getGameModeName());
+
+            if(i < modeList.size() - 1){
+                output.append(", ");
+            }
+        }
+        return output.toString();
+    }
+
+    public String procssPlatformList(ArrayList<Platform> platformList){
+        StringBuilder output = new StringBuilder();
+
+        for(int i = 0; i < platformList.size(); i++){
+            output.append(platformList.get(i).getPlatformName());
+
+            if(i < platformList.size() - 1){
+                output.append(", ");
+            }
+        }
+        return output.toString();
+    }
+
+    public void setIfNotNull(FormFieldGroup field, String value) {
+        if (value != null && !value.trim().isEmpty()) {
+            field.setValue(value);
+        }
+    }
+
+    public void setIfNotNull(MultiValueField field, String value) {
+        if (value != null && !value.trim().isEmpty()) {
+            field.setValues(value);
+        }
+    }
+
+    public void setIfNotNull(AccessLinkField field, String value) {
+        if (value != null && !value.trim().isEmpty()) {
+            field.setLink(value);
+        }
+    }
+
+    public void setIfNotNull(ImageFileField field, String value) {
+        if (value != null && !value.trim().isEmpty()) {
+            field.setImage(value);
+        }
     }
 
 }

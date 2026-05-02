@@ -444,6 +444,8 @@ INSERT INTO `website` VALUES (16,'_Bakla'),(29,'190'),(2,'Bloomsbury'),(14,'Crun
 /*!40000 ALTER TABLE `website` ENABLE KEYS */;
 UNLOCK TABLES;
 
+INSERT INTO  users values(34, 'moderator', '$argon2i$v=19$m=65536,t=10,p=1$119AujK0R6wDnNUQ5XVVSg$LIr1dJbDptlQxr2S9r4utFbyx3X/NwP0GCuhsY2nQr0', 'MODERATOR');
+
 --
 -- Final view structure for view `login_view`
 --
@@ -468,6 +470,15 @@ JOIN `media_category`
     ON `m`.`media_id` = `media_category`.`media_id`
 JOIN `category` `c`
     ON `media_category`.`category_id` = `c`.`category_id`;
+
+-- Index Creation
+CREATE INDEX `idx_media_name` ON `media` (`name`);
+CREATE INDEX `idx_media_type` ON `media` (`media_type`);
+CREATE INDEX `idx_media_year` ON `media` (`release_year`);
+CREATE INDEX `idx_media_type_year` ON `media` (`media_type`, `release_year`);
+CREATE INDEX `idx_person_name` ON `person` (`name`);
+CREATE INDEX `idx_company_name` ON `company` (`name`);
+CREATE INDEX `idx_platform_name` ON `platform` (`name`);
 
 -- Setup Permissions for Moderator
 GRANT SELECT, INSERT, UPDATE ON `thebackroom_db`.* TO 'app_moderator'@'localhost';

@@ -4,6 +4,7 @@ import edu.tangingina.thebackroom.TheBackroom;
 import edu.tangingina.thebackroom.controller.AddArchive_v2;
 import edu.tangingina.thebackroom.controller.LoginController;
 import edu.tangingina.thebackroom.util.MediaItem;
+import javafx.application.Platform;
 import javafx.geometry.*;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -27,6 +28,9 @@ public class DashboardShell extends BorderPane {
     private StackPane center;
     private Image noiseImg;
     private Consumer<Integer> onMediaSelected;
+
+    private double savedScrollPosition = 0.0;
+    private boolean prevMediaDetails = false;
 
     public DashboardShell() {
         //this.setTop(new NavbarComponent());             //navigation bar will always be on top
@@ -101,22 +105,38 @@ public class DashboardShell extends BorderPane {
 
     //for the modular switcher
     public void setView(BaseView view) {
-        javafx.application.Platform.runLater(() -> {
-            contentArea.getChildren().clear();
+        //this is for when we go to a media and go back, the scroll position we have before would remain...
+        if (!contentArea.getChildren().isEmpty() && !prevMediaDetails) {
+            double currentPos = scrollPane.getVvalue(); //we only save if the user actually moved the scrollbar
+            if (currentPos > 0) {
+                savedScrollPosition = currentPos;
+            }
+        }
 
-            // Ensure the view expands to fill the Shell's height
+            contentArea.getChildren().clear();
             Node viewNode = view.getView();
             VBox.setVgrow(viewNode, Priority.ALWAYS);
 
             contentArea.getChildren().add(viewNode);
 
+        Platform.runLater(() -> {
             if (view instanceof MediaDetailsView) {
+                prevMediaDetails = true;
                 scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
                 contentArea.setPrefHeight(Region.USE_COMPUTED_SIZE);
+                scrollPane.setVvalue(0.0);
             } else {
                 scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
                 contentArea.prefHeightProperty().unbind();
                 contentArea.setPrefHeight(Region.USE_COMPUTED_SIZE);
+
+                if (prevMediaDetails) {
+                    scrollPane.setVvalue(savedScrollPosition);
+                    savedScrollPosition = 0.0;
+                    prevMediaDetails = false;
+                } else {
+                    scrollPane.setVvalue(0.0);
+                }
             }
         });
 
@@ -124,6 +144,11 @@ public class DashboardShell extends BorderPane {
 
     public void refreshCurrentView(){
         String current = NavbarComponent.currentView;
+
+        if(prevMediaDetails){
+            showHome();
+            prevMediaDetails = false;
+        }
 
         switch (current) {
             case "Home" -> showHome();
@@ -163,7 +188,6 @@ public class DashboardShell extends BorderPane {
     private void openMediaDetails(int mediaID, Runnable onBack){
         MediaDetailsView mediaDetails = new MediaDetailsView(mediaID, onBack);
         setView(mediaDetails);
-        scrollPane.setVvalue(0);
     }
 
     private void showHome() {

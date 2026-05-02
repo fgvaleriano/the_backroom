@@ -1,5 +1,6 @@
 package edu.tangingina.thebackroom.controller.dashboard;
 
+import edu.tangingina.thebackroom.TheBackroom;
 import edu.tangingina.thebackroom.controller.AddArchive_v2;
 import edu.tangingina.thebackroom.controller.FormFieldFactory;
 import edu.tangingina.thebackroom.controller.FormFieldGroup;
@@ -17,7 +18,7 @@ import java.io.File;
 public class ImportDialog {
 
     private static Scene scene;
-    private static Stage window;
+    public static Stage window;
     private static ComboBox<String> mediaTypeSelector;
     private static Label header, errorLabel, inputLabel;
     private static StackPane root;
@@ -75,19 +76,37 @@ public class ImportDialog {
             System.out.println("Importing Archive");
 
             if (selectedFile == null || filePathField.getText().isBlank()) {
-                if (!filePathField.getStyleClass().contains("error-field")) {
+                if (!filePathField.getStyleClass().contains("input-field-error")) {
                     filePathField.getStyleClass().add("input-field-error");
                     errorLabel.setVisible(true);
                     errorLabel.setManaged(true);
-                    return;
                 }
+                return; // Stop here if no file is selected
+            }
 
-                filePathField.setPromptText("Please upload a file");
-                errorLabel.setVisible(false);
-                errorLabel.setManaged(false);
-                filePathField.getStyleClass().remove("input-field-error");
-                closeWindow();
+            String fileName = selectedFile.getName().toLowerCase();
 
+            if (fileName.endsWith(".csv")) {
+                System.out.println("Processing a CSV file...");
+                try{
+                    TheBackroom.fm.importCSV(filePathField.getText());
+                }catch (Exception e1){
+
+                }
+            } else if (fileName.endsWith(".json")) {
+                System.out.println("Processing a JSON file...");
+                try{
+                    TheBackroom.fm.importJSON(filePathField.getText());
+                }catch (Exception e1){
+
+                }
+            } else if (fileName.endsWith(".sql")) {
+                System.out.println("Processing an SQL file...");
+                try{
+                    TheBackroom.fm.importSQL(filePathField.getText());
+                }catch (Exception e1){
+
+                }
             }
             closeWindow();
         });
@@ -108,9 +127,16 @@ public class ImportDialog {
         window.showAndWait();
     }
 
-    //close dialog box
+    //closing dialog box
     public static void closeWindow() {
         window.close();
+        Scene sc = TheBackroom.sm.getMainScene();
+
+        Node found = sc.lookup(".dashboard-shell");
+        if(found instanceof DashboardShell shell){
+            shell.refreshCurrentView();
+
+        }
     }
 
     private static HBox getInput() {
@@ -146,8 +172,7 @@ public class ImportDialog {
                     new FileChooser.ExtensionFilter("Supported Files", "*.csv", "*.json", "*.sql"),
                     new FileChooser.ExtensionFilter("CSV Files", "*.csv"),
                     new FileChooser.ExtensionFilter("JSON Files", "*.json"),
-                    new FileChooser.ExtensionFilter("SQL Files", "*.sql"),
-                    new FileChooser.ExtensionFilter("All Files", "*.*")
+                    new FileChooser.ExtensionFilter("SQL Files", "*.sql")
             );
 
             selectedFile = fileChooser.showOpenDialog(window);
@@ -169,4 +194,6 @@ public class ImportDialog {
         row.setPrefWidth(400);
         return row;
     }
+
+
 }

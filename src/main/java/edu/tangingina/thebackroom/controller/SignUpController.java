@@ -31,7 +31,7 @@ public class SignUpController implements Initializable {
         String pass = passField.getText();
         String confirmPass = confirmPassField.getText();
 
-        if(user.isEmpty()){
+        if(user.isEmpty() || user.length() > 50){
             errorLabel.setText("Please input your username.");
             hideError(false);
         }else if(pass.isEmpty() || confirmPass.isEmpty() ){
